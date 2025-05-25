@@ -387,7 +387,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     else if (lang === 'zh') tooltipText = iconDisplayNamesZh[iconName] || tooltipText;
     else if (lang === 'ko') tooltipText = iconDisplayNamesKo[iconName] || tooltipText;
     return (
-    <div className="relative flex flex-col items-center justify-center cursor-pointer">
+    <div className="relative flex flex-col items-center justify-center cursor-pointer" style={{overflow: 'visible'}}>
       <span 
         className={className || ''}
         style={{
@@ -404,12 +404,12 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
       </span>
       {(activeTooltip === iconName || isShowTooltip) && (
           isMobile ? (
-            <div className={`absolute top-full ${position === 'left' ? 'left-0' : position === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'} mt-2 w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-50 pointer-events-none text-center break-words`}> 
+            <div className={`absolute top-full ${position === 'left' ? 'left-0' : position === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'} mt-2 w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-[9999] pointer-events-none text-center break-words`} style={{overflow: 'visible'}}>
               {tooltipText}
               <div className={`absolute w-2 h-2 bg-white/90 transform rotate-45 ${position === 'left' ? 'left-4' : position === 'right' ? 'right-4' : 'left-1/2 -translate-x-1/2'} -top-1`}></div>
             </div>
           ) : (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max max-w-[180px] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-50 pointer-events-none text-center">
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max max-w-[180px] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-[9999] pointer-events-none text-center" style={{overflow: 'visible'}}>
               {tooltipText}
           <div className="absolute w-2 h-2 bg-white/90 transform rotate-45 left-1/2 -translate-x-1/2 top-full -mt-1"></div>
         </div>
@@ -526,17 +526,18 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     const groupIcons = iconMap[activeMenu];
 
     return (
-      <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x"
+      <div className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x relative"
         style={{ 
           WebkitOverflowScrolling: 'touch', 
           scrollBehavior: 'smooth', 
           scrollSnapType: 'x mandatory',
           minWidth: 0,
-          maxWidth: '100%'
+          maxWidth: '100%',
+          paddingBottom: 32 // thêm padding dưới để tooltip không bị cắt
         }}
       >
         {allIcons.map(icon => (
-          <div key={icon} className="flex-shrink-0 scroll-snap-align-start">
+          <div key={icon} className="flex-shrink-0 scroll-snap-align-start relative" style={{overflow: 'visible'}}>
             {iconComponents[icon] ? (
               <IconWithTooltip 
                 iconName={icon} 
