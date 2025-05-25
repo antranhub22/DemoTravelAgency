@@ -244,6 +244,22 @@ const serviceKeywordsMap: Record<string, string[]> = {
 };
 // --- END KEYWORDS GROUP MAPPING ---
 
+// --- SERVICE RELATED TERMS MAPPING ---
+const serviceRelatedTerms: Record<string, string[]> = {
+  tours: ['tour', 'tours', 'tourism', 'excursion', 'trip', 'đặt tour', 'tour du lịch'],
+  bus: ['bus', 'bus ticket', 'xe khách', 'vé xe', 'bus ride', 'bus service'],
+  vehicle: ['vehicle', 'car', 'rental', 'thuê xe', 'xe thuê', 'motorbike', 'scooter'],
+  currency: ['currency', 'exchange', 'money', 'đổi tiền', 'ngoại tệ'],
+  laundry: ['laundry', 'giặt', 'giặt ủi', 'washing', 'laundry service'],
+  homestay: ['homestay', 'nhà nghỉ', 'ở nhà dân', 'homestay service'],
+  roomservice: ['room service', 'đồ ăn phòng', 'gọi món', 'in-room dining'],
+  housekeeping: ['housekeeping', 'dọn phòng', 'lau dọn', 'cleaning'],
+  localtourism: ['local tourism', 'địa điểm', 'thông tin du lịch', 'local info'],
+  concierge: ['concierge', 'hỗ trợ', 'đặt bàn', 'booking', 'support'],
+  guestfeedback: ['feedback', 'phản hồi', 'khiếu nại', 'complaint']
+};
+// --- END SERVICE RELATED TERMS MAPPING ---
+
 // --- COMPONENT: KeywordsBlock ---
 const allKeywords = Array.from(new Set(Object.values(serviceKeywordsMap).flat()));
 const keywordRows = chunkArray<string>(allKeywords, 10);
@@ -262,15 +278,12 @@ const KeywordsBlock = () => {
 
   useEffect(() => {
     const normText = transcripts.map(m => m.content.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ')).join(' ');
-    // Đếm số lần xuất hiện của từng service
-    const serviceMentions = serviceLabelOptions.map(service => {
-      const label = service.label.toLowerCase();
-      const regex = new RegExp(`\\b${label.replace(/ /g, '\\s+')}\\b`, 'i');
-      const mentions = (normText.match(regex) || []).length;
-      return { key: service.key, mentions };
-    });
-    // Lấy tất cả service có mentions > 0
-    const mentionedServices = serviceMentions.filter(s => s.mentions > 0).map(s => s.key);
+    // Nhận diện service bằng related terms
+    const mentionedServices = Object.entries(serviceRelatedTerms)
+      .filter(([key, terms]) =>
+        terms.some(term => normText.includes(term.toLowerCase()))
+      )
+      .map(([key]) => key);
     setActiveServices(mentionedServices);
 
     // Lấy tất cả keywords thuộc các service được đề cập
