@@ -10,12 +10,29 @@ import { useWebSocket } from '@/hooks/useWebSocket';
 import { Link } from 'wouter';
 import { History } from 'lucide-react';
 import InfographicSteps from './InfographicSteps';
+import { t, Lang } from '../i18n';
 
 const VoiceAssistant: React.FC = () => {
-  const { currentInterface, language } = useAssistant();
+  const { currentInterface, language, setLanguage } = useAssistant();
   
   // Initialize WebSocket connection
   useWebSocket();
+
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = React.useState(false);
+  const [showInfographic, setShowInfographic] = React.useState(false);
+
+  const LANGUAGES = [
+    { code: 'en', label: 'English', flag: '🇬🇧' },
+    { code: 'fr', label: 'Français', flag: '🇫🇷' },
+    { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+    { code: 'zh', label: '中文', flag: '🇨🇳' },
+    { code: 'ko', label: '한국어', flag: '��🇷' },
+  ];
+  const selectedLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
+  const handleLangSelect = (code: string) => {
+    setLanguage(code);
+    setIsLangDropdownOpen(false);
+  };
 
   return (
     <div className="relative h-screen overflow-hidden font-sans text-gray-800 bg-neutral-50" id="app">
@@ -42,21 +59,53 @@ const VoiceAssistant: React.FC = () => {
               <span style={{color: '#FFD700', WebkitTextFillColor: '#FFD700'}}>HaiLy</span> <span style={{color: '#fff', WebkitTextFillColor: '#fff'}}>Travel</span>
             </span>
           </div>
-          {/* Right: Call History */}
-          <div className="w-10 flex-shrink-0 flex items-center justify-end ml-2 sm:ml-6 mr-2 sm:mr-8">
+          {/* Right: Call History, Language, Info */}
+          <div className="flex items-center gap-2">
             <Link href="/call-history">
               <a className="flex items-center gap-1 px-2 py-1 rounded bg-primary-dark text-white text-xs sm:text-sm">
                 <History className="w-4 h-4" />
                 <span className="hidden sm:inline">Call History</span>
               </a>
             </Link>
-          </div>
-          {/* Nút Infor ở giữa TopBar */}
-          <div className="hidden sm:flex items-center justify-center ..."> 
-            {/* ...icon info... */}
+            {/* Language Selector */}
+            <div className="relative w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 transition-all duration-200 shadow cursor-pointer select-none" onClick={() => setIsLangDropdownOpen(v => !v)}>
+              <span className="text-2xl" style={{fontSize: '2rem'}}>{selectedLang.flag}</span>
+              {isLangDropdownOpen && (
+                <div className="absolute left-0 top-12 z-50 bg-white rounded-xl shadow-lg py-2 w-40 border border-gray-200 animate-fade-in">
+                  {LANGUAGES.map(lang => (
+                    <div
+                      key={lang.code}
+                      className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-amber-100 rounded-lg transition text-gray-900 ${lang.code === language ? 'bg-amber-50 font-bold' : ''}`}
+                      onClick={e => { e.stopPropagation(); handleLangSelect(lang.code); }}
+                    >
+                      <span className="text-xl">{lang.flag}</span>
+                      <span className="text-base">{lang.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* Info Button */}
+            <button
+              onClick={() => setShowInfographic(true)}
+              className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-amber-300 bg-white/20 hover:bg-white/40 transition-all duration-200 shadow"
+            >
+              <span className="material-icons text-2xl text-amber-400">info</span>
+            </button>
           </div>
         </div>
       </header>
+
+      {showInfographic && (
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+          <div className="bg-white rounded-xl p-6 shadow-lg max-w-md w-full relative">
+            <button onClick={() => setShowInfographic(false)} className="absolute top-2 right-2 text-gray-500 hover:text-pink-600 text-2xl">&times;</button>
+            <div className="text-gray-800">
+              <InfographicSteps />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Interface Layers Container */}
       <div className="relative w-full h-full" id="interfaceContainer">
