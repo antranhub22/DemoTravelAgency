@@ -134,7 +134,17 @@ const IconWithTooltip = ({ icon, tooltip, forceShowTooltip = false }: IconWithTo
     >
       {icon}
       {(show || forceShowTooltip) && (
-        <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-white text-gray-900 text-xs rounded shadow-lg whitespace-nowrap font-semibold border border-gray-200">
+        <div
+          className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 text-xs font-semibold whitespace-nowrap"
+          style={{
+            background: 'none',
+            boxShadow: 'none',
+            border: 'none',
+            color: '#fff',
+            textShadow: '0 2px 8px rgba(0,0,0,0.45)',
+            borderRadius: 0
+          }}
+        >
           {tooltip}
         </div>
       )}
