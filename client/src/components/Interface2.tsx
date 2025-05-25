@@ -276,6 +276,7 @@ const keywordRows = chunkArray<string>(allKeywords, 10);
 const KeywordsBlock = () => {
   const [activeKeywords, setActiveKeywords] = useState<string[]>([]);
   const [activeServices, setActiveServices] = useState<string[]>([]);
+  const [persistedServices, setPersistedServices] = useState<string[]>([]);
   const { transcripts } = useAssistant();
 
   // Di chuyển hook vào trong component
@@ -295,13 +296,18 @@ const KeywordsBlock = () => {
       )
       .map(([key]) => key);
     setActiveServices(mentionedServices);
-
+    // Thêm các service mới vào persistedServices
+    setPersistedServices(prev => {
+      const newServices = mentionedServices.filter(s => !prev.includes(s));
+      return [...prev, ...newServices];
+    });
     // Lấy tất cả keywords thuộc các service được đề cập
-    const serviceKeywords = mentionedServices.length > 0
-      ? Array.from(new Set(mentionedServices.flatMap(s => serviceKeywordsMap[s] || [])))
+    const allServices = Array.from(new Set([...persistedServices, ...mentionedServices]));
+    const serviceKeywords = allServices.length > 0
+      ? Array.from(new Set(allServices.flatMap(s => serviceKeywordsMap[s] || [])))
       : [];
     // Highlight các keywords được nhắc tới trong hội thoại
-    const matched: string[] = serviceKeywords.filter(kw => {
+    const matched: string[] = serviceKeywords.filter((kw: string) => {
       const related = keywordRelatedMap[kw] || [];
       const allTerms = [kw, ...related].sort((a, b) => b.length - a.length);
       return allTerms.some(term => {
@@ -313,6 +319,13 @@ const KeywordsBlock = () => {
     });
     setActiveKeywords(matched);
   }, [transcripts, keywordRelatedMap]);
+
+  // Reset persistedServices khi transcripts rỗng
+  useEffect(() => {
+    if (!transcripts || transcripts.length === 0) {
+      setPersistedServices([]);
+    }
+  }, [transcripts]);
 
   return (
     <div className="flex flex-col gap-3 items-center w-full">
