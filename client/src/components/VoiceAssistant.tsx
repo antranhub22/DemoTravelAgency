@@ -93,7 +93,7 @@ const VoiceAssistant: React.FC = () => {
           <div className="bg-white rounded-xl p-6 shadow-lg max-w-md w-full relative">
             <button onClick={() => setShowInfo(false)} className="absolute top-2 right-2 text-gray-500 hover:text-pink-600 text-2xl">&times;</button>
             <div className="text-gray-800">
-              <InfographicSteps />
+              <InfographicSteps currentStep={1} compact={false} horizontal={false} forceShowContent={true} />
             </div>
           </div>
         </div>

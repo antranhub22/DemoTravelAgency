@@ -7,9 +7,10 @@ interface InfographicStepsProps {
   compact?: boolean;
   horizontal?: boolean;
   language?: Lang;
+  forceShowContent?: boolean;
 }
 
-export default function InfographicSteps({ currentStep = 1, compact = false, horizontal = false, language: propLanguage }: InfographicStepsProps) {
+export default function InfographicSteps({ currentStep = 1, compact = false, horizontal = false, language: propLanguage, forceShowContent = false }: InfographicStepsProps) {
   const [showProgress, setShowProgress] = useState(false);
   // Lấy language từ prop hoặc context
   const { language: contextLanguage } = useAssistant ? useAssistant() : { language: 'en' };
@@ -37,7 +38,7 @@ const steps = [
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
 
   // Nếu là mobile và chưa show progress, chỉ hiển thị icon
-  if (isMobile && !showProgress) {
+  if (isMobile && !showProgress && !forceShowContent) {
     return (
       <div className="flex justify-center items-center mb-4">
         <button 
