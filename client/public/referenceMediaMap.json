@@ -1,0 +1,57 @@
+[
+  {
+    "keywords": ["White Sand Dunes", "Sand Dune", "Đồi Cát Trắng"],
+    "media": [
+      {
+        "type": "image",
+        "url": "/assets/references/images/white_sand_dune_1.jpg",
+        "caption": "White Sand Dunes - Bình Thuận"
+      },
+      {
+        "type": "image",
+        "url": "/assets/references/images/white_sand_dune_2.jpg",
+        "caption": "Sunrise at White Sand Dunes"
+      }
+    ]
+  },
+  {
+    "keywords": ["Fairy Stream", "Suoi Tien", "Suối Tiên"],
+    "media": [
+      {
+        "type": "image",
+        "url": "/assets/references/images/fairy_stream_1.jpg",
+        "caption": "Fairy Stream - Suối Tiên"
+      }
+    ]
+  },
+  {
+    "keywords": ["Jeep Tour", "Sunset Jeep Tour", "Jeep"],
+    "media": [
+      {
+        "type": "image",
+        "url": "/assets/references/images/jeep_tour_1.jpg",
+        "caption": "Jeep Tour Adventure"
+      }
+    ]
+  },
+  {
+    "keywords": ["Fishing Village", "Làng Chài"],
+    "media": [
+      {
+        "type": "image",
+        "url": "/assets/references/images/fishing_village_1.jpg",
+        "caption": "Mui Ne Fishing Village"
+      }
+    ]
+  },
+  {
+    "keywords": ["Wine Castle", "Lâu Đài Rượu Vang"],
+    "media": [
+      {
+        "type": "image",
+        "url": "/assets/references/images/wine_castle_1.jpg",
+        "caption": "Wine Castle - Sealinks"
+      }
+    ]
+  }
+] 

@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import type { ReferenceItem } from '@/services/ReferenceService';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, A11y } from 'swiper/modules';
@@ -11,6 +11,7 @@ import { FaBookOpen } from 'react-icons/fa';
 import { FiChevronDown } from 'react-icons/fi';
 import { IconMedia } from '../assets/iconMediaMap';
 import SwiperCore from 'swiper';
+import { useAssistant } from '@/context/AssistantContext';
 
 const CATEGORIES = [
   'Landmark',
@@ -42,6 +43,36 @@ const Reference = ({ references, activeIconMedia }: ReferenceProps): JSX.Element
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState(CATEGORIES[0]);
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
+
+  // --- BẮT ĐẦU: Hiển thị media reference động theo hội thoại ---
+  const { transcripts } = useAssistant();
+  const [mediaMap, setMediaMap] = useState<any[]>([]);
+  const [matchedMedia, setMatchedMedia] = useState<any[]>([]);
+
+  // Load file referenceMediaMap.json
+  useEffect(() => {
+    fetch('/referenceMediaMap.json')
+      .then(res => res.json())
+      .then(data => setMediaMap(data));
+  }, []);
+
+  // Khi transcripts thay đổi, so khớp từ khóa và lấy media
+  useEffect(() => {
+    if (!mediaMap.length || !transcripts || transcripts.length === 0) {
+      setMatchedMedia([]);
+      return;
+    }
+    const normText = transcripts.map(m => m.content.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ')).join(' ');
+    const found: any[] = [];
+    mediaMap.forEach(entry => {
+      if (entry.keywords.some((kw: string) => normText.includes(kw.toLowerCase()))) {
+        entry.media.forEach((m: any) => found.push(m));
+      }
+    });
+    setMatchedMedia(found);
+  }, [transcripts, mediaMap]);
+
+  // --- KẾT THÚC: Hiển thị media reference động ---
 
   useEffect(() => {
     setLoading(true);
@@ -270,6 +301,23 @@ const Reference = ({ references, activeIconMedia }: ReferenceProps): JSX.Element
           </div>
         </div>
       </div>
+
+      {/* Carousel media reference động */}
+      {matchedMedia.length > 0 ? (
+        <div className="mb-4">
+          <div className="font-bold text-white text-lg mb-2">Related Media</div>
+          <div className="w-full max-w-2xl mx-auto">
+            <div className="flex overflow-x-auto gap-4 pb-2">
+              {matchedMedia.map((media, idx) => (
+                <div key={idx} className="flex-shrink-0 w-64 bg-white/90 rounded-xl shadow-md p-2 flex flex-col items-center">
+                  <img src={media.url} alt={media.caption} className="object-cover w-full h-40 rounded-lg mb-2" />
+                  <div className="text-sm text-gray-800 text-center font-semibold">{media.caption}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {/* Loading state */}
       {loading ? (
