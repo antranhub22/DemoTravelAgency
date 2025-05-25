@@ -608,7 +608,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // 5. NÚT CHAT AI: Style lại nút gọi AI cho lớn, glow, fixed bottom center
   const CallButton = () => (
-    <button className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-8 py-4 rounded-full shadow-lg text-lg font-bold flex items-center gap-2 animate-pulse z-50" onClick={() => handleCall(lang as any)}>
+    <button className="fixed bottom-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-8 py-4 rounded-full shadow-lg text-lg font-bold flex items-center gap-2 animate-pulse z-50" onClick={() => handleCall(lang as any)}>
       <span className="material-icons text-3xl mr-2">auto_mode</span>
       {t('press_to_order', lang)}
     </button>
@@ -664,7 +664,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
       }}
     >
       <div
-        className="flex flex-col items-center justify-start text-white overflow-visible pb-16 sm:pb-10"
+        className="flex flex-col items-center justify-start text-white overflow-visible pb-28 sm:pb-28"
         style={{
           minWidth: 0,
           width: '100vw',
