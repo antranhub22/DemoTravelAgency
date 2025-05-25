@@ -663,13 +663,18 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
         overflowX: 'visible',
       }}
     >
-      <div className="w-full flex flex-col items-center justify-start text-white p-0 pt-4 sm:pt-8 lg:pt-12 overflow-visible pb-32 sm:pb-24"
+      <div
+        className="flex flex-col items-center justify-start text-white overflow-visible pb-32 sm:pb-24"
         style={{
           minWidth: 0,
           width: '100vw',
           maxWidth: '100vw',
-          overflowX: 'visible',
-          WebkitOverflowScrolling: 'touch',
+          left: 0,
+          position: 'relative',
+          zIndex: 1000,
+          background: 'transparent',
+          padding: 0,
+          margin: 0,
         }}
       >
         <Header />
