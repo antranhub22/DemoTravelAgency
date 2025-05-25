@@ -17,11 +17,6 @@ import { OrderStatus } from '@shared/schema';
 import { Bus, Mountain, Landmark, Car, CarFront, Bike, Coins, Euro, DollarSign, Shirt, Sparkles, Home, Building2, CalendarDays, KeyRound, UserRound, Plus, Star, Sun, CalendarCheck, Umbrella, Map, Ship, Waves, ArrowRightLeft } from 'lucide-react';
 import InfographicSteps from './InfographicSteps';
 import '../styles/custom-scrollbar.css';
-import Header from './interface1/Header';
-import Navigation from './interface1/Navigation';
-import MediaArea from './interface1/MediaArea';
-import CallButton from './interface1/CallButton';
-import Footer from './interface1/Footer';
 
 interface Interface1Props {
   isActive: boolean;
@@ -523,6 +518,153 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   };
   const selectedLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
 
+  // 1. HEADER: Đưa avatar sang phải, menu/hướng dẫn sang trái, thêm tiêu đề lớn dưới header
+  const Header = () => (
+    <div className="flex items-center justify-between w-full mb-4">
+      <style>{shimmerAnimation}</style>
+      {/* Flag (ngôn ngữ) bên trái */}
+      <div className="relative w-12 h-12 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 transition-all duration-200 shadow mr-2 cursor-pointer select-none" onClick={() => setIsLangDropdownOpen(v => !v)}>
+        <span className="text-2xl" style={{fontSize: '2rem'}}>{selectedLang.flag}</span>
+        {isLangDropdownOpen && (
+          <div className="absolute left-0 top-14 z-50 bg-white rounded-xl shadow-lg py-2 w-40 border border-gray-200 animate-fade-in">
+            {LANGUAGES.map(lang => (
+              <div
+                key={lang.code}
+                className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-amber-100 rounded-lg transition text-gray-900 ${lang.code === language ? 'bg-amber-50 font-bold' : ''}`}
+                onClick={e => { e.stopPropagation(); handleLangSelect(lang.code); }}
+              >
+                <span className="text-xl">{lang.flag}</span>
+                <span className="text-base">{lang.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      {/* Dropdown tab nằm giữa trên mobile */}
+      <div className="flex-1 flex justify-center items-center">
+        <div className="block sm:hidden w-full max-w-xs mx-auto">
+          <div className="relative w-full">
+            <button
+              className="w-full px-4 py-3 rounded-2xl bg-white/30 backdrop-blur-md text-amber-100 font-bold text-base flex items-center justify-between shadow-lg border border-white/30 focus:outline-none focus:ring-2 focus:ring-amber-300 transition-all duration-200"
+              style={{ boxShadow: '0 4px 24px 0 rgba(139,26,71,0.10)', fontFamily: 'Poppins, sans-serif', letterSpacing: '0.02em' }}
+              onClick={() => setShowTabDropdown(v => !v)}
+            >
+              <span className="truncate text-lg font-semibold text-amber-100 drop-shadow-sm" style={{textShadow:'0 1px 6px rgba(139,26,71,0.18)'}}>
+                {tabOptions.find(opt => opt.key === activeMenu)?.label}
+              </span>
+              <span className="material-icons ml-2 text-amber-200 transition-transform duration-200" style={{transform: showTabDropdown ? 'rotate(180deg)' : 'rotate(0deg)'}}>expand_more</span>
+            </button>
+            {showTabDropdown && (
+              <div className="absolute left-0 right-0 mt-2 bg-white/80 bg-gradient-to-br from-[#fff7] to-[#ffe9b3cc] rounded-2xl shadow-2xl z-50 border border-amber-100 overflow-hidden animate-fade-in backdrop-blur-md"
+                style={{animation: 'dropdown-fade-in 0.22s cubic-bezier(.4,0,.2,1)'}}
+              >
+                {tabOptions.map(opt => (
+                  <button
+                    key={opt.key}
+                    className={`w-full text-left px-5 py-3 text-base font-semibold transition-all duration-150 ${activeMenu === opt.key ? 'bg-amber-100/80 text-pink-900' : 'text-amber-900 hover:bg-amber-50/80 hover:text-pink-900'}`}
+                    style={{fontFamily:'Poppins, sans-serif', letterSpacing:'0.01em'}}
+                    onClick={() => { setActiveMenu(opt.key as MenuKey); setShowTabDropdown(false); }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            <style>{`
+              @keyframes dropdown-fade-in {
+                0% { opacity: 0; transform: translateY(-12px) scale(0.98); }
+                100% { opacity: 1; transform: translateY(0) scale(1); }
+              }
+            `}</style>
+          </div>
+        </div>
+      </div>
+      {/* Nút info/avatar ở góc phải */}
+      <button
+        onClick={() => setShowInfographic(true)}
+        className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-amber-300 bg-white/20 hover:bg-white/40 transition-all duration-200 shadow ml-2"
+      >
+        <span className="material-icons text-2xl text-amber-400">info</span>
+      </button>
+    </div>
+  );
+
+  // 2. TABS: Trên mobile là dropdown, desktop là tab bar ngang
+  const tabOptions = [
+    { key: 'tours', label: t('tourism_tour', lang) },
+    { key: 'bus', label: t('ticket_bus', lang) },
+    { key: 'vehicle', label: t('rental_service', lang) },
+    { key: 'currency', label: t('currency_exchange', lang) },
+    { key: 'laundry', label: t('laundry_service', lang) },
+    { key: 'homestay', label: t('homestay_service', lang) },
+  ];
+
+  const TabBar = () => (
+    <>
+      {/* Desktop: Tab bar ngang */}
+      <div className="hidden sm:flex w-full overflow-x-auto flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
+        style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth', scrollSnapType: 'x mandatory', minWidth: 0 }}
+      >
+        {tabOptions.map(opt => (
+          <button
+            key={opt.key}
+            onClick={() => setActiveMenu(opt.key as MenuKey)}
+            className={`flex-shrink-0 min-w-[160px] sm:min-w-[120px] px-4 py-2 rounded-full font-bold text-base sm:text-sm scroll-snap-align-start ${activeMenu === opt.key ? 'bg-amber-400 text-pink-900 shadow' : 'bg-transparent text-amber-300'}`}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+    </>
+  );
+
+  // 3. ICON GROUP: Style lại icon group cho bo tròn, nhỏ gọn, đặt phía trên card
+  const IconGroup = () => (
+    <div className="flex flex-row gap-2 mb-2 justify-center">
+      {iconMap[activeMenu] && renderIconGroup(iconMap[activeMenu], iconMap[activeMenu].length, 20)}
+    </div>
+  );
+
+  // 4. CARD DỊCH VỤ: Style lại card/reference: ảnh lớn, overlay, tag, nút heart/arrow, slider ngang
+  const ServiceCard = ({ refItem }: { refItem: ReferenceItem }) => (
+    <div className="relative min-w-[280px] max-w-xs rounded-2xl shadow-lg overflow-hidden bg-white/90">
+      <img src={refItem.image ? refItem.image : hotelImage} alt={refItem.title || 'Service'} className="w-full h-40 object-cover" />
+      <div className="absolute top-2 left-2 flex gap-1">
+        <span className="bg-amber-400 text-xs font-bold px-2 py-1 rounded-full">AI</span>
+        <span className="bg-blue-400 text-xs font-bold px-2 py-1 rounded-full">3 Days</span>
+        <span className="bg-pink-400 text-xs font-bold px-2 py-1 rounded-full">{t('tour_package', lang)}</span>
+      </div>
+      <button className="absolute top-2 right-2 bg-white/80 rounded-full p-1 shadow"><span className="material-icons text-pink-500">favorite_border</span></button>
+      <div className="absolute bottom-2 right-2 bg-amber-400 rounded-full p-2 shadow"><span className="material-icons text-pink-900">arrow_outward</span></div>
+      <div className="p-4">
+        <h3 className="font-bold text-lg text-pink-900 mb-1">{refItem.title}</h3>
+        <p className="text-sm text-gray-700 mb-2 whitespace-pre-line">
+          {refItem.description
+            ? refItem.description.split(/\n|\r/).map((line, idx) => {
+                const match = line.match(/^([\w\s\-()']+):\s*(.*)$/);
+                if (match) {
+                  return (
+                    <div key={idx} className="mb-0.5">
+                      <span className="font-bold text-amber-700">{match[1]}:</span> <span className="font-medium text-gray-900">{match[2]}</span>
+                    </div>
+                  );
+                }
+                return <div key={idx}>{line}</div>;
+              })
+            : null}
+        </p>
+      </div>
+    </div>
+  );
+
+  // 5. NÚT CHAT AI: Style lại nút gọi AI cho lớn, glow, fixed bottom center
+  const CallButton = () => (
+    <button className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-8 py-4 rounded-full shadow-lg text-lg font-bold flex items-center gap-2 animate-pulse z-50" onClick={() => handleCall(lang as any)}>
+      <span className="material-icons text-3xl mr-2">auto_mode</span>
+      {t('press_to_order', lang)}
+    </button>
+  );
+
   return (
     <div 
       className={`absolute w-full min-h-screen h-full transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'} z-10 overflow-y-auto`} 
@@ -537,48 +679,32 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
       <div className="container mx-auto flex flex-col items-center justify-start text-white p-3 pt-6 sm:p-5 sm:pt-10 lg:pt-16 overflow-visible pb-32 sm:pb-24" 
         style={{ transform: 'translateZ(20px)', minHeight: 'fit-content' }}
       >
-        <Header
-          language={language}
-          setLanguage={setLanguage}
-          showInfographic={showInfographic}
-          setShowInfographic={setShowInfographic}
-        />
-        <Navigation
-          activeMenu={activeMenu}
-          setActiveMenu={setActiveMenu}
-          activeIcon={activeIcon}
-          setActiveIcon={setActiveIcon}
-          iconMap={iconMap}
-          iconComponents={iconComponents}
-          iconDisplayNamesEn={iconDisplayNamesEn}
-          iconDisplayNamesFr={iconDisplayNamesFr}
-          iconDisplayNamesRu={iconDisplayNamesRu}
-          iconDisplayNamesZh={iconDisplayNamesZh}
-          iconDisplayNamesKo={iconDisplayNamesKo}
-          handleIconClick={handleIconClick}
-          t={t}
-          lang={lang}
-          showTabDropdown={showTabDropdown}
-          setShowTabDropdown={setShowTabDropdown}
-        />
-        <MediaArea
-          activeIcon={activeIcon}
-          iconMediaMap={iconMediaMap}
-          showReference={showReference}
-          setShowReference={setShowReference}
-          references={references}
-          t={t}
-          lang={lang}
-        />
-        <CallButton handleCall={handleCall} lang={lang} t={t} />
-        <Footer />
+        {/* --- LAYOUT MỚI MOBILE --- */}
+        <Header />
+        <TabBar />
+        <IconGroup />
+        {activeIcon && iconMediaMap[activeIcon] && iconMediaMap[activeIcon].length > 0 && (
+          <div className="w-full overflow-x-auto flex flex-row gap-4 pb-4">
+            {iconMediaMap[activeIcon].map((media, idx) => (
+              <div key={idx} className="min-w-[280px] max-w-xs rounded-2xl shadow-lg overflow-hidden bg-white/90">
+                <img src={media.src} alt={media.alt || ''} className="w-full h-40 object-cover" />
+                <div className="p-4">
+                  <p className="text-sm text-gray-700 mb-2">{media.description}</p>
+                </div>
+            </div>
+            ))}
+          </div>
+        )}
+        <CallButton />
+        {/* --- END LAYOUT MỚI --- */}
+        {/* Các block giao diện cũ đã được loại bỏ để layout mới hiển thị rõ ràng */}
         {showInfographic && (
           <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
             <div className="bg-white rounded-xl p-6 shadow-lg max-w-md w-full relative">
               <button onClick={() => setShowInfographic(false)} className="absolute top-2 right-2 text-gray-500 hover:text-pink-600 text-2xl">&times;</button>
               <div className="text-gray-800">
                 <InfographicSteps />
-              </div>
+            </div>
             </div>
           </div>
         )}
