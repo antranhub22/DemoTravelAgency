@@ -517,33 +517,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     { key: 'homestay', label: t('homestay_service', lang) },
   ];
 
-  const TabBar = () => (
-    <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
-      style={{ 
-        WebkitOverflowScrolling: 'touch', 
-        scrollBehavior: 'smooth', 
-        scrollSnapType: 'x mandatory',
-        minWidth: 0,
-        maxWidth: '100%'
-      }}
-    >
-      {tabOptions.map(opt => (
-        <button
-          key={opt.key}
-          onClick={() => setActiveMenu(opt.key as MenuKey)}
-          className={`flex-shrink-0 min-w-[160px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
-            activeMenu === opt.key 
-              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105' 
-              : 'bg-transparent text-amber-300 hover:bg-white/10'
-          }`}
-        >
-          {opt.label}
-        </button>
-      ))}
-    </div>
-  );
-
-  // 3. ICON GROUP: Chuyển thành slider ngang chứa tất cả icons
   const IconGroup = () => {
     // Tạo mảng chứa tất cả icons
     const allIcons = [
@@ -675,7 +648,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
         style={{ transform: 'translateZ(20px)', minHeight: 'fit-content' }}
       >
         <Header />
-        <TabBar />
         <IconGroup />
         {activeIcon && iconMediaMap[activeIcon] && iconMediaMap[activeIcon].length > 0 && (
           <div className="w-full overflow-x-auto flex flex-row gap-4 pb-4">
