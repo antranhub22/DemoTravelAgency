@@ -497,7 +497,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
           onClick={() => {
             setActiveMenu(opt.key as MenuKey);
             setShowGroupTooltip(opt.key);
-            setTimeout(() => setShowGroupTooltip(null), 3000);
           }}
           className={`flex-shrink-0 min-w-[160px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
             activeMenu === opt.key 
@@ -533,11 +532,14 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
           scrollSnapType: 'x mandatory',
           minWidth: 0,
           maxWidth: '100%',
-          paddingBottom: 32 // thêm padding dưới để tooltip không bị cắt
+          paddingBottom: 32,
+          zIndex: 10000,
+          position: 'relative',
+          overflow: 'visible', // Đảm bảo không cắt tooltip
         }}
       >
         {allIcons.map(icon => (
-          <div key={icon} className="flex-shrink-0 scroll-snap-align-start relative" style={{overflow: 'visible'}}>
+          <div key={icon} className="flex-shrink-0 scroll-snap-align-start relative" style={{overflow: 'visible', zIndex: 10001}}>
             {iconComponents[icon] ? (
               <IconWithTooltip 
                 iconName={icon} 
