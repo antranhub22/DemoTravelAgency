@@ -19,65 +19,57 @@ type NavigationProps = {
   setShowTabDropdown: (v: boolean) => void;
 };
 
-const LABELS = [
-  { key: 'tours', label: 'TOURS' },
-  { key: 'bus', label: 'BUS' },
-  { key: 'vehicle', label: 'VEHICLE' },
-  { key: 'currency', label: 'CURRENCY' },
-  { key: 'laundry', label: 'LAUNDRY' },
-  { key: 'homestay', label: 'HOMESTAY' },
-];
-
 const Navigation: React.FC<NavigationProps> = ({
   activeMenu, setActiveMenu, activeIcon, setActiveIcon, iconMap, iconComponents,
   iconDisplayNamesEn, iconDisplayNamesFr, iconDisplayNamesRu, iconDisplayNamesZh, iconDisplayNamesKo,
-  handleIconClick, t, lang
+  handleIconClick, t, lang, showTabDropdown, setShowTabDropdown
 }) => {
-  // Tạo layout hình chữ T cho 6 label
-  // Hàng 1: 2 label
-  // Hàng 2: 2 label
-  // Hàng 3: 2 label
-  // (Có thể điều chỉnh lại vị trí nếu muốn giống hình hơn)
-  const labelGrid = [
-    [LABELS[0], LABELS[1]],
-    [LABELS[2], LABELS[3]],
-    [LABELS[4], LABELS[5]],
+  const tabOptions = [
+    { key: 'tours', label: t('tourism_tour', lang) },
+    { key: 'bus', label: t('ticket_bus', lang) },
+    { key: 'vehicle', label: t('rental_service', lang) },
+    { key: 'currency', label: t('currency_exchange', lang) },
+    { key: 'laundry', label: t('laundry_service', lang) },
+    { key: 'homestay', label: t('homestay_service', lang) },
   ];
-
-  // Render các icon cho từng label
-  const renderIcons = (labelKey: string) => (
-    <div className="flex flex-wrap justify-center gap-2 mt-2">
-      {iconMap[labelKey].map((icon: string) => (
-        <button
-          key={icon}
-          onClick={() => { setActiveMenu(labelKey); setActiveIcon(icon); handleIconClick(icon); }}
-          className={`w-10 h-10 flex items-center justify-center rounded-lg shadow transition-all duration-200
-            ${activeMenu === labelKey ? 'bg-blue-400' : 'bg-gray-200'}
-            ${activeIcon === icon && activeMenu === labelKey ? 'ring-4 ring-blue-600' : ''}`}
-        >
-          {iconComponents[icon]}
-        </button>
-      ))}
-    </div>
-  );
-
+  const renderIconGroup = (icons: string[], col: number, iconSize = 22) => {
+    const items = icons.map(icon => {
+      const isActive = icon === activeIcon;
+      return (
+        <li key={icon} className="w-10 h-10 flex items-center justify-center">
+          {iconComponents[icon] ? (
+            <span onClick={() => handleIconClick(icon)}>{iconComponents[icon]}</span>
+          ) : <span className="text-red-500">?</span>}
+        </li>
+      );
+    });
+    const remainder = icons.length % col;
+    if (remainder !== 0) {
+      for (let i = 0; i < col - remainder; i++) {
+        items.push(<li key={`invisible-${i}`} className="w-10 h-10 flex items-center justify-center invisible"></li>);
+      }
+    }
+    return items;
+  };
   return (
-    <div className="flex flex-col items-center justify-center w-full py-6">
-      <div className="grid grid-cols-2 gap-6">
-        {labelGrid.flat().map((label, idx) => (
-          <div key={label.key} className="flex flex-col items-center">
-            <button
-              onClick={() => setActiveMenu(label.key)}
-              className={`px-8 py-4 mb-2 rounded-xl font-bold text-lg shadow-lg transition-all duration-200
-                ${activeMenu === label.key ? 'bg-blue-500 text-white scale-105' : 'bg-blue-200 text-blue-900'}`}
-            >
-              {t ? t(label.label.toLowerCase(), lang) : label.label}
-            </button>
-            {renderIcons(label.key)}
-          </div>
+    <>
+      {/* Tab bar ngang */}
+      <div className="w-full overflow-x-auto flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x flex">
+        {tabOptions.map(opt => (
+          <button
+            key={opt.key}
+            onClick={() => setActiveMenu(opt.key)}
+            className={`flex-shrink-0 min-w-[160px] sm:min-w-[120px] px-4 py-2 rounded-full font-bold text-base sm:text-sm scroll-snap-align-start ${activeMenu === opt.key ? 'bg-amber-400 text-pink-900 shadow' : 'bg-transparent text-amber-300'}`}
+          >
+            {opt.label}
+          </button>
         ))}
       </div>
-    </div>
+      {/* Icon group */}
+      <div className="flex flex-row gap-2 mb-2 justify-center">
+        {iconMap[activeMenu] && renderIconGroup(iconMap[activeMenu], iconMap[activeMenu].length, 20)}
+      </div>
+    </>
   );
 };
 
