@@ -656,14 +656,14 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
         <TabBar />
         <IconGroup />
         {activeIcon && iconMediaMap[activeIcon] && iconMediaMap[activeIcon].length > 0 && (
-          <div className="w-full overflow-x-auto flex flex-row gap-4 pb-4">
+          <div className={`w-full overflow-x-auto flex flex-row gap-4 pb-4 ${iconMediaMap[activeIcon].length === 1 ? 'justify-center' : ''}`}>
             {iconMediaMap[activeIcon].map((media, idx) => (
               <div key={idx} className="min-w-[280px] max-w-xs rounded-2xl shadow-lg overflow-hidden bg-white/90">
                 <img src={media.src} alt={media.alt || ''} className="w-full h-[180px] object-cover rounded-2xl" />
                 <div className="p-4">
                   <p className="text-sm text-gray-700 mb-2">{media.description}</p>
                 </div>
-            </div>
+              </div>
             ))}
           </div>
         )}
