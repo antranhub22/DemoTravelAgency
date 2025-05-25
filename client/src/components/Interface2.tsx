@@ -130,38 +130,99 @@ const IconWithTooltip = ({ icon, tooltip }: { icon: JSX.Element, tooltip: string
 };
 // --- END COMPONENT ---
 
-// --- COMPONENT: KeywordsBlock ---
-const allKeywords = [
-  'Destination', 'Tour Name', 'Duration', 'Start Date', 'Pickup Location', 'Drop-off Location', 'Activities', 'Number of Participants', 'Guide Language', 'Price', 'Special Request',
-  'Departure City', 'Arrival City', 'Travel Date', 'Departure Time', 'Number of Tickets', 'Bus Type', 'Pickup Point', 'Drop-off Point', 'Luggage Info', 'Contact Number',
-  'Vehicle Type', 'Pickup Date', 'Return Date', 'Driver Included', 'Fuel Policy', 'Deposi Method',
-  'Currency Type', 'Amount', 'Exchange From', 'Exchange To', 'ID Required',
-  'Laundry Type', 'Pickup Time', 'Return Time', 'Weight Estimate', 'Special Item', 'Fragrance Option',
-  'Location', 'Check-in Date', 'Check-out Date', 'Number of Guests', 'Room Type', 'Facilities Needed', 'Host Language', 'Pet Friendly', 'Smoking Allowed',
-  'Room Number', 'Guest Name', 'Service Time', 'Food Order', 'Dietary Preference', 'Allergen Info', 'Quantity',
-  'Cleaning Time', 'Linen/Towel Request', 'Extra Amenities', 'Maintenance Issue',
-  'Interest Type', 'Travel Time', 'Weather Concern', 'Transport Needed', 'Language Preference', 'Activity Level',
-  'Restaurant Booking', 'Spa/Wellness Time', 'Taxi / Transfer', 'Wake-up Call', 'Lost & Found',
-  'Issue Type', 'Time of Incident', 'Desired Resolution'
+// --- COMPONENT: ServiceLabels ---
+const serviceLabelOptions = [
+  { key: 'tours', label: 'Tourism & Tours' },
+  { key: 'bus', label: 'Bus Tickets' },
+  { key: 'vehicle', label: 'Vehicle Rental' },
+  { key: 'currency', label: 'Currency Exchange' },
+  { key: 'laundry', label: 'Laundry Service' },
+  { key: 'homestay', label: 'Homestay Service' },
+  { key: 'roomservice', label: 'Room Service' },
+  { key: 'housekeeping', label: 'Housekeeping' },
+  { key: 'localtourism', label: 'Local Tourism Info' },
+  { key: 'concierge', label: 'Concierge Support' },
+  { key: 'guestfeedback', label: 'Guest Feedback' },
 ];
-const uniqueKeywords = Array.from(new Set(allKeywords.filter(k => k !== 'Price'))); // Price sẽ được thêm riêng để đảm bảo chỉ 1 icon
-uniqueKeywords.push('Price');
-const chunkArray = <T,>(arr: T[], size: number): T[][] => arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr];
-const keywordRows = chunkArray<string>(uniqueKeywords, 10);
-const KeywordsBlock = () => (
-  <div className="flex flex-col gap-3 items-center">
-    {/* Service icons row */}
-    <div className="flex flex-row justify-center gap-6 mb-2">
-      {serviceIcons.map(s => <IconWithTooltip key={s.key} icon={s.icon} tooltip={s.tooltip} />)}
-    </div>
-    {/* Keyword icons rows */}
-    {keywordRows.map((row: string[], idx: number) => (
-      <div key={idx} className="flex flex-row justify-center gap-4">
-        {row.map((k: string) => keywordIconMap[k] && <IconWithTooltip key={k} icon={keywordIconMap[k]} tooltip={k} />)}
-      </div>
+const ServiceLabels = ({ active, setActive }: { active: string, setActive: (key: string) => void }) => (
+  <div className="w-full flex flex-row overflow-x-auto flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
+    style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth', scrollSnapType: 'x mandatory', minWidth: 0 }}
+  >
+    {serviceLabelOptions.map(opt => (
+      <button
+        key={opt.key}
+        onClick={() => setActive(opt.key)}
+        className={`flex-shrink-0 min-w-[160px] sm:min-w-[120px] px-4 py-2 rounded-full font-bold text-base sm:text-sm scroll-snap-align-start ${active === opt.key ? 'bg-amber-400 text-pink-900 shadow' : 'bg-transparent text-amber-300'}`}
+        style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.02em' }}
+      >
+        {opt.label}
+      </button>
     ))}
   </div>
 );
+// --- END COMPONENT ---
+
+// --- KEYWORDS GROUP MAPPING ---
+const serviceKeywordsMap: Record<string, string[]> = {
+  tours: [
+    'Destination', 'Tour Name', 'Duration', 'Start Date', 'Pickup Location', 'Drop-off Location', 'Activities', 'Number of Participants', 'Guide Language', 'Price', 'Special Request'
+  ],
+  bus: [
+    'Departure City', 'Arrival City', 'Travel Date', 'Departure Time', 'Number of Tickets', 'Bus Type', 'Pickup Point', 'Drop-off Point', 'Luggage Info', 'Contact Number', 'Price'
+  ],
+  vehicle: [
+    'Vehicle Type', 'Pickup Date', 'Return Date', 'Pickup Location', 'Drop-off Location', 'Driver Included', 'Price', 'Fuel Policy', 'Deposi Method'
+  ],
+  currency: [
+    'Currency Type', 'Amount', 'Exchange From', 'Exchange To', 'ID Required'
+  ],
+  laundry: [
+    'Laundry Type', 'Pickup Time', 'Return Time', 'Weight Estimate', 'Special Item', 'Fragrance Option', 'Price'
+  ],
+  homestay: [
+    'Location', 'Check-in Date', 'Check-out Date', 'Number of Guests', 'Room Type', 'Facilities Needed', 'Price', 'Host Language', 'Pet Friendly', 'Smoking Allowed'
+  ],
+  roomservice: [
+    'Room Number', 'Guest Name', 'Service Time', 'Food Order', 'Dietary Preference', 'Allergen Info', 'Quantity', 'Price', 'Special Request'
+  ],
+  housekeeping: [
+    'Room Number', 'Cleaning Time', 'Linen/Towel Request', 'Extra Amenities', 'Maintenance Issue'
+  ],
+  localtourism: [
+    'Interest Type', 'Destination', 'Travel Time', 'Weather Concern', 'Transport Needed', 'Language Preference', 'Activity Level'
+  ],
+  concierge: [
+    'Restaurant Booking', 'Spa/Wellness Time', 'Taxi / Transfer', 'Wake-up Call', 'Lost & Found'
+  ],
+  guestfeedback: [
+    'Issue Type', 'Time of Incident', 'Room Number', 'Desired Resolution'
+  ]
+};
+// --- END KEYWORDS GROUP MAPPING ---
+
+// --- COMPONENT: KeywordsBlock ---
+const KeywordsBlock = () => {
+  const [activeService, setActiveService] = useState('tours');
+  const keywords = serviceKeywordsMap[activeService] || [];
+  const chunkArray = <T,>(arr: T[], size: number): T[][] => arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr];
+  const keywordRows = chunkArray<string>(keywords, 10);
+  return (
+    <div className="flex flex-col gap-3 items-center w-full">
+      {/* Service labels row */}
+      <ServiceLabels active={activeService} setActive={setActiveService} />
+      {/* Service icons row (ẩn, đã thay bằng label) */}
+      {/* <div className="flex flex-row justify-center gap-6 mb-2">
+        {serviceIcons.map(s => <IconWithTooltip key={s.key} icon={s.icon} tooltip={s.tooltip} />)}
+      </div> */}
+      {/* Keyword icons rows */}
+      {keywordRows.map((row: string[], idx: number) => (
+        <div key={idx} className="flex flex-row justify-center gap-4">
+          {row.map((k: string) => keywordIconMap[k] && <IconWithTooltip key={k} icon={keywordIconMap[k]} tooltip={k} />)}
+        </div>
+      ))}
+    </div>
+  );
+};
 // --- END COMPONENT ---
 
 const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
@@ -425,16 +486,6 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
                   {formatDuration(localDuration)}
                 </div>
               </div>
-              {/* Nút xác nhận (mobile) */}
-              <Button
-                id="confirmButton"
-                onClick={handleNext}
-                variant="yellow"
-                className="flex items-center justify-center sm:hidden text-xs font-bold"
-                style={{ minHeight: 44, minWidth: 120, fontSize: 14, zIndex: 10 }}
-              >
-                <span className="material-icons text-lg mr-2">send</span>{t('confirm', language)}
-              </Button>
               {/* Nút MicLevel bên phải */}
               <button
                 className="flex items-center justify-center transition-colors"
@@ -563,6 +614,34 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
         <div className="w-full md:w-1/3 flex flex-col gap-4 p-2">
           {/* Khối Keywords */}
           <KeywordsBlock />
+          {/* Hai nút Confirm và Cancel dưới khối Keywords */}
+          <div className="flex flex-col gap-4 w-full md:w-auto mt-4">
+            <Button
+              id="endCallButton"
+              onClick={handleNext}
+              variant="yellow"
+              className="w-full md:w-auto flex items-center justify-center space-x-2 text-base sm:text-lg"
+              style={{ minHeight: 56, minWidth: 220, zIndex: 10 }}
+            >
+              <span className="material-icons">send</span>
+              <span className="whitespace-nowrap">{t('confirm_request', language as any)}</span>
+            </Button>
+            <button
+              id="cancelButtonDesktop"
+              onClick={handleCancel}
+              className="w-full md:w-auto bg-white hover:bg-blue-100 text-blue-900 font-semibold py-3 px-8 rounded-full shadow flex items-center justify-center space-x-2 transition-all duration-200 border-2 border-blue-200 text-base sm:text-lg active:scale-95 active:bg-blue-100"
+              style={{
+                fontFamily: 'inherit',
+                letterSpacing: 0.2,
+                minHeight: 56,
+                minWidth: 120,
+                touchAction: 'manipulation',
+                zIndex: 10
+              }}
+            >
+              <span className="material-icons text-lg mr-2">cancel</span>{t('cancel', language as any)}
+            </button>
+          </div>
           {/* Khối Summary */}
           <div className="bg-yellow-50 rounded-2xl shadow p-4 border border-yellow-200">
             <h3 className="font-bold text-yellow-800 text-lg mb-2">Summary</h3>
