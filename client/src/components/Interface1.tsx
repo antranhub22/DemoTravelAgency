@@ -18,8 +18,6 @@ import { Bus, Mountain, Landmark, Car, CarFront, Bike, Coins, Euro, DollarSign, 
 import InfographicSteps from './InfographicSteps';
 import '../styles/custom-scrollbar.css';
 import { createPortal } from 'react-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
 
 interface Interface1Props {
   isActive: boolean;
@@ -500,34 +498,33 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   ];
 
   const TabBar = () => (
-    <div className="w-full mb-4">
-      <Swiper
-        spaceBetween={8}
-        slidesPerView={3.2}
-        freeMode={true}
-        className="w-full"
-        style={{paddingBottom: 2}}
-        breakpoints={{
-          640: { slidesPerView: 4.5 },
-          1024: { slidesPerView: 6 },
-        }}
-      >
-        {tabOptions.map(opt => (
-          <SwiperSlide key={opt.key} style={{width: 'auto'}}>
-            <button
-              onClick={() => setActiveMenu(opt.key as MenuKey)}
-              className={`flex-shrink-0 min-w-[140px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
-                activeMenu === opt.key
-                  ? 'bg-amber-400 text-pink-900 shadow-lg scale-105'
-                  : 'bg-transparent text-amber-300 hover:bg-white/10'
-              }`}
-              style={{ touchAction: 'manipulation' }}
-            >
-              {opt.label}
-            </button>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+    <div
+      className="w-full overflow-x-auto whitespace-nowrap flex flex-row flex-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
+      style={{
+        WebkitOverflowScrolling: 'touch',
+        scrollBehavior: 'smooth',
+        scrollSnapType: 'x mandatory',
+        minWidth: 0,
+        maxWidth: '100%',
+        touchAction: 'pan-x',
+        overflowX: 'auto',
+        overflowY: 'hidden',
+      }}
+    >
+      {tabOptions.map(opt => (
+        <button
+          key={opt.key}
+          onClick={() => setActiveMenu(opt.key as MenuKey)}
+          className={`flex-shrink-0 min-w-[140px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
+            activeMenu === opt.key
+              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105'
+              : 'bg-transparent text-amber-300 hover:bg-white/10'
+          }`}
+          style={{ touchAction: 'manipulation' }}
+        >
+          {opt.label}
+        </button>
+      ))}
     </div>
   );
 
@@ -542,35 +539,39 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
       ...homestayIcons
     ];
     return (
-      <div className="w-full mb-4">
-        <Swiper
-          spaceBetween={8}
-          slidesPerView={6.2}
-          freeMode={true}
-          className="w-full"
-          style={{paddingBottom: 2}}
-          breakpoints={{
-            640: { slidesPerView: 10 },
-            1024: { slidesPerView: 15 },
-          }}
-        >
-          {allIcons.map(icon => (
-            <SwiperSlide key={icon} style={{width: 'auto'}}>
-              <div className="flex items-center justify-center h-12" style={{minWidth: 40}}>
-                {iconComponents[icon] ? (
-                  <IconWithTooltip
-                    iconName={icon}
-                    iconSize={24}
-                    isActive={icon === activeIcon}
-                    className="transition-transform duration-200 hover:scale-110"
-                  />
-                ) : (
-                  <span className="text-red-500">?</span>
-                )}
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+      <div
+        className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x relative items-center h-12 py-0 px-2 mb-4"
+        style={{
+          WebkitOverflowScrolling: 'touch',
+          scrollBehavior: 'smooth',
+          scrollSnapType: 'x mandatory',
+          minWidth: 0,
+          maxWidth: '100%',
+          zIndex: 10000,
+          position: 'relative',
+          overflowX: 'auto',
+          overflowY: 'visible',
+          touchAction: 'pan-x',
+        }}
+      >
+        {allIcons.map(icon => (
+          <div
+            key={icon}
+            className="flex-shrink-0 scroll-snap-align-start relative flex items-center justify-center"
+            style={{ overflow: 'visible', zIndex: 10001, height: '100%', minWidth: 40 }}
+          >
+            {iconComponents[icon] ? (
+              <IconWithTooltip
+                iconName={icon}
+                iconSize={24}
+                isActive={icon === activeIcon}
+                className="transition-transform duration-200 hover:scale-110"
+              />
+            ) : (
+              <span className="text-red-500">?</span>
+            )}
+          </div>
+        ))}
       </div>
     );
   };
