@@ -658,7 +658,10 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
         {activeIcon && iconMediaMap[activeIcon] && iconMediaMap[activeIcon].length > 0 && (
           <div className={`w-full overflow-x-auto flex flex-row gap-4 pb-4 ${iconMediaMap[activeIcon].length === 1 ? 'justify-center' : ''}`}>
             {iconMediaMap[activeIcon].map((media, idx) => (
-              <div key={idx} className="min-w-[420px] max-w-[480px] rounded-2xl shadow-lg overflow-hidden bg-white/90">
+              <div
+                key={idx}
+                className="reference-media-card min-w-[420px] max-w-[480px] rounded-2xl shadow-lg overflow-hidden bg-white/90"
+              >
                 <img src={media.src} alt={media.alt || ''} className="w-full h-[270px] object-cover rounded-2xl" />
                 <div className="p-4">
                   <p className="text-sm text-gray-700 mb-2">{media.description}</p>
@@ -681,6 +684,17 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
           </div>
         )}
       </div>
+      <style>{`
+        @media (max-width: 639px) {
+          .reference-media-card {
+            min-width: 260px !important;
+            max-width: 320px !important;
+          }
+          .reference-media-card img {
+            height: 160px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
