@@ -211,7 +211,15 @@ const keywordRelatedMap: Record<string, string[]> = {
   ],
   'Guest Complaint': [
     'No Wifi', 'Dirty Room', 'Noisy Neighbors', 'Broken TV', 'Smelly Bathroom'
-  ]
+  ],
+  'Departure City': [
+    'Ho Chi Minh City', 'Da Lat', 'Nha Trang', 'Can Tho', 'Vung Tau',
+    // Có thể thêm các địa danh khác nếu cần
+  ],
+  'Arrival City': [
+    'Ho Chi Minh City', 'Da Lat', 'Nha Trang', 'Can Tho', 'Vung Tau',
+    // Có thể thêm các địa danh khác nếu cần
+  ],
 };
 // --- END KEYWORD RELATED TERMS LIBRARY ---
 
