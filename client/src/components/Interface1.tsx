@@ -600,7 +600,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   // 4. CARD DỊCH VỤ: Style lại card/reference: ảnh lớn, overlay, tag, nút heart/arrow, slider ngang
   const ServiceCard = ({ refItem }: { refItem: ReferenceItem }) => (
     <div className="relative min-w-[280px] max-w-xs rounded-2xl shadow-lg overflow-hidden bg-white/90">
-      <img src={refItem.image ? refItem.image : hotelImage} alt={refItem.title || 'Service'} className="w-full h-40 object-cover" />
+      <img src={refItem.image ? refItem.image : hotelImage} alt={refItem.title || 'Service'} className="w-full h-[180px] object-cover rounded-2xl" />
       <div className="absolute top-2 left-2 flex gap-1">
         <span className="bg-amber-400 text-xs font-bold px-2 py-1 rounded-full">AI</span>
         <span className="bg-blue-400 text-xs font-bold px-2 py-1 rounded-full">3 Days</span>
@@ -659,7 +659,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
           <div className="w-full overflow-x-auto flex flex-row gap-4 pb-4">
             {iconMediaMap[activeIcon].map((media, idx) => (
               <div key={idx} className="min-w-[280px] max-w-xs rounded-2xl shadow-lg overflow-hidden bg-white/90">
-                <img src={media.src} alt={media.alt || ''} className="w-full h-40 object-cover" />
+                <img src={media.src} alt={media.alt || ''} className="w-full h-[180px] object-cover rounded-2xl" />
                 <div className="p-4">
                   <p className="text-sm text-gray-700 mb-2">{media.description}</p>
                 </div>

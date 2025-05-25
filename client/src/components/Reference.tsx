@@ -123,7 +123,7 @@ const Reference = ({ references, activeIconMedia }: ReferenceProps): JSX.Element
             <img
               src={getAssetUrl(reference.url)}
               alt={reference.title}
-              className="object-cover w-full h-full rounded-t-xl hover:opacity-80 transition cursor-zoom-in"
+              className="object-cover w-full h-[180px] rounded-2xl hover:opacity-80 cursor-zoom-in"
               onClick={e => { e.stopPropagation(); setLightboxImg(getAssetUrl(reference.url)); }}
               tabIndex={0}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { setLightboxImg(getAssetUrl(reference.url)); } }}
@@ -193,7 +193,7 @@ const Reference = ({ references, activeIconMedia }: ReferenceProps): JSX.Element
           <img
             src={activeIconMedia.src}
             alt={activeIconMedia.alt || 'Icon Media'}
-            className="rounded-xl max-h-[60vh] w-auto object-contain border-4 border-white shadow-2xl"
+            className="object-cover w-full h-[180px] rounded-2xl border-4 border-white shadow-2xl"
           />
         ) : activeIconMedia.type === 'video' ? (
           <video
@@ -227,7 +227,7 @@ const Reference = ({ references, activeIconMedia }: ReferenceProps): JSX.Element
             <img
               src={lightboxImg}
               alt="Phóng to ảnh reference"
-              className="rounded-xl max-h-[92vh] max-w-[96vw] w-auto object-contain border-4 border-white shadow-2xl"
+              className="object-cover w-full h-[92vh] max-w-[96vw] rounded-2xl border-4 border-white shadow-2xl"
               onClick={e => e.stopPropagation()}
             />
           </div>
@@ -369,7 +369,12 @@ export const ReferenceMedia = ({ media }: { media: IconMedia }) => {
         onClick={() => setZoomed(true)}
         title="Click to zoom"
       >
-        <img src={media.src} alt={media.alt || ''} className="rounded-xl object-cover mx-auto" style={{width: 320, height: 220}} />
+        <img
+          src={media.src}
+          alt={media.alt || ''}
+          className="object-cover w-full h-[180px] rounded-2xl"
+          style={{ width: 320, height: 180 }}
+        />
       </div>
       {/* Description luôn hiển thị bên dưới, auto nới rộng, không giới hạn chiều cao */}
       {media.description && (
@@ -410,7 +415,12 @@ export const ReferenceMedia = ({ media }: { media: IconMedia }) => {
             >
               <span className="material-icons text-2xl">close</span>
             </button>
-            <img src={media.src} alt={media.alt || ''} className="rounded-xl object-cover mx-auto" style={{width: 320, height: 220}} />
+            <img
+              src={media.src}
+              alt={media.alt || ''}
+              className="object-cover w-full h-[180px] rounded-2xl"
+              style={{ width: 320, height: 180 }}
+            />
           </div>
         </div>
       )}
@@ -435,7 +445,12 @@ export const ReferenceSlider = ({ mediaList, activeIdx, onChange, side }: { medi
       {mediaList.map((media, idx) => (
         <SwiperSlide key={idx}>
           <div className="flex flex-col items-center">
-            <img src={media.src} alt={media.alt || ''} className="rounded-xl object-cover mx-auto" style={{width: 320, height: 220}} />
+            <img
+              src={media.src}
+              alt={media.alt || ''}
+              className="object-cover w-full h-[180px] rounded-2xl"
+              style={{ width: 320, height: 180 }}
+            />
             {media.description && (
               <div
                 className="mt-3 w-full px-2"
