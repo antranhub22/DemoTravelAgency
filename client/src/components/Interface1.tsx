@@ -479,13 +479,17 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   ];
 
   const TabBar = () => (
-    <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
-      style={{ 
-        WebkitOverflowScrolling: 'touch', 
-        scrollBehavior: 'smooth', 
+    <div
+      className="w-full overflow-x-auto whitespace-nowrap flex flex-row flex-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
+      style={{
+        WebkitOverflowScrolling: 'touch',
+        scrollBehavior: 'smooth',
         scrollSnapType: 'x mandatory',
         minWidth: 0,
-        maxWidth: '100%'
+        maxWidth: '100%',
+        touchAction: 'pan-x',
+        overflowX: 'auto',
+        overflowY: 'hidden',
       }}
     >
       {tabOptions.map(opt => (
@@ -493,10 +497,11 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
           key={opt.key}
           onClick={() => setActiveMenu(opt.key as MenuKey)}
           className={`flex-shrink-0 min-w-[160px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
-            activeMenu === opt.key 
-              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105' 
+            activeMenu === opt.key
+              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105'
               : 'bg-transparent text-amber-300 hover:bg-white/10'
           }`}
+          style={{ touchAction: 'manipulation' }}
         >
           {opt.label}
         </button>
@@ -506,7 +511,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // 3. ICON GROUP: Chuyển thành slider ngang chứa tất cả icons
   const IconGroup = () => {
-    // Tạo mảng chứa tất cả icons
     const allIcons = [
       ...travelTourIcons,
       ...busTicketIcons,
@@ -517,24 +521,31 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     ];
 
     return (
-      <div className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x relative items-center h-12 py-0 px-2"
-        style={{ 
-          WebkitOverflowScrolling: 'touch', 
-          scrollBehavior: 'smooth', 
+      <div
+        className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x relative items-center h-12 py-0 px-2"
+        style={{
+          WebkitOverflowScrolling: 'touch',
+          scrollBehavior: 'smooth',
           scrollSnapType: 'x mandatory',
           minWidth: 0,
           maxWidth: '100%',
           zIndex: 10000,
           position: 'relative',
-          overflow: 'visible',
+          overflowX: 'auto',
+          overflowY: 'visible',
+          touchAction: 'pan-x',
         }}
       >
         {allIcons.map(icon => (
-          <div key={icon} className="flex-shrink-0 scroll-snap-align-start relative flex items-center justify-center" style={{overflow: 'visible', zIndex: 10001, height: '100%'}}>
+          <div
+            key={icon}
+            className="flex-shrink-0 scroll-snap-align-start relative flex items-center justify-center"
+            style={{ overflow: 'visible', zIndex: 10001, height: '100%', minWidth: 40 }}
+          >
             {iconComponents[icon] ? (
-              <IconWithTooltip 
-                iconName={icon} 
-                iconSize={24} 
+              <IconWithTooltip
+                iconName={icon}
+                iconSize={24}
                 isActive={icon === activeIcon}
                 className="transition-transform duration-200 hover:scale-110"
               />
