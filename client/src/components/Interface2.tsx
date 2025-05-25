@@ -216,12 +216,25 @@ const keywordRelatedMap: Record<string, string[]> = {
 // --- END KEYWORD RELATED TERMS LIBRARY ---
 
 // --- COMPONENT: IconWithTooltip ---
-const IconWithTooltip = ({ icon, tooltip }: { icon: JSX.Element, tooltip: string }) => {
+interface IconWithTooltipProps {
+  icon: JSX.Element;
+  tooltip: string;
+  forceShowTooltip?: boolean;
+}
+const IconWithTooltip = ({ icon, tooltip, forceShowTooltip = false }: IconWithTooltipProps) => {
   const [show, setShow] = useState(false);
+  useEffect(() => {
+    if (forceShowTooltip) setShow(true);
+    else setShow(false);
+  }, [forceShowTooltip]);
   return (
-    <div className="relative flex flex-col items-center justify-center cursor-pointer group" onClick={() => setShow(!show)} onMouseLeave={() => setShow(false)}>
+    <div
+      className="relative flex flex-col items-center justify-center cursor-pointer group"
+      onClick={() => setShow(!forceShowTooltip && !show)}
+      onMouseLeave={() => { if (!forceShowTooltip) setShow(false); }}
+    >
       {icon}
-      {show && (
+      {(show || forceShowTooltip) && (
         <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-white text-gray-900 text-xs rounded shadow-lg whitespace-nowrap font-semibold border border-gray-200">
           {tooltip}
         </div>
@@ -397,7 +410,8 @@ const KeywordsBlock = () => {
                       ? '#FFC94A'
                       : '#FFFFFF'
                 })} 
-                tooltip={k} 
+                tooltip={k}
+                forceShowTooltip={activeKeywords.includes(k)}
               />
             </span>
           ))}
