@@ -114,14 +114,6 @@ const keywordIconMap: Record<string, JSX.Element> = {
 };
 // --- END KEYWORDS ICONS MAPPING ---
 
-// --- KEYWORD RELATED TERMS LIBRARY ---
-const [keywordRelatedMap, setKeywordRelatedMap] = useState<Record<string, string[]>>({});
-useEffect(() => {
-  fetch('/keywordRelatedMap.json')
-    .then(res => res.json())
-    .then(data => setKeywordRelatedMap(data));
-}, []);
-
 // --- COMPONENT: IconWithTooltip ---
 interface IconWithTooltipProps {
   icon: JSX.Element;
@@ -260,6 +252,14 @@ const KeywordsBlock = () => {
   const [activeServices, setActiveServices] = useState<string[]>([]);
   const { transcripts } = useAssistant();
 
+  // Di chuyển hook vào trong component
+  const [keywordRelatedMap, setKeywordRelatedMap] = useState<Record<string, string[]>>({});
+  useEffect(() => {
+    fetch('/keywordRelatedMap.json')
+      .then(res => res.json())
+      .then(data => setKeywordRelatedMap(data));
+  }, []);
+
   useEffect(() => {
     const normText = transcripts.map(m => m.content.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ')).join(' ');
     // Đếm số lần xuất hiện của từng service
@@ -289,7 +289,7 @@ const KeywordsBlock = () => {
       });
     });
     setActiveKeywords(matched);
-  }, [transcripts]);
+  }, [transcripts, keywordRelatedMap]);
 
   return (
     <div className="flex flex-col gap-3 items-center w-full">
