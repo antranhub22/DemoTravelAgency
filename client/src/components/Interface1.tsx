@@ -1,5 +1,5 @@
 // Interface1 component - latest version v1.0.1 
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAssistant } from '@/context/AssistantContext';
 import hotelImage from '../assets/hotel-exterior.jpeg';
 import { t, Lang } from '../i18n';
@@ -60,9 +60,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // State cho dropdown tab trên mobile
   const [showTabDropdown, setShowTabDropdown] = useState(false);
-
-  // Thêm state để kiểm soát hiển thị tooltip đồng loạt
-  const [showGroupTooltip, setShowGroupTooltip] = useState<string | null>(null);
 
   const iconColor = '#FFC94A'; // Màu vàng giống tiêu đề
   const iconComponents: Record<string, JSX.Element> = {
@@ -380,7 +377,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   };
 
   // Component hiển thị icon với tooltip
-  const IconWithTooltip = ({ iconName, className, iconSize = 32, position = 'center', isActive = false, isShowTooltip = false }: { iconName: string, className?: string, iconSize?: number, position?: 'left' | 'center' | 'right', isActive?: boolean, isShowTooltip?: boolean }) => {
+  const IconWithTooltip = ({ iconName, className, iconSize = 32, position = 'center', isActive = false }: { iconName: string, className?: string, iconSize?: number, position?: 'left' | 'center' | 'right', isActive?: boolean }) => {
     let tooltipText = iconDisplayNamesEn[iconName] || iconName;
     if (lang === 'fr') tooltipText = iconDisplayNamesFr[iconName] || tooltipText;
     else if (lang === 'ru') tooltipText = iconDisplayNamesRu[iconName] || tooltipText;
@@ -402,14 +399,14 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
       >
         {React.cloneElement(iconComponents[iconName] || <span className="text-red-500">?</span>, { size: iconSize, color: isActive ? '#8B1A47' : iconColor })}
       </span>
-      {(activeTooltip === iconName || isShowTooltip) && (
+      {activeTooltip === iconName && (
           isMobile ? (
-            <div className={`absolute top-full ${position === 'left' ? 'left-0' : position === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'} mt-2 w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-[9999] pointer-events-auto text-center break-words`} style={{pointerEvents:'auto'}}> 
+            <div className={`absolute top-full ${position === 'left' ? 'left-0' : position === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'} mt-2 w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-50 pointer-events-none text-center break-words`}> 
               {tooltipText}
               <div className={`absolute w-2 h-2 bg-white/90 transform rotate-45 ${position === 'left' ? 'left-4' : position === 'right' ? 'right-4' : 'left-1/2 -translate-x-1/2'} -top-1`}></div>
             </div>
           ) : (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max max-w-[180px] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-[9999] pointer-events-auto text-center" style={{pointerEvents:'auto'}}>
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max max-w-[180px] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-50 pointer-events-none text-center">
               {tooltipText}
           <div className="absolute w-2 h-2 bg-white/90 transform rotate-45 left-1/2 -translate-x-1/2 top-full -mt-1"></div>
         </div>
@@ -468,6 +465,45 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   const Header = () => (
     <div className="flex items-center justify-between w-full mb-4">
       <style>{shimmerAnimation}</style>
+      {/* Dropdown tab nằm giữa trên mobile */}
+      <div className="flex-1 flex justify-center items-center">
+        <div className="block sm:hidden w-full max-w-xs mx-auto">
+          <div className="relative w-full">
+            <button
+              className="w-full px-4 py-3 rounded-2xl bg-white/30 backdrop-blur-md text-amber-100 font-bold text-base flex items-center justify-between shadow-lg border border-white/30 focus:outline-none focus:ring-2 focus:ring-amber-300 transition-all duration-200"
+              style={{ boxShadow: '0 4px 24px 0 rgba(139,26,71,0.10)', fontFamily: 'Poppins, sans-serif', letterSpacing: '0.02em' }}
+              onClick={() => setShowTabDropdown(v => !v)}
+            >
+              <span className="truncate text-lg font-semibold text-amber-100 drop-shadow-sm" style={{textShadow:'0 1px 6px rgba(139,26,71,0.18)'}}>
+                {tabOptions.find(opt => opt.key === activeMenu)?.label}
+              </span>
+              <span className="material-icons ml-2 text-amber-200 transition-transform duration-200" style={{transform: showTabDropdown ? 'rotate(180deg)' : 'rotate(0deg)'}}>expand_more</span>
+            </button>
+            {showTabDropdown && (
+              <div className="absolute left-0 right-0 mt-2 bg-white/80 bg-gradient-to-br from-[#fff7] to-[#ffe9b3cc] rounded-2xl shadow-2xl z-50 border border-amber-100 overflow-hidden animate-fade-in backdrop-blur-md"
+                style={{animation: 'dropdown-fade-in 0.22s cubic-bezier(.4,0,.2,1)'}}
+              >
+                {tabOptions.map(opt => (
+                  <button
+                    key={opt.key}
+                    className={`w-full text-left px-5 py-3 text-base font-semibold transition-all duration-150 ${activeMenu === opt.key ? 'bg-amber-100/80 text-pink-900' : 'text-amber-900 hover:bg-amber-50/80 hover:text-pink-900'}`}
+                    style={{fontFamily:'Poppins, sans-serif', letterSpacing:'0.01em'}}
+                    onClick={() => { setActiveMenu(opt.key as MenuKey); setShowTabDropdown(false); }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            <style>{`
+              @keyframes dropdown-fade-in {
+                0% { opacity: 0; transform: translateY(-12px) scale(0.98); }
+                100% { opacity: 1; transform: translateY(0) scale(1); }
+              }
+            `}</style>
+          </div>
+        </div>
+      </div>
     </div>
   );
 
@@ -481,181 +517,68 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     { key: 'homestay', label: t('homestay_service', lang) },
   ];
 
-  // Custom Slider cho TabBar
-  const TabBar = () => {
-    const tabBarRef = useRef<HTMLDivElement>(null);
-    const scrollLeftRef = useRef(0);
-    const scrollByAmount = 180; // px
-
-    // Lưu scrollLeft trước khi re-render
-    useLayoutEffect(() => {
-      if (tabBarRef.current) {
-        tabBarRef.current.scrollLeft = scrollLeftRef.current;
-      }
-    });
-
-    const handleScroll = () => {
-      if (tabBarRef.current) {
-        scrollLeftRef.current = tabBarRef.current.scrollLeft;
-      }
-    };
-
-    const handleScrollLeft = () => {
-      if (tabBarRef.current) {
-        tabBarRef.current.scrollBy({ left: -scrollByAmount, behavior: 'smooth' });
-        setTimeout(handleScroll, 300);
-      }
-    };
-    const handleScrollRight = () => {
-      if (tabBarRef.current) {
-        tabBarRef.current.scrollBy({ left: scrollByAmount, behavior: 'smooth' });
-        setTimeout(handleScroll, 300);
-      }
-    };
-
-    return (
-      <div className="relative w-full flex items-center mb-4">
+  const TabBar = () => (
+    <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
+      style={{ 
+        WebkitOverflowScrolling: 'touch', 
+        scrollBehavior: 'smooth', 
+        scrollSnapType: 'x mandatory',
+        minWidth: 0,
+        maxWidth: '100%'
+      }}
+    >
+      {tabOptions.map(opt => (
         <button
-          className="absolute left-0 z-[10000] h-full px-2 bg-gradient-to-r from-white/60 to-transparent text-amber-700 font-bold text-2xl rounded-l-lg focus:outline-none"
-          style={{top:0, bottom:0}}
-          onClick={handleScrollLeft}
-          aria-label="Scroll left"
-          type="button"
+          key={opt.key}
+          onClick={() => setActiveMenu(opt.key as MenuKey)}
+          className={`flex-shrink-0 min-w-[160px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
+            activeMenu === opt.key 
+              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105' 
+              : 'bg-transparent text-amber-300 hover:bg-white/10'
+          }`}
         >
-          &#8592;
+          {opt.label}
         </button>
-        <div
-          ref={tabBarRef}
-          onScroll={handleScroll}
-          className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar scrollbar-hide scroll-snap-x"
-          style={{
-            WebkitOverflowScrolling: 'touch',
-            scrollBehavior: 'smooth',
-            scrollSnapType: 'x mandatory',
-            minWidth: 0,
-            touchAction: 'pan-x',
-          }}
-        >
-          {tabOptions.map(opt => (
-            <button
-              key={opt.key}
-              onClick={() => {
-                setActiveMenu(opt.key as MenuKey);
-                setShowGroupTooltip(opt.key);
-                setTimeout(() => setShowGroupTooltip(null), 3000);
-              }}
-              className={`flex-shrink-0 min-w-max px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
-                activeMenu === opt.key
-                  ? 'bg-amber-400 text-pink-900 shadow-lg scale-105'
-                  : 'bg-transparent text-amber-300 hover:bg-white/10'
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-        <button
-          className="absolute right-0 z-[10000] h-full px-2 bg-gradient-to-l from-white/60 to-transparent text-amber-700 font-bold text-2xl rounded-r-lg focus:outline-none"
-          style={{top:0, bottom:0}}
-          onClick={handleScrollRight}
-          aria-label="Scroll right"
-          type="button"
-        >
-          &#8594;
-        </button>
-      </div>
-    );
-  };
+      ))}
+    </div>
+  );
 
   // 3. ICON GROUP: Chuyển thành slider ngang chứa tất cả icons
   const IconGroup = () => {
-    const iconBarRef = useRef<HTMLDivElement>(null);
-    const scrollLeftRef = useRef(0);
-    const scrollByAmount = 120; // px
+    // Tạo mảng chứa tất cả icons
     const allIcons = [
       ...travelTourIcons,
       ...busTicketIcons,
       ...vehicleRentalIcons,
       ...currencyIcons,
       ...laundryIcons,
-      ...homestayIcons,
+      ...homestayIcons
     ];
-    const groupIcons = iconMap[activeMenu];
-
-    // Lưu scrollLeft trước khi re-render
-    useLayoutEffect(() => {
-      if (iconBarRef.current) {
-        iconBarRef.current.scrollLeft = scrollLeftRef.current;
-      }
-    });
-
-    const handleScroll = () => {
-      if (iconBarRef.current) {
-        scrollLeftRef.current = iconBarRef.current.scrollLeft;
-      }
-    };
-
-    const handleScrollLeft = () => {
-      if (iconBarRef.current) {
-        iconBarRef.current.scrollBy({ left: -scrollByAmount, behavior: 'smooth' });
-        setTimeout(handleScroll, 300);
-      }
-    };
-    const handleScrollRight = () => {
-      if (iconBarRef.current) {
-        iconBarRef.current.scrollBy({ left: scrollByAmount, behavior: 'smooth' });
-        setTimeout(handleScroll, 300);
-      }
-    };
 
     return (
-      <div className="relative w-full flex items-center mb-2">
-        <button
-          className="absolute left-0 z-[10000] h-full px-2 bg-gradient-to-r from-white/60 to-transparent text-amber-700 font-bold text-2xl rounded-l-lg focus:outline-none"
-          style={{top:0, bottom:0}}
-          onClick={handleScrollLeft}
-          aria-label="Scroll left"
-          type="button"
-        >
-          &#8592;
-        </button>
-        <div
-          ref={iconBarRef}
-          onScroll={handleScroll}
-          className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x"
-          style={{
-            WebkitOverflowScrolling: 'touch',
-            scrollBehavior: 'smooth',
-            scrollSnapType: 'x mandatory',
-            minWidth: 0,
-            touchAction: 'pan-x',
-          }}
-        >
-          {allIcons.map(icon => (
-            <div key={icon} className="flex-shrink-0 min-w-max scroll-snap-align-start">
-              {iconComponents[icon] ? (
-                <IconWithTooltip
-                  iconName={icon}
-                  iconSize={24}
-                  isActive={icon === activeIcon}
-                  isShowTooltip={showGroupTooltip === activeMenu && groupIcons.includes(icon)}
-                  className="transition-transform duration-200 hover:scale-110"
-                />
-              ) : (
-                <span className="text-red-500">?</span>
-              )}
-            </div>
-          ))}
-        </div>
-        <button
-          className="absolute right-0 z-[10000] h-full px-2 bg-gradient-to-l from-white/60 to-transparent text-amber-700 font-bold text-2xl rounded-r-lg focus:outline-none"
-          style={{top:0, bottom:0}}
-          onClick={handleScrollRight}
-          aria-label="Scroll right"
-          type="button"
-        >
-          &#8594;
-        </button>
+      <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x"
+        style={{ 
+          WebkitOverflowScrolling: 'touch', 
+          scrollBehavior: 'smooth', 
+          scrollSnapType: 'x mandatory',
+          minWidth: 0,
+          maxWidth: '100%'
+        }}
+      >
+        {allIcons.map(icon => (
+          <div key={icon} className="flex-shrink-0 scroll-snap-align-start">
+            {iconComponents[icon] ? (
+              <IconWithTooltip 
+                iconName={icon} 
+                iconSize={24} 
+                isActive={icon === activeIcon}
+                className="transition-transform duration-200 hover:scale-110"
+              />
+            ) : (
+              <span className="text-red-500">?</span>
+            )}
+          </div>
+        ))}
       </div>
     );
   };
