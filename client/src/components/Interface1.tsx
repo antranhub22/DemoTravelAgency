@@ -664,7 +664,21 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
               >
                 <img src={media.src} alt={media.alt || ''} className="w-full h-[270px] object-cover rounded-2xl" />
                 <div className="p-4">
-                  <p className="text-sm text-gray-700 mb-2">{media.description}</p>
+                  <div className="text-sm text-gray-700 mb-2">
+                    {media.description && media.description.split('\n').map((line, idx) => {
+                      // Regex: tìm **label**: value
+                      const match = line.match(/^\*\*(.+?)\*\*:(.*)$/);
+                      if (match) {
+                        return (
+                          <div key={idx} className="mb-0.5">
+                            <strong className="text-amber-700">{match[1]}:</strong>
+                            <span className="font-medium text-gray-900">{match[2]}</span>
+                          </div>
+                        );
+                      }
+                      return <div key={idx}>{line}</div>;
+                    })}
+                  </div>
                 </div>
               </div>
             ))}
