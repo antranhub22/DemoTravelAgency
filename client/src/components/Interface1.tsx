@@ -1,5 +1,5 @@
 // Interface1 component - latest version v1.0.1 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAssistant } from '@/context/AssistantContext';
 import hotelImage from '../assets/hotel-exterior.jpeg';
 import { t, Lang } from '../i18n';
@@ -60,9 +60,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // State cho dropdown tab trên mobile
   const [showTabDropdown, setShowTabDropdown] = useState(false);
-
-  // Thêm state để kiểm soát hiển thị tooltip đồng loạt
-  const [showGroupTooltip, setShowGroupTooltip] = useState<string | null>(null);
 
   const iconColor = '#FFC94A'; // Màu vàng giống tiêu đề
   const iconComponents: Record<string, JSX.Element> = {
@@ -380,7 +377,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   };
 
   // Component hiển thị icon với tooltip
-  const IconWithTooltip = ({ iconName, className, iconSize = 32, position = 'center', isActive = false, isShowTooltip = false }: { iconName: string, className?: string, iconSize?: number, position?: 'left' | 'center' | 'right', isActive?: boolean, isShowTooltip?: boolean }) => {
+  const IconWithTooltip = ({ iconName, className, iconSize = 32, position = 'center', isActive = false }: { iconName: string, className?: string, iconSize?: number, position?: 'left' | 'center' | 'right', isActive?: boolean }) => {
     let tooltipText = iconDisplayNamesEn[iconName] || iconName;
     if (lang === 'fr') tooltipText = iconDisplayNamesFr[iconName] || tooltipText;
     else if (lang === 'ru') tooltipText = iconDisplayNamesRu[iconName] || tooltipText;
@@ -402,14 +399,14 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
       >
         {React.cloneElement(iconComponents[iconName] || <span className="text-red-500">?</span>, { size: iconSize, color: isActive ? '#8B1A47' : iconColor })}
       </span>
-      {(activeTooltip === iconName || isShowTooltip) && (
+      {activeTooltip === iconName && (
           isMobile ? (
-            <div className={`absolute top-full ${position === 'left' ? 'left-0' : position === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'} mt-2 w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-[9999] pointer-events-auto text-center break-words`} style={{pointerEvents:'auto'}}> 
+            <div className={`absolute top-full ${position === 'left' ? 'left-0' : position === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'} mt-2 w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-50 pointer-events-none text-center break-words`}> 
               {tooltipText}
               <div className={`absolute w-2 h-2 bg-white/90 transform rotate-45 ${position === 'left' ? 'left-4' : position === 'right' ? 'right-4' : 'left-1/2 -translate-x-1/2'} -top-1`}></div>
             </div>
           ) : (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max max-w-[180px] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-[9999] pointer-events-auto text-center" style={{pointerEvents:'auto'}}>
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max max-w-[180px] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-50 pointer-events-none text-center">
               {tooltipText}
           <div className="absolute w-2 h-2 bg-white/90 transform rotate-45 left-1/2 -translate-x-1/2 top-full -mt-1"></div>
         </div>
@@ -481,141 +478,68 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     { key: 'homestay', label: t('homestay_service', lang) },
   ];
 
-  // Custom Slider cho TabBar
-  const TabBar = () => {
-    const tabBarRef = useRef<HTMLDivElement>(null);
-    const scrollByAmount = 180; // px
-
-    const handleScrollLeft = () => {
-      if (tabBarRef.current) tabBarRef.current.scrollBy({ left: -scrollByAmount, behavior: 'smooth' });
-    };
-    const handleScrollRight = () => {
-      if (tabBarRef.current) tabBarRef.current.scrollBy({ left: scrollByAmount, behavior: 'smooth' });
-    };
-
-    return (
-      <div className="relative w-full flex items-center mb-4">
+  const TabBar = () => (
+    <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
+      style={{ 
+        WebkitOverflowScrolling: 'touch', 
+        scrollBehavior: 'smooth', 
+        scrollSnapType: 'x mandatory',
+        minWidth: 0,
+        maxWidth: '100%'
+      }}
+    >
+      {tabOptions.map(opt => (
         <button
-          className="absolute left-0 z-[10000] h-full px-2 bg-gradient-to-r from-white/60 to-transparent text-amber-700 font-bold text-2xl rounded-l-lg focus:outline-none"
-          style={{top:0, bottom:0}}
-          onClick={handleScrollLeft}
-          aria-label="Scroll left"
-          type="button"
+          key={opt.key}
+          onClick={() => setActiveMenu(opt.key as MenuKey)}
+          className={`flex-shrink-0 min-w-[160px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
+            activeMenu === opt.key 
+              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105' 
+              : 'bg-transparent text-amber-300 hover:bg-white/10'
+          }`}
         >
-          &#8592;
+          {opt.label}
         </button>
-        <div
-          ref={tabBarRef}
-          className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar scrollbar-hide scroll-snap-x"
-          style={{
-            WebkitOverflowScrolling: 'touch',
-            scrollBehavior: 'smooth',
-            scrollSnapType: 'x mandatory',
-            minWidth: 0,
-            maxWidth: '100%',
-            touchAction: 'pan-x',
-          }}
-        >
-          {tabOptions.map(opt => (
-            <button
-              key={opt.key}
-              onClick={() => {
-                setActiveMenu(opt.key as MenuKey);
-                setShowGroupTooltip(opt.key);
-                setTimeout(() => setShowGroupTooltip(null), 3000);
-              }}
-              className={`flex-shrink-0 min-w-max px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
-                activeMenu === opt.key
-                  ? 'bg-amber-400 text-pink-900 shadow-lg scale-105'
-                  : 'bg-transparent text-amber-300 hover:bg-white/10'
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-        <button
-          className="absolute right-0 z-[10000] h-full px-2 bg-gradient-to-l from-white/60 to-transparent text-amber-700 font-bold text-2xl rounded-r-lg focus:outline-none"
-          style={{top:0, bottom:0}}
-          onClick={handleScrollRight}
-          aria-label="Scroll right"
-          type="button"
-        >
-          &#8594;
-        </button>
-      </div>
-    );
-  };
+      ))}
+    </div>
+  );
 
   // 3. ICON GROUP: Chuyển thành slider ngang chứa tất cả icons
   const IconGroup = () => {
-    const iconBarRef = useRef<HTMLDivElement>(null);
-    const scrollByAmount = 120; // px
+    // Tạo mảng chứa tất cả icons
     const allIcons = [
       ...travelTourIcons,
       ...busTicketIcons,
       ...vehicleRentalIcons,
       ...currencyIcons,
       ...laundryIcons,
-      ...homestayIcons,
+      ...homestayIcons
     ];
-    const groupIcons = iconMap[activeMenu];
-
-    const handleScrollLeft = () => {
-      if (iconBarRef.current) iconBarRef.current.scrollBy({ left: -scrollByAmount, behavior: 'smooth' });
-    };
-    const handleScrollRight = () => {
-      if (iconBarRef.current) iconBarRef.current.scrollBy({ left: scrollByAmount, behavior: 'smooth' });
-    };
 
     return (
-      <div className="relative w-full flex items-center mb-2">
-        <button
-          className="absolute left-0 z-[10000] h-full px-2 bg-gradient-to-r from-white/60 to-transparent text-amber-700 font-bold text-2xl rounded-l-lg focus:outline-none"
-          style={{top:0, bottom:0}}
-          onClick={handleScrollLeft}
-          aria-label="Scroll left"
-          type="button"
-        >
-          &#8592;
-        </button>
-        <div
-          ref={iconBarRef}
-          className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x"
-          style={{
-            WebkitOverflowScrolling: 'touch',
-            scrollBehavior: 'smooth',
-            scrollSnapType: 'x mandatory',
-            minWidth: 0,
-            maxWidth: '100%',
-            touchAction: 'pan-x',
-          }}
-        >
-          {allIcons.map(icon => (
-            <div key={icon} className="flex-shrink-0 min-w-max scroll-snap-align-start">
-              {iconComponents[icon] ? (
-                <IconWithTooltip
-                  iconName={icon}
-                  iconSize={24}
-                  isActive={icon === activeIcon}
-                  isShowTooltip={showGroupTooltip === activeMenu && groupIcons.includes(icon)}
-                  className="transition-transform duration-200 hover:scale-110"
-                />
-              ) : (
-                <span className="text-red-500">?</span>
-              )}
-            </div>
-          ))}
-        </div>
-        <button
-          className="absolute right-0 z-[10000] h-full px-2 bg-gradient-to-l from-white/60 to-transparent text-amber-700 font-bold text-2xl rounded-r-lg focus:outline-none"
-          style={{top:0, bottom:0}}
-          onClick={handleScrollRight}
-          aria-label="Scroll right"
-          type="button"
-        >
-          &#8594;
-        </button>
+      <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x"
+        style={{ 
+          WebkitOverflowScrolling: 'touch', 
+          scrollBehavior: 'smooth', 
+          scrollSnapType: 'x mandatory',
+          minWidth: 0,
+          maxWidth: '100%'
+        }}
+      >
+        {allIcons.map(icon => (
+          <div key={icon} className="flex-shrink-0 scroll-snap-align-start">
+            {iconComponents[icon] ? (
+              <IconWithTooltip 
+                iconName={icon} 
+                iconSize={24} 
+                isActive={icon === activeIcon}
+                className="transition-transform duration-200 hover:scale-110"
+              />
+            ) : (
+              <span className="text-red-500">?</span>
+            )}
+          </div>
+        ))}
       </div>
     );
   };
