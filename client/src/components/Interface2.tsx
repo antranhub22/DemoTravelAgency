@@ -247,23 +247,51 @@ const serviceLabelOptions = [
 ];
 const chunkArray = <T,>(arr: T[], size: number): T[][] => arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr];
 const serviceLabelRows = chunkArray(serviceLabelOptions, 4); // 3 hàng, mỗi hàng 4,4,3
-const ServiceLabels = () => (
-  <div className="flex flex-col gap-2 w-full mb-2 items-center">
-    {serviceLabelRows.map((row, idx) => (
-      <div key={idx} className="flex flex-row justify-center gap-2 w-full max-w-4xl mx-auto">
-        {row.map(opt => (
-          <span
-            key={opt.key}
-            className="flex-shrink-0 min-w-[90px] sm:min-w-[80px] px-3 py-1.5 rounded-full font-bold text-sm sm:text-xs bg-amber-400 text-pink-900 shadow text-center"
-            style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.01em', display: 'inline-block' }}
-          >
-            {opt.label}
-          </span>
-        ))}
-      </div>
-    ))}
-  </div>
-);
+const ServiceLabels = () => {
+  const [activeService, setActiveService] = useState<string | null>(null);
+  const { transcripts } = useAssistant();
+
+  // Xác định service đang được đề cập
+  useEffect(() => {
+    const normText = transcripts.map(m => m.content.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ')).join(' ');
+    
+    // Tìm service được đề cập nhiều nhất
+    const serviceMentions = serviceLabelOptions.map(service => {
+      const label = service.label.toLowerCase();
+      const regex = new RegExp(`\\b${label.replace(/ /g, '\\s+')}\\b`, 'i');
+      const mentions = (normText.match(regex) || []).length;
+      return { key: service.key, mentions };
+    });
+
+    const mostMentioned = serviceMentions.reduce((max, curr) => 
+      curr.mentions > max.mentions ? curr : max
+    , { key: '', mentions: 0 });
+
+    setActiveService(mostMentioned.mentions > 0 ? mostMentioned.key : null);
+  }, [transcripts]);
+
+  return (
+    <div className="flex flex-col gap-2 w-full mb-2 items-center">
+      {serviceLabelRows.map((row, idx) => (
+        <div key={idx} className="flex flex-row justify-center gap-2 w-full max-w-4xl mx-auto">
+          {row.map(opt => (
+            <span
+              key={opt.key}
+              className={`flex-shrink-0 min-w-[90px] sm:min-w-[80px] px-3 py-1.5 rounded-full font-bold text-sm sm:text-xs shadow text-center transition-all duration-200 ${
+                activeService === opt.key 
+                  ? 'bg-amber-400 text-pink-900 scale-110 ring-2 ring-amber-300' 
+                  : 'bg-amber-400/60 text-pink-900/80'
+              }`}
+              style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.01em', display: 'inline-block' }}
+            >
+              {opt.label}
+            </span>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
 // --- END COMPONENT ---
 
 // --- KEYWORDS GROUP MAPPING ---
@@ -309,22 +337,47 @@ const allKeywords = Array.from(new Set(Object.values(serviceKeywordsMap).flat())
 const keywordRows = chunkArray<string>(allKeywords, 10);
 const KeywordsBlock = () => {
   const [activeKeywords, setActiveKeywords] = useState<string[]>([]);
+  const [activeService, setActiveService] = useState<string | null>(null);
   const { transcripts } = useAssistant();
-  // Highlight logic: update activeKeywords when transcripts changes
+
+  // Xác định service và keywords đang được đề cập
   useEffect(() => {
-    const allText = transcripts.map(m => m.content.toLowerCase()).join(' ');
-    const matched: string[] = allKeywords.filter(kw => {
-      // Lấy danh sách từ liên quan cho keyword này
-      const related = keywordRelatedMap[kw] || [];
-      // So khớp keyword gốc và tất cả từ liên quan
-      const allTerms = [kw, ...related];
-      return allTerms.some(term => {
-        const norm = term.toLowerCase().replace(/[^a-z0-9 ]/gi, '');
-        return norm && allText.includes(norm);
-      });
+    const normText = transcripts.map(m => m.content.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ')).join(' ');
+    
+    // 1. Xác định service đang được đề cập
+    const serviceMentions = serviceLabelOptions.map(service => {
+      const label = service.label.toLowerCase();
+      const regex = new RegExp(`\\b${label.replace(/ /g, '\\s+')}\\b`, 'i');
+      const mentions = (normText.match(regex) || []).length;
+      return { key: service.key, mentions };
     });
-    setActiveKeywords(matched);
+
+    const mostMentioned = serviceMentions.reduce((max, curr) => 
+      curr.mentions > max.mentions ? curr : max
+    , { key: '', mentions: 0 });
+
+    const currentService = mostMentioned.mentions > 0 ? mostMentioned.key : null;
+    setActiveService(currentService);
+
+    // 2. Chỉ highlight keywords thuộc service đang active
+    if (currentService) {
+      const serviceKeywords = serviceKeywordsMap[currentService] || [];
+      const matched: string[] = serviceKeywords.filter(kw => {
+        const related = keywordRelatedMap[kw] || [];
+        const allTerms = [kw, ...related].sort((a, b) => b.length - a.length);
+        return allTerms.some(term => {
+          const normTerm = term.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ').trim();
+          if (!normTerm) return false;
+          const regex = new RegExp(`\\b${normTerm.replace(/ /g, '\\s+')}\\b`, 'i');
+          return regex.test(normText);
+        });
+      });
+      setActiveKeywords(matched);
+    } else {
+      setActiveKeywords([]);
+    }
   }, [transcripts]);
+
   return (
     <div className="flex flex-col gap-3 items-center w-full">
       {/* Service labels 3 hàng trên cùng */}
@@ -333,8 +386,26 @@ const KeywordsBlock = () => {
       {keywordRows.map((row: string[], idx: number) => (
         <div key={idx} className="flex flex-row justify-center gap-4">
           {row.map((k: string) => keywordIconMap[k] && (
-            <span key={k} className={activeKeywords.includes(k) ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg scale-110 transition-all duration-200' : ''}>
-              <IconWithTooltip icon={React.cloneElement(keywordIconMap[k], { color: '#FFC94A' })} tooltip={k} />
+            <span 
+              key={k} 
+              className={`transition-all duration-200 ${
+                activeKeywords.includes(k) 
+                  ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg' 
+                  : activeService && serviceKeywordsMap[activeService]?.includes(k)
+                    ? 'opacity-100'
+                    : 'opacity-75'
+              }`}
+            >
+              <IconWithTooltip 
+                icon={React.cloneElement(keywordIconMap[k], { 
+                  color: activeKeywords.includes(k) 
+                    ? '#FFC94A' 
+                    : activeService && serviceKeywordsMap[activeService]?.includes(k)
+                      ? '#FFC94A'
+                      : '#FFFFFF'
+                })} 
+                tooltip={k} 
+              />
             </span>
           ))}
         </div>
@@ -492,7 +563,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
   const handleNext = useCallback(() => {
     // Nếu chưa có hội thoại thì không cho xác nhận
     if (!transcripts || transcripts.length === 0) {
-      alert(t('need_conversation', language));
+      alert(t('need_conversation', language as import('../i18n').Lang));
       return;
     }
     // Capture the current duration for the email
@@ -574,7 +645,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               {/* Nút Mute bên trái */}
               <button
                 className="flex items-center justify-center transition-colors"
-                title={isMuted ? t('unmute', language) : t('mute', language)}
+                title={isMuted ? t('unmute', language as import('../i18n').Lang) : t('mute', language as import('../i18n').Lang)}
                 onClick={toggleMute}
                 style={{fontSize: 22, padding: 0, background: 'none', border: 'none', color: '#d4af37', width: 28, height: 28}}
                 onMouseOver={e => (e.currentTarget.style.color = '#ffd700')}
@@ -597,7 +668,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
                   zIndex: 10
                 }}
               >
-                <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language)}
+                <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language as import('../i18n').Lang)}
               </button>
               {/* Duration ở giữa, luôn căn giữa */}
               <div className="flex-1 flex justify-center">
@@ -669,7 +740,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               <div className="w-full flex flex-col gap-1 pr-2" style={{overflowY: 'auto', maxHeight: '28vh'}}>
                 {conversationTurns.length === 0 && (
                   <div className="text-gray-400 text-base text-center select-none" style={{opacity: 0.7}}>
-                    {t('tap_to_speak', language)}
+                    {t('tap_to_speak', language as import('../i18n').Lang)}
                   </div>
                 )}
                 {[...conversationTurns].reverse().map((turn, turnIdx) => (
@@ -748,7 +819,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               style={{ minHeight: 56, minWidth: 220, zIndex: 10 }}
             >
               <span className="material-icons">send</span>
-              <span className="whitespace-nowrap">{t('confirm_request', language as any)}</span>
+              <span className="whitespace-nowrap">{t('confirm_request', language as import('../i18n').Lang)}</span>
             </Button>
             <button
               id="cancelButtonDesktop"
@@ -763,7 +834,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
                 zIndex: 10
               }}
             >
-              <span className="material-icons text-lg mr-2">cancel</span>{t('cancel', language as any)}
+              <span className="material-icons text-lg mr-2">cancel</span>{t('cancel', language as import('../i18n').Lang)}
             </button>
           </div>
         </div>
