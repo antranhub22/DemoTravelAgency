@@ -34,20 +34,16 @@ const VoiceAssistant: React.FC = () => {
       {/* Header Bar */}
       <header className="w-full bg-primary text-white p-4 shadow-md">
         <div className="container mx-auto flex items-center justify-between px-2">
-          {/* Left: Logo */}
-          <div className="w-24 flex-shrink-0 flex items-center justify-start ml-1 sm:ml-4 mr-2 sm:mr-6">
+          {/* Left: Logo + Brand name */}
+          <div className="flex items-center flex-shrink-0 ml-1 sm:ml-4 mr-2 sm:mr-6">
             <img src="/assets/references/images/haily-logo1.jpg" alt="Haily Logo" className="h-16 sm:h-20 w-auto rounded-lg shadow-md bg-white/80 p-1" />
-          </div>
-          {/* Center: HaiLy Travel brand name - ẩn trên desktop/tablet */}
-          <div className="flex-1 flex justify-center sm:hidden">
-            <span className="font-extrabold text-xl tracking-wide select-none" style={{
+            <span className="font-extrabold text-xl tracking-wide select-none ml-2" style={{
               background: 'linear-gradient(90deg, #FFD700 60%, #fff 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               textShadow: '0 2px 8px rgba(0,0,0,0.18)',
               letterSpacing: '0.04em',
               fontFamily: 'Poppins, sans-serif',
-              padding: '0 0.5rem',
               borderRadius: '8px',
               lineHeight: 1.1
             }}>
