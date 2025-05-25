@@ -32,7 +32,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80',
       alt: 'Bus Da Lat Demo 1',
-      description: `Destination: Da Lat\nPrice: 150,000 – 250,000 VND`
+      description: `**Bus Type**: Sleeper Bus\n**Destination**: Da Lat\n**Price**: 150.000 - 250.000 VND`
     }
   ],
   bus_nt: [
@@ -40,7 +40,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=600&q=80',
       alt: 'Bus Nha Trang Demo 1',
-      description: `Destination: Nha Trang\nPrice: 180,000 – 300,000 VND`
+      description: `**Bus Type**: Sleeper Bus\n**Destination**: Nha Trang\n**Price**: 180.000 - 300.000 VND`
     }
   ],
   bus_dn: [
@@ -48,7 +48,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80',
       alt: 'Bus Da Nang Demo 1',
-      description: `Destination: Da Nang\nPrice: 530,000 – 590,000 VND`
+      description: `**Bus Type**: Sleeper Bus\n**Destination**: Da Nang\n**Price**: 530.000 - 590.000 VND`
     }
   ],
   // ================ VEHICLE RENTAL ================
@@ -65,7 +65,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80',
       alt: 'Car Rental with Driver Demo 1',
-      description: `Vehicle Type: Car with Driver\nPrice: 800,000 – 1,200,000 VND/day`
+      description: `**Vehicle Type**: Car with Driver\n**Price**: 800.000 - 1.200.000 VND/day`
     }
   ],
   car_self: [
@@ -73,7 +73,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=600&q=80',
       alt: 'Car Rental Self-drive Demo 1',
-      description: `Vehicle Type: Car without Driver\nPrice: 700,000 – 1,000,000 VND/day`
+      description: `**Vehicle Type**: Car without Driver\n**Price**: 700.000 - 1.000.000 VND/day`
     }
   ],
   // ================ CURRENCY EXCHANGE ================
@@ -90,7 +90,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80',
       alt: 'EUR Exchange Demo 1',
-      description: `Currency Type: EUR\nRate: (Contact for rate)`
+      description: `**Currency Type**: Euro\n**Rate**: (Contact for rate)`
     }
   ],
   currency_other: [
@@ -98,7 +98,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1511918984145-48de785d4c4e?auto=format&fit=crop&w=600&q=80',
       alt: 'Other Currency Exchange Demo 1',
-      description: `Currency Type: Others\nRate: (Contact for rate)`
+      description: `**Currency Type**: Others\n**Rate**: (Contact for rate)`
     }
   ],
   // ================ LAUNDRY SERVICE ================
@@ -115,7 +115,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80',
       alt: 'Express Laundry Demo 1',
-      description: `Laundry Type: Express Wash\nPrice: 40,000 – 50,000 VND/kg`
+      description: `**Laundry Type**: Express Wash\n**Price**: 40.000 - 50.000 VND/kg`
     }
   ],
   laundry_special: [
@@ -123,7 +123,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
       alt: 'Delicates Laundry Demo 1',
-      description: `Laundry Type: Delicates & Special Garments\nPrice: 15,000 – 60,000 VND/item`
+      description: `**Laundry Type**: Delicates & Special Garments\n**Price**: 15.000 - 60.000 VND/item`
     }
   ],
   // ================ HOMESTAY ================
@@ -140,7 +140,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80',
       alt: 'Homestay 300-600k Demo 1',
-      description: `Size: Medium\nAmenities: WiFi, A/C, Private Bathroom\nPrice: 300,000 – 600,000 VND`
+      description: `**Size**: 35m²\n**Amenities**: WiFi, AC, Private Bathroom\n**Price**: 300.000 - 600.000 VND/night`
     }
   ],
   homestay_600k: [
@@ -148,7 +148,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=600&q=80',
       alt: 'Homestay >600k Demo 1',
-      description: `Size: Large\nAmenities: A/C, Breakfast, View\nPrice: Over 600,000 VND`
+      description: `**Size**: 45m²\n**Amenities**: AC, Breakfast, View\n**Price**: Over 600.000 VND/night`
     }
   ],
   // ================ TOURS ================
@@ -249,37 +249,37 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: '/assets/tour_fullday/PoSahInu_Tower1.jpg',
       alt: 'Po Sah Inu Tower 1',
-      description: 'Tour Name: East Of Mui Ne\nAttraction: Po Sah Inu Tower\nLocation: Phan Thiet\nHighlight: Cham architecture\nActivity: Sightseeing'
+      description: `**Attractions**: Po Sah Inu Tower\n**Tour Name**: Full Day Cultural Tour`
     },
     {
       type: 'image',
       src: '/assets/tour_fullday/PoSahInu_Tower2.jpg',
       alt: 'Po Sah Inu Tower 2',
-      description: 'Tour Name: East Of Mui Ne\nAttraction: Po Sah Inu Tower\nLocation: Phan Thiet\nHighlight: Cham architecture\nActivity: Sightseeing'
+      description: `**Attractions**: Po Sah Inu Tower\n**Tour Name**: Full Day Cultural Tour`
     },
     {
       type: 'image',
       src: '/assets/tour_fullday/dragon fruit plantation.jpeg',
       alt: 'Dragon Fruit Plantation',
-      description: 'Tour Name: East Of Mui Ne\nAttraction: Dragon Fruit Plantation\nActivity: Farm Visit\nHighlight: Local agriculture'
+      description: `**Attractions**: Dragon Fruit Plantation\n**Tour Name**: Full Day Farm Tour`
     },
     {
       type: 'image',
       src: '/assets/tour_fullday/Ke ga lighthouse.jpg',
       alt: 'Ke Ga Lighthouse',
-      description: 'Tour Name: East Of Mui Ne\nAttraction: Ke Ga Lighthouse\nLocation: Ke Ga Cape\nHighlight: Oldest lighthouse in Vietnam\nActivity: Sightseeing'
+      description: `**Attractions**: Ke Ga Lighthouse\n**Tour Name**: Full Day Coastal Tour`
     },
     {
       type: 'image',
       src: '/assets/tour_fullday/KeGa_Lighthouse1.jpg',
       alt: 'Ke Ga Lighthouse 1',
-      description: 'Tour Name: East Of Mui Ne\nAttraction: Ke Ga Lighthouse\nLocation: Ke Ga Cape\nHighlight: Oldest lighthouse in Vietnam\nActivity: Sightseeing'
+      description: `**Attractions**: Ke Ga Lighthouse\n**Tour Name**: Full Day Coastal Tour`
     },
     {
       type: 'image',
       src: '/assets/tour_fullday/Wine_Castle2.jpg',
       alt: 'Wine Castle 2',
-      description: 'Tour Name: East Of Mui Ne\nAttraction: Wine Castle\nLocation: Mui Ne\nHighlight: Wine tasting, European architecture\nActivity: Visit & Tasting'
+      description: `**Attractions**: Wine Castle\n**Tour Name**: Full Day Wine Tour`
     }
   ],
   tour_multiday: [
@@ -287,25 +287,25 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: '/assets/tour_multiday/Tuyen_Lam_Lake_Dalat.jpg',
       alt: 'Tuyen Lam Lake Dalat',
-      description: 'Tour Name: East Of Mui Ne\nAttraction: Tuyen Lam Lake\nLocation: Da Lat\nHighlight: Scenic lake, boat ride\nActivity: Sightseeing'
+      description: `**Attractions**: Tuyen Lam Lake\n**Tour Name**: 3 Days Da Lat Tour`
     },
     {
       type: 'image',
       src: '/assets/tour_multiday/Langbiang-dalat-2.jpg',
       alt: 'Langbiang Dalat 2',
-      description: 'Tour Name: East Of Mui Ne\nAttraction: Langbiang Mountain\nLocation: Da Lat\nHighlight: Trekking, panoramic view\nActivity: Hiking'
+      description: `**Attractions**: Langbiang Mountain\n**Tour Name**: 3 Days Da Lat Tour`
     },
     {
       type: 'image',
       src: '/assets/tour_multiday/Prenn_Waterfall_tour1.jpg',
       alt: 'Prenn Waterfall Tour 1',
-      description: 'Tour Name: East Of Mui Ne\nAttraction: Prenn Waterfall\nLocation: Da Lat\nHighlight: Waterfall, elephant ride\nActivity: Sightseeing'
+      description: `**Attractions**: Prenn Waterfall\n**Tour Name**: 3 Days Da Lat Tour`
     },
     {
       type: 'image',
       src: '/assets/tour_multiday/flower-garden-dalat.jpg',
       alt: 'Flower Garden Dalat',
-      description: 'Tour Name: East Of Mui Ne\nAttraction: Flower Garden\nLocation: Da Lat\nHighlight: Colorful flowers, photography\nActivity: Visit & Photo'
+      description: `**Attractions**: Flower Garden\n**Tour Name**: 3 Days Da Lat Tour`
     }
   ],
   special_tour: [
@@ -313,7 +313,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=600&q=80',
       alt: 'Special Tour Demo 1',
-      description: `Tour: Hot Air Balloon Ride\nDuration: ~30 min flight + transfer\nPickup: Hotel in early morning\nInclusions: Balloon Ride, Transport, Drink\nPrice: 3,800,000 VND/person\nLanguage: English, Vietnamese`
+      description: `**Attractions**: Hot Air Balloon Ride\n**Tour Name**: Special Balloon Tour`
     }
   ]
 }; 
