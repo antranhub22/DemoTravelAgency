@@ -18,7 +18,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1511918984145-48de785d4c4e?auto=format&fit=crop&w=600&q=80',
       alt: 'Bus HCM Demo 1',
-      description: `Destination: Ho Chi Minh City\nPrice: 320.000 VND`
+      description: `**Bus Type**: Sleeper Bus\n**Destination**: Ho Chi Minh City\n**Price**: 320.000 VND`
     },
     {
       type: 'image',
@@ -55,9 +55,9 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
   motorcycle: [
     {
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=600&q=80',
-      alt: 'Motorbike Rental Demo 1',
-      description: `Vehicle Type: Motorbike\nPrice: 150,000 VND/day`
+      src: 'https://images.unsplash.com/photo-1511918984145-48de785d4c4e?auto=format&fit=crop&w=600&q=80',
+      alt: 'Motorcycle Rental Demo 1',
+      description: `**Vehicle Type**: Honda Wave 110cc\n**Price**: 150.000 VND/day`
     }
   ],
   car_driver: [
@@ -80,9 +80,9 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
   usd: [
     {
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80',
+      src: 'https://images.unsplash.com/photo-1511918984145-48de785d4c4e?auto=format&fit=crop&w=600&q=80',
       alt: 'USD Exchange Demo 1',
-      description: `Currency Type: USD\nRate: 25,600 VND/USD`
+      description: `**Currency Type**: US Dollar\n**Rate**: 24,500 VND`
     }
   ],
   eur: [
@@ -105,9 +105,9 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
   laundry_regular: [
     {
       type: 'image',
-      src: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80',
+      src: 'https://images.unsplash.com/photo-1511918984145-48de785d4c4e?auto=format&fit=crop&w=600&q=80',
       alt: 'Regular Laundry Demo 1',
-      description: `Laundry Type: Regular Wash\nPrice: 30,000 VND/kg`
+      description: `**Laundry Type**: Regular Wash\n**Price**: 50.000 VND/kg`
     }
   ],
   laundry_express: [
@@ -132,7 +132,7 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
       type: 'image',
       src: 'https://images.unsplash.com/photo-1511918984145-48de785d4c4e?auto=format&fit=crop&w=600&q=80',
       alt: 'Homestay <300k Demo 1',
-      description: `Size: Small\nAmenities: WiFi, Fan, Shared Bathroom\nPrice: Under 300,000 VND`
+      description: `**Size**: 25m²\n**Amenities**: AC, WiFi, TV\n**Price**: 250.000 VND/night`
     }
   ],
   homestay_300_600k: [
@@ -155,9 +155,9 @@ export const iconMediaMap: Record<string, IconMedia[]> = {
   tour_halfday: [
     {
       type: 'image',
-      src: '/assets/tour_halfday/tour_halfday_1.jpg',
-      alt: 'White Sand Dunes 1',
-      description: 'Tour Name: East Of Mui Ne\nAttractions: White Sand Dunes'
+      src: 'https://images.unsplash.com/photo-1511918984145-48de785d4c4e?auto=format&fit=crop&w=600&q=80',
+      alt: 'Half Day Tour Demo 1',
+      description: `**Attractions**: Cu Chi Tunnels, War Remnants Museum\n**Tour Name**: Cu Chi Tunnels Half Day Tour`
     },
     {
       type: 'image',
