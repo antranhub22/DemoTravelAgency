@@ -384,6 +384,9 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
   // NEW: State để ẩn/hiện khung realtime conversation
   const [showRealtimeConversation, setShowRealtimeConversation] = useState(true);
   
+  // Thêm state cho summaryContent ở đầu Interface2
+  const [summaryContent, setSummaryContent] = useState<string>('');
+  
   // Cleanup function for animations
   const cleanupAnimations = () => {
     Object.values(animationFrames.current).forEach(frameId => {
@@ -554,6 +557,17 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
       conversationRef.current.scrollTop = 0;
     }
   }, [conversationTurns, isActive]);
+  
+  // Tự động sinh summary mỗi khi transcripts thay đổi (giống Interface3, dùng logic tổng hợp đơn giản)
+  useEffect(() => {
+    if (!transcripts || transcripts.length === 0) {
+      setSummaryContent('');
+      return;
+    }
+    // Ghép toàn bộ hội thoại thành 1 đoạn tóm tắt đơn giản (có thể thay bằng AI nếu muốn)
+    const summary = transcripts.map(t => `${t.role === 'assistant' ? 'Assistant' : 'User'}: ${t.content}`).join('\n');
+    setSummaryContent(summary);
+  }, [transcripts]);
   
   return (
     <div 
@@ -742,9 +756,11 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           {/* Khối Keywords */}
           <KeywordsBlock />
           {/* Khối Summary */}
-          <div className="bg-yellow-50 rounded-2xl shadow p-4 border border-yellow-200 mb-4">
-            <h3 className="font-bold text-yellow-800 text-lg mb-2">Summary</h3>
-            <div className="text-gray-700">(Tóm tắt nội dung sẽ hiển thị ở đây)</div>
+          <div className="p-3 sm:p-5 bg-white/80 rounded-xl shadow border border-white/30 mb-3 sm:mb-4 relative" style={{backdropFilter:'blur(2px)'}}>
+            <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2 text-blue-800">{t('summary', language as import('../i18n').Lang)}</h3>
+            <div className="text-sm sm:text-base leading-relaxed text-gray-800 whitespace-pre-line" style={{fontWeight: 400}}>
+              {summaryContent || t('summary_placeholder', language as import('../i18n').Lang)}
+            </div>
           </div>
           {/* Hai nút Confirm và Cancel dưới khối Summary */}
           <div className="flex flex-col gap-4 w-full md:w-auto mt-2">
