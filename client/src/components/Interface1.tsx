@@ -53,7 +53,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   const [showReference, setShowReference] = useState(false);
 
   // Thêm state để quản lý menu đang chọn trên mobile
-  type MenuKey = 'tours' | 'bus' | 'vehicle' | 'currency' | 'laundry' | 'homestay';
+  type MenuKey = 'tours' | 'bus' | 'vehicle' | 'currency' | 'laundry' | 'homestay' | 'roomservice';
   const [activeMenu, setActiveMenu] = useState<MenuKey>('tours');
 
   // State để điều khiển popup infographic
@@ -295,6 +295,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     currency: currencyIcons,
     laundry: laundryIcons,
     homestay: homestayIcons,
+    roomservice: [],
   };
 
   // Thêm useEffect để tự động set activeIcon khi activeMenu thay đổi
@@ -495,6 +496,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     { key: 'currency', label: t('currency_exchange', lang) },
     { key: 'laundry', label: t('laundry_service', lang) },
     { key: 'homestay', label: t('homestay_service', lang) },
+    { key: 'roomservice', label: 'Room Service' },
   ];
 
   const TabBar = () => (
