@@ -115,113 +115,12 @@ const keywordIconMap: Record<string, JSX.Element> = {
 // --- END KEYWORDS ICONS MAPPING ---
 
 // --- KEYWORD RELATED TERMS LIBRARY ---
-const keywordRelatedMap: Record<string, string[]> = {
-  'Destination for Tour Booking': [
-    'Sand Dune', 'Fairy Stream', 'Fishing Village', 'Mountain', 'Lighthouse', 'Poshanu Tower', 'Wine Castle', 'Mui Ne Beach', 'Ong Dia Rock Beach', 'Cham Tower', 'Local Market'
-  ],
-  'Tour Name': [
-    'Sunset Jeep Tour', 'Sunrise Sand Dune Tour', 'Private Mui Ne Tour', 'Phan Thiet City Tour'
-  ],
-  'Activities': [
-    'Sandboarding', 'Jeep Ride', 'Trekking', 'Sightseeing', 'Local Food Tasting', 'Photography'
-  ],
-  'Pickup Location': [
-    'Hotel Pickup', 'Bus Station Pickup', 'Resort Gate', 'Main Road'
-  ],
-  'Duration': [
-    'Half Day', 'Full Day', '2 Days 1 Night', 'Custom Duration'
-  ],
-  'Destination for Bus Tickets': [
-    'Ho Chi Minh City', 'Da Lat', 'Nha Trang', 'Can Tho', 'Vung Tau'
-  ],
-  'Bus Type': [
-    'Sleeper Bus', 'Limousine', 'Seat Bus', 'VIP Bus', 'Double Cabin'
-  ],
-  'Pickup Point': [
-    'Hotel Office Pickup', 'Terminal', 'Station', 'Main Street'
-  ],
-  'Drop-off Point': [
-    'Ben Xe Mien Dong', 'Da Lat Terminal', 'Nha Trang Station'
-  ],
-  'Vehicle Type': [
-    'Motorbike', 'Scooter', 'Car', '7-Seater Car', '16-Seater Van', 'Bicycle'
-  ],
-  'Rental Location': [
-    'Mui Ne Center', 'Ham Tien', 'Phan Thiet Station', 'Hon Rom'
-  ],
-  'Insurance Option': [
-    'Full Coverage', 'Partial Insurance', 'No Insurance'
-  ],
-  'Currency Type': [
-    'USD', 'EUR', 'VND', 'KRW', 'JPY', 'CNY'
-  ],
-  'Exchange From': [
-    'USD', 'Euro', 'Won', 'Baht'
-  ],
-  'Exchange To': [
-    'Vietnam Dong', 'VND'
-  ],
-  'Exchange Spot': [
-    'Hotel Front Desk', 'Gold Shop', 'Local Exchange Office'
-  ],
-  'Laundry Type': [
-    'Wash & Fold', 'Dry Clean', 'Express Laundry', 'Iron Only'
-  ],
-  'Fragrance Option': [
-    'Lavender', 'No Perfume', 'Baby Soft', 'Citrus'
-  ],
-  'Pickup Time': [
-    'Morning Pickup', 'Afternoon Pickup', 'Immediate Pickup'
-  ],
-  'Location for Homestay': [
-    'Mui Ne', 'Ham Tien', 'Phu Hai', 'Ke Ga', 'Tien Thanh'
-  ],
-  'Room Type': [
-    'Private Room', 'Shared Room', 'Beachfront Villa', 'Garden Bungalow'
-  ],
-  'Facilities Needed': [
-    'Kitchen', 'Pool', 'BBQ', 'Pet Friendly', 'Parking'
-  ],
-  'Food Order (Room Service)': [
-    'Pho', 'Banh Mi', 'Fried Rice', 'Breakfast Set', 'Coffee', 'Tea', 'Water', 'Juice'
-  ],
-  'Extra Amenities (Housekeeping)': [
-    'Towel', 'Pillow', 'Blanket', 'Toothbrush', 'Soap', 'Toilet Paper'
-  ],
-  'Cleaning Request': [
-    'Room Cleaning', 'Linen Change', 'Trash Removal', 'Floor Mopping'
-  ],
-  'Maintenance Issue': [
-    'Aircon Not Working', 'Clogged Toilet', 'No Hot Water', 'Broken Light'
-  ],
-  'Tourism Interests (Local Info)': [
-    'Sand Dune', 'Wine Castle', 'Fairy Stream', 'Fishing Village', 'Kite Surfing', 'Beach Walk', 'Local Cuisine'
-  ],
-  'Transport Needed (Local Info)': [
-    'Taxi', 'Jeep', 'Bike', 'Canoe', 'Shuttle Bus'
-  ],
-  'Restaurant Booking': [
-    'Seafood Restaurant', 'Local Eatery', 'Fine Dining', 'Buffet', 'Vietnamese Food'
-  ],
-  'Spa Booking': [
-    'Massage', 'Sauna', 'Body Scrub', 'Facial', 'Wellness Treatment'
-  ],
-  'Wake-up Call': [
-    'Morning Call', '6AM Wakeup', 'Sunrise Tour Reminder'
-  ],
-  'Guest Complaint': [
-    'No Wifi', 'Dirty Room', 'Noisy Neighbors', 'Broken TV', 'Smelly Bathroom'
-  ],
-  'Departure City': [
-    'Ho Chi Minh City', 'Da Lat', 'Nha Trang', 'Can Tho', 'Vung Tau',
-    // Có thể thêm các địa danh khác nếu cần
-  ],
-  'Arrival City': [
-    'Ho Chi Minh City', 'Da Lat', 'Nha Trang', 'Can Tho', 'Vung Tau',
-    // Có thể thêm các địa danh khác nếu cần
-  ],
-};
-// --- END KEYWORD RELATED TERMS LIBRARY ---
+const [keywordRelatedMap, setKeywordRelatedMap] = useState<Record<string, string[]>>({});
+useEffect(() => {
+  fetch('/keywordRelatedMap.json')
+    .then(res => res.json())
+    .then(data => setKeywordRelatedMap(data));
+}, []);
 
 // --- COMPONENT: IconWithTooltip ---
 interface IconWithTooltipProps {
