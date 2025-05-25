@@ -203,21 +203,37 @@ const serviceKeywordsMap: Record<string, string[]> = {
 // --- COMPONENT: KeywordsBlock ---
 const KeywordsBlock = () => {
   const [activeService, setActiveService] = useState('tours');
+  const [activeKeywords, setActiveKeywords] = useState<string[]>([]);
+  const { transcripts } = useAssistant();
   const keywords = serviceKeywordsMap[activeService] || [];
   const chunkArray = <T,>(arr: T[], size: number): T[][] => arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr];
   const keywordRows = chunkArray<string>(keywords, 10);
+
+  // Highlight logic: update activeKeywords when transcripts or activeService changes
+  useEffect(() => {
+    // Lấy toàn bộ nội dung hội thoại (user + assistant)
+    const allText = transcripts.map(m => m.content.toLowerCase()).join(' ');
+    // So khớp từng keyword (không phân biệt hoa thường, loại bỏ dấu câu)
+    const matched: string[] = keywords.filter(kw => {
+      // So khớp keyword dạng từ/cụm từ, ignore case, ignore dấu câu
+      const kwNorm = kw.toLowerCase().replace(/[^a-z0-9 ]/gi, '');
+      return kwNorm && allText.includes(kwNorm);
+    });
+    setActiveKeywords(matched);
+  }, [transcripts, activeService]);
+
   return (
     <div className="flex flex-col gap-3 items-center w-full">
       {/* Service labels row */}
       <ServiceLabels active={activeService} setActive={setActiveService} />
-      {/* Service icons row (ẩn, đã thay bằng label) */}
-      {/* <div className="flex flex-row justify-center gap-6 mb-2">
-        {serviceIcons.map(s => <IconWithTooltip key={s.key} icon={s.icon} tooltip={s.tooltip} />)}
-      </div> */}
       {/* Keyword icons rows */}
       {keywordRows.map((row: string[], idx: number) => (
         <div key={idx} className="flex flex-row justify-center gap-4">
-          {row.map((k: string) => keywordIconMap[k] && <IconWithTooltip key={k} icon={keywordIconMap[k]} tooltip={k} />)}
+          {row.map((k: string) => keywordIconMap[k] && (
+            <span key={k} className={activeKeywords.includes(k) ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg scale-110 transition-all duration-200' : ''}>
+              <IconWithTooltip icon={keywordIconMap[k]} tooltip={k} />
+            </span>
+          ))}
         </div>
       ))}
     </div>
