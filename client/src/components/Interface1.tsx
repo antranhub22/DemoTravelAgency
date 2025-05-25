@@ -482,13 +482,15 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   ];
 
   const TabBar = () => (
-    <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
-      style={{ 
-        WebkitOverflowScrolling: 'touch', 
-        scrollBehavior: 'smooth', 
+    <div
+      className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
+      style={{
+        WebkitOverflowScrolling: 'touch',
+        scrollBehavior: 'smooth',
         scrollSnapType: 'x mandatory',
         minWidth: 0,
-        maxWidth: '100%'
+        maxWidth: '100%',
+        touchAction: 'pan-x',
       }}
     >
       {tabOptions.map(opt => (
@@ -499,9 +501,9 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
             setShowGroupTooltip(opt.key);
             setTimeout(() => setShowGroupTooltip(null), 3000);
           }}
-          className={`flex-shrink-0 min-w-[160px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
-            activeMenu === opt.key 
-              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105' 
+          className={`flex-shrink-0 min-w-max px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
+            activeMenu === opt.key
+              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105'
               : 'bg-transparent text-amber-300 hover:bg-white/10'
           }`}
         >
@@ -513,34 +515,34 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // 3. ICON GROUP: Chuyển thành slider ngang chứa tất cả icons
   const IconGroup = () => {
-    // Tạo mảng chứa tất cả icons
     const allIcons = [
       ...travelTourIcons,
       ...busTicketIcons,
       ...vehicleRentalIcons,
       ...currencyIcons,
       ...laundryIcons,
-      ...homestayIcons
+      ...homestayIcons,
     ];
-    // Xác định các icon thuộc nhóm đang active
     const groupIcons = iconMap[activeMenu];
 
     return (
-      <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x"
-        style={{ 
-          WebkitOverflowScrolling: 'touch', 
-          scrollBehavior: 'smooth', 
+      <div
+        className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x"
+        style={{
+          WebkitOverflowScrolling: 'touch',
+          scrollBehavior: 'smooth',
           scrollSnapType: 'x mandatory',
           minWidth: 0,
-          maxWidth: '100%'
+          maxWidth: '100%',
+          touchAction: 'pan-x',
         }}
       >
         {allIcons.map(icon => (
-          <div key={icon} className="flex-shrink-0 scroll-snap-align-start">
+          <div key={icon} className="flex-shrink-0 min-w-max scroll-snap-align-start">
             {iconComponents[icon] ? (
-              <IconWithTooltip 
-                iconName={icon} 
-                iconSize={24} 
+              <IconWithTooltip
+                iconName={icon}
+                iconSize={24}
                 isActive={icon === activeIcon}
                 isShowTooltip={showGroupTooltip === activeMenu && groupIcons.includes(icon)}
                 className="transition-transform duration-200 hover:scale-110"
