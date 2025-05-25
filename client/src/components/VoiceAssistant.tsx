@@ -26,7 +26,7 @@ const VoiceAssistant: React.FC = () => {
     { code: 'fr', label: 'Français', flag: '🇫🇷' },
     { code: 'ru', label: 'Русский', flag: '🇷🇺' },
     { code: 'zh', label: '中文', flag: '🇨🇳' },
-    { code: 'ko', label: '한국어', flag: '��🇷' },
+    { code: 'ko', label: '한국어', flag: '🇰🇷' },
   ];
   const selectedLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
   const handleLangSelect = (code: string) => {
@@ -39,34 +39,24 @@ const VoiceAssistant: React.FC = () => {
       {/* Header Bar */}
       <header className="w-full bg-primary text-white p-4 shadow-md">
         <div className="container mx-auto flex items-center justify-between px-2">
-          {/* Left: Logo */}
-          <div className="w-24 flex-shrink-0 flex items-center justify-start ml-1 sm:ml-4 mr-2 sm:mr-6">
-            <img src="/assets/references/images/haily-logo1.jpg" alt="Haily Logo" className="h-16 sm:h-20 w-auto rounded-lg shadow-md bg-white/80 p-1" />
-          </div>
-          {/* Center: HaiLy Travel brand name - ẩn trên desktop/tablet */}
-          <div className="flex-1 flex justify-center sm:hidden">
-            <span className="font-extrabold text-xl tracking-wide select-none" style={{
+          {/* Left: Logo + Tên app */}
+          <div className="flex items-center gap-2 flex-shrink-0 min-w-0">
+            <img src="/assets/references/images/haily-logo1.jpg" alt="Haily Logo" className="h-12 w-12 rounded-lg shadow-md bg-white/80 p-1" />
+            <span className="font-extrabold text-xl tracking-wide select-none whitespace-nowrap" style={{
               background: 'linear-gradient(90deg, #FFD700 60%, #fff 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               textShadow: '0 2px 8px rgba(0,0,0,0.18)',
               letterSpacing: '0.04em',
               fontFamily: 'Poppins, sans-serif',
-              padding: '0 0.5rem',
               borderRadius: '8px',
               lineHeight: 1.1
             }}>
               <span style={{color: '#FFD700', WebkitTextFillColor: '#FFD700'}}>HaiLy</span> <span style={{color: '#fff', WebkitTextFillColor: '#fff'}}>Travel</span>
             </span>
           </div>
-          {/* Right: Call History, Language, Info */}
-          <div className="flex items-center gap-2">
-            <Link href="/call-history">
-              <a className="flex items-center gap-1 px-2 py-1 rounded bg-primary-dark text-white text-xs sm:text-sm">
-                <History className="w-4 h-4" />
-                <span className="hidden sm:inline">Call History</span>
-              </a>
-            </Link>
+          {/* Center: Nút chọn ngôn ngữ + Info */}
+          <div className="flex items-center gap-2 flex-1 justify-center">
             {/* Language Selector */}
             <div className="relative w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 transition-all duration-200 shadow cursor-pointer select-none" onClick={() => setIsLangDropdownOpen(v => !v)}>
               <span className="text-2xl" style={{fontSize: '2rem'}}>{selectedLang.flag}</span>
@@ -92,6 +82,15 @@ const VoiceAssistant: React.FC = () => {
             >
               <span className="material-icons text-2xl text-amber-400">info</span>
             </button>
+          </div>
+          {/* Right: Call History */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <Link href="/call-history">
+              <a className="flex items-center gap-1 px-2 py-1 rounded bg-primary-dark text-white text-xs sm:text-sm">
+                <History className="w-4 h-4" />
+                <span className="hidden sm:inline">Call History</span>
+              </a>
+            </Link>
           </div>
         </div>
       </header>
