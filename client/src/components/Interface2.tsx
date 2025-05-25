@@ -363,7 +363,8 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
     setCurrentInterface,
     micLevel,
     modelOutput,
-    language
+    language,
+    callSummary
   } = useAssistant();
   
   // State cho Paint-on effect
@@ -759,7 +760,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           <div className="p-3 sm:p-5 bg-white/80 rounded-xl shadow border border-white/30 mb-3 sm:mb-4 relative" style={{backdropFilter:'blur(2px)'}}>
             <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2 text-blue-800">{t('summary', language as import('../i18n').Lang)}</h3>
             <div className="text-sm sm:text-base leading-relaxed text-gray-800 whitespace-pre-line" style={{fontWeight: 400}}>
-              {summaryContent || t('summary_placeholder', language as import('../i18n').Lang)}
+              {callSummary?.content || t('summary_placeholder', language as import('../i18n').Lang)}
             </div>
           </div>
           {/* Hai nút Confirm và Cancel dưới khối Summary */}
