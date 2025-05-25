@@ -337,45 +337,38 @@ const allKeywords = Array.from(new Set(Object.values(serviceKeywordsMap).flat())
 const keywordRows = chunkArray<string>(allKeywords, 10);
 const KeywordsBlock = () => {
   const [activeKeywords, setActiveKeywords] = useState<string[]>([]);
-  const [activeService, setActiveService] = useState<string | null>(null);
+  const [activeServices, setActiveServices] = useState<string[]>([]);
   const { transcripts } = useAssistant();
 
-  // Xác định service và keywords đang được đề cập
   useEffect(() => {
     const normText = transcripts.map(m => m.content.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ')).join(' ');
-    
-    // 1. Xác định service đang được đề cập
+    // Đếm số lần xuất hiện của từng service
     const serviceMentions = serviceLabelOptions.map(service => {
       const label = service.label.toLowerCase();
       const regex = new RegExp(`\\b${label.replace(/ /g, '\\s+')}\\b`, 'i');
       const mentions = (normText.match(regex) || []).length;
       return { key: service.key, mentions };
     });
+    // Lấy tất cả service có mentions > 0
+    const mentionedServices = serviceMentions.filter(s => s.mentions > 0).map(s => s.key);
+    setActiveServices(mentionedServices);
 
-    const mostMentioned = serviceMentions.reduce((max, curr) => 
-      curr.mentions > max.mentions ? curr : max
-    , { key: '', mentions: 0 });
-
-    const currentService = mostMentioned.mentions > 0 ? mostMentioned.key : null;
-    setActiveService(currentService);
-
-    // 2. Chỉ highlight keywords thuộc service đang active
-    if (currentService) {
-      const serviceKeywords = serviceKeywordsMap[currentService] || [];
-      const matched: string[] = serviceKeywords.filter(kw => {
-        const related = keywordRelatedMap[kw] || [];
-        const allTerms = [kw, ...related].sort((a, b) => b.length - a.length);
-        return allTerms.some(term => {
-          const normTerm = term.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ').trim();
-          if (!normTerm) return false;
-          const regex = new RegExp(`\\b${normTerm.replace(/ /g, '\\s+')}\\b`, 'i');
-          return regex.test(normText);
-        });
+    // Lấy tất cả keywords thuộc các service được đề cập
+    const serviceKeywords = mentionedServices.length > 0
+      ? Array.from(new Set(mentionedServices.flatMap(s => serviceKeywordsMap[s] || [])))
+      : [];
+    // Highlight các keywords được nhắc tới trong hội thoại
+    const matched: string[] = serviceKeywords.filter(kw => {
+      const related = keywordRelatedMap[kw] || [];
+      const allTerms = [kw, ...related].sort((a, b) => b.length - a.length);
+      return allTerms.some(term => {
+        const normTerm = term.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ').trim();
+        if (!normTerm) return false;
+        const regex = new RegExp(`\\b${normTerm.replace(/ /g, '\\s+')}\\b`, 'i');
+        return regex.test(normText);
       });
-      setActiveKeywords(matched);
-    } else {
-      setActiveKeywords([]);
-    }
+    });
+    setActiveKeywords(matched);
   }, [transcripts]);
 
   return (
@@ -391,7 +384,7 @@ const KeywordsBlock = () => {
               className={`transition-all duration-200 ${
                 activeKeywords.includes(k) 
                   ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg' 
-                  : activeService && serviceKeywordsMap[activeService]?.includes(k)
+                  : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
                     ? 'opacity-100'
                     : 'opacity-75'
               }`}
@@ -400,7 +393,7 @@ const KeywordsBlock = () => {
                 icon={React.cloneElement(keywordIconMap[k], { 
                   color: activeKeywords.includes(k) 
                     ? '#FFC94A' 
-                    : activeService && serviceKeywordsMap[activeService]?.includes(k)
+                    : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
                       ? '#FFC94A'
                       : '#FFFFFF'
                 })} 
