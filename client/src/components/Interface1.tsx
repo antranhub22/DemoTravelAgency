@@ -404,12 +404,12 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
       </span>
       {(activeTooltip === iconName || isShowTooltip) && (
           isMobile ? (
-            <div className={`absolute top-full ${position === 'left' ? 'left-0' : position === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'} mt-2 w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-50 pointer-events-none text-center break-words`}> 
+            <div className={`absolute top-full ${position === 'left' ? 'left-0' : position === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'} mt-2 w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-[9999] pointer-events-auto text-center break-words`} style={{pointerEvents:'auto'}}> 
               {tooltipText}
               <div className={`absolute w-2 h-2 bg-white/90 transform rotate-45 ${position === 'left' ? 'left-4' : position === 'right' ? 'right-4' : 'left-1/2 -translate-x-1/2'} -top-1`}></div>
             </div>
           ) : (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max max-w-[180px] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-50 pointer-events-none text-center">
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max max-w-[180px] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-[9999] pointer-events-auto text-center" style={{pointerEvents:'auto'}}>
               {tooltipText}
           <div className="absolute w-2 h-2 bg-white/90 transform rotate-45 left-1/2 -translate-x-1/2 top-full -mt-1"></div>
         </div>
