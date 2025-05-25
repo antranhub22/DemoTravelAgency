@@ -421,7 +421,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
             className="fixed z-[9999] w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg pointer-events-none text-center break-words"
             style={{
               left: tooltipPos.left,
-              top: tooltipPos.top - 32, // hiển thị sát phía trên icon
+              top: tooltipPos.top - 20, // hiển thị sát phía trên icon
               transform: 'translate(-50%, -100%)',
               overflow: 'visible',
             }}
