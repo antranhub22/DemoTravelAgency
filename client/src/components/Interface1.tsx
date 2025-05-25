@@ -499,11 +499,10 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   const TabBar = () => (
     <div
-      className="w-full overflow-x-auto whitespace-nowrap flex flex-row flex-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
+      className="w-full overflow-x-auto whitespace-nowrap flex flex-row flex-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide"
       style={{
         WebkitOverflowScrolling: 'touch',
         scrollBehavior: 'smooth',
-        scrollSnapType: 'x mandatory',
         minWidth: 0,
         maxWidth: '100%',
         touchAction: 'pan-x',
@@ -515,7 +514,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
         <button
           key={opt.key}
           onClick={() => setActiveMenu(opt.key as MenuKey)}
-          className={`flex-shrink-0 min-w-[140px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
+          className={`flex-shrink-0 min-w-[140px] px-4 py-2 rounded-full font-bold text-base transition-all duration-200 ${
             activeMenu === opt.key
               ? 'bg-amber-400 text-pink-900 shadow-lg scale-105'
               : 'bg-transparent text-amber-300 hover:bg-white/10'
@@ -540,11 +539,10 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     ];
     return (
       <div
-        className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x relative items-center h-12 py-0 px-2 mb-4"
+        className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide relative items-center h-12 py-0 px-2 mb-4"
         style={{
           WebkitOverflowScrolling: 'touch',
           scrollBehavior: 'smooth',
-          scrollSnapType: 'x mandatory',
           minWidth: 0,
           maxWidth: '100%',
           zIndex: 10000,
@@ -557,7 +555,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
         {allIcons.map(icon => (
           <div
             key={icon}
-            className="flex-shrink-0 scroll-snap-align-start relative flex items-center justify-center"
+            className="flex-shrink-0 relative flex items-center justify-center"
             style={{ overflow: 'visible', zIndex: 10001, height: '100%', minWidth: 40 }}
           >
             {iconComponents[icon] ? (
