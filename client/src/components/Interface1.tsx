@@ -541,7 +541,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
     return (
       <div
-        className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x relative items-center h-12 py-0 px-2"
+        className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x relative items-center h-12 py-0 px-2 mb-4"
         style={{
           WebkitOverflowScrolling: 'touch',
           scrollBehavior: 'smooth',
