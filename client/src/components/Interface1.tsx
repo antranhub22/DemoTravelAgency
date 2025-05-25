@@ -461,63 +461,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   // Thêm hook để xác định mobile
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
 
-  // Sửa hàm renderIconGroup để nhận iconSize động
-  const renderIconGroup = (icons: string[], col: number, iconSize = 22) => {
-    const items = icons.map(icon => {
-      const isActive = icon === activeIcon;
-      return (
-        <li key={icon} className="w-10 h-10 flex items-center justify-center">
-          {iconComponents[icon] ? <IconWithTooltip iconName={icon} iconSize={iconSize} isActive={isActive} /> : <span className="text-red-500">?</span>}
-        </li>
-      );
-    });
-    // Bổ sung li invisible nếu thiếu để đủ hàng cuối
-    const remainder = icons.length % col;
-    if (remainder !== 0) {
-      for (let i = 0; i < col - remainder; i++) {
-        items.push(<li key={`invisible-${i}`} className="w-10 h-10 flex items-center justify-center invisible"></li>);
-      }
-    }
-    return items;
-  };
-
-  // Thêm style cho animation
-  const shimmerAnimation = `
-    @keyframes shimmer {
-      0% {
-        background-position: -200% center;
-      }
-      100% {
-        background-position: 200% center;
-      }
-    }
-  `;
-
-  // Thêm CSS ẩn scrollbar và scroll-snap-x nếu chưa có:
-  <style>{`
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
-    .scrollbar-hide::-webkit-scrollbar { display: none; }
-    .scroll-snap-x { scroll-snap-type: x mandatory; }
-    .scroll-snap-align-start { scroll-snap-align: start; }
-  `}</style>
-
-  // Thêm vào đầu component:
-  const LANGUAGES = [
-    { code: 'en', label: 'English', flag: '🇬🇧' },
-    { code: 'fr', label: 'French', flag: '🇫🇷' },
-    { code: 'zh', label: 'Chinese', flag: '🇨🇳' },
-    { code: 'ru', label: 'Russian', flag: '🇷🇺' },
-    { code: 'ko', label: 'Korean', flag: '🇰🇷' },
-  ];
-  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
-  const handleLangSelect = (code: string) => {
-    setLanguage(code as Lang);
-    setIsLangDropdownOpen(false);
-  };
-  const selectedLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
-
   // 1. HEADER: Đưa avatar sang phải, menu/hướng dẫn sang trái, thêm tiêu đề lớn dưới header
   const Header = () => (
     <div className="flex items-center justify-between w-full mb-4">
@@ -564,7 +507,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     </div>
   );
 
-  // 2. TABS: Trên mobile là dropdown, desktop là tab bar ngang
+  // 2. TAB BAR: Chuyển thành slider ngang
   const tabOptions = [
     { key: 'tours', label: t('tourism_tour', lang) },
     { key: 'bus', label: t('ticket_bus', lang) },
@@ -575,30 +518,70 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   ];
 
   const TabBar = () => (
-    <>
-      {/* Desktop: Tab bar ngang */}
-      <div className="hidden sm:flex w-full overflow-x-auto flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
-        style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth', scrollSnapType: 'x mandatory', minWidth: 0 }}
-      >
-        {tabOptions.map(opt => (
-          <button
-            key={opt.key}
-            onClick={() => setActiveMenu(opt.key as MenuKey)}
-            className={`flex-shrink-0 min-w-[160px] sm:min-w-[120px] px-4 py-2 rounded-full font-bold text-base sm:text-sm scroll-snap-align-start ${activeMenu === opt.key ? 'bg-amber-400 text-pink-900 shadow' : 'bg-transparent text-amber-300'}`}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-    </>
-  );
-
-  // 3. ICON GROUP: Style lại icon group cho bo tròn, nhỏ gọn, đặt phía trên card
-  const IconGroup = () => (
-    <div className="flex flex-row gap-2 mb-2 justify-center">
-      {iconMap[activeMenu] && renderIconGroup(iconMap[activeMenu], iconMap[activeMenu].length, 20)}
+    <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
+      style={{ 
+        WebkitOverflowScrolling: 'touch', 
+        scrollBehavior: 'smooth', 
+        scrollSnapType: 'x mandatory',
+        minWidth: 0,
+        maxWidth: '100%'
+      }}
+    >
+      {tabOptions.map(opt => (
+        <button
+          key={opt.key}
+          onClick={() => setActiveMenu(opt.key as MenuKey)}
+          className={`flex-shrink-0 min-w-[160px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
+            activeMenu === opt.key 
+              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105' 
+              : 'bg-transparent text-amber-300 hover:bg-white/10'
+          }`}
+        >
+          {opt.label}
+        </button>
+      ))}
     </div>
   );
+
+  // 3. ICON GROUP: Chuyển thành slider ngang chứa tất cả icons
+  const IconGroup = () => {
+    // Tạo mảng chứa tất cả icons
+    const allIcons = [
+      ...travelTourIcons,
+      ...busTicketIcons,
+      ...vehicleRentalIcons,
+      ...currencyIcons,
+      ...laundryIcons,
+      ...homestayIcons
+    ];
+
+    return (
+      <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x"
+        style={{ 
+          WebkitOverflowScrolling: 'touch', 
+          scrollBehavior: 'smooth', 
+          scrollSnapType: 'x mandatory',
+          minWidth: 0,
+          maxWidth: '100%'
+        }}
+      >
+        {allIcons.map(icon => (
+          <div key={icon} className="flex-shrink-0 scroll-snap-align-start">
+            {iconComponents[icon] ? (
+              <IconWithTooltip 
+                iconName={icon} 
+                iconSize={24} 
+                isActive={icon === activeIcon}
+                className="transition-transform duration-200 hover:scale-110"
+              />
+            ) : (
+              <span className="text-red-500">?</span>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   // 4. CARD DỊCH VỤ: Style lại card/reference: ảnh lớn, overlay, tag, nút heart/arrow, slider ngang
   const ServiceCard = ({ refItem }: { refItem: ReferenceItem }) => (
@@ -640,6 +623,43 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     </button>
   );
 
+  // Thêm style cho animation
+  const shimmerAnimation = `
+    @keyframes shimmer {
+      0% {
+        background-position: -200% center;
+      }
+      100% {
+        background-position: 200% center;
+      }
+    }
+  `;
+
+  // Thêm CSS ẩn scrollbar và scroll-snap-x nếu chưa có:
+  <style>{`
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scroll-snap-x { scroll-snap-type: x mandatory; }
+    .scroll-snap-align-start { scroll-snap-align: start; }
+  `}</style>
+
+  // Thêm vào đầu component:
+  const LANGUAGES = [
+    { code: 'en', label: 'English', flag: '🇬🇧' },
+    { code: 'fr', label: 'French', flag: '🇫🇷' },
+    { code: 'zh', label: 'Chinese', flag: '🇨🇳' },
+    { code: 'ru', label: 'Russian', flag: '🇷🇺' },
+    { code: 'ko', label: 'Korean', flag: '🇰🇷' },
+  ];
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const handleLangSelect = (code: string) => {
+    setLanguage(code as Lang);
+    setIsLangDropdownOpen(false);
+  };
+  const selectedLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
+
   return (
     <div 
       className={`absolute w-full min-h-screen h-full transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'} z-10 overflow-y-auto`} 
@@ -654,7 +674,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
       <div className="container mx-auto flex flex-col items-center justify-start text-white p-3 pt-6 sm:p-5 sm:pt-10 lg:pt-16 overflow-visible pb-32 sm:pb-24" 
         style={{ transform: 'translateZ(20px)', minHeight: 'fit-content' }}
       >
-        {/* --- LAYOUT MỚI MOBILE --- */}
         <Header />
         <TabBar />
         <IconGroup />
@@ -666,20 +685,18 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
                 <div className="p-4">
                   <p className="text-sm text-gray-700 mb-2">{media.description}</p>
                 </div>
-            </div>
+              </div>
             ))}
           </div>
         )}
         <CallButton />
-        {/* --- END LAYOUT MỚI --- */}
-        {/* Các block giao diện cũ đã được loại bỏ để layout mới hiển thị rõ ràng */}
         {showInfographic && (
           <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
             <div className="bg-white rounded-xl p-6 shadow-lg max-w-md w-full relative">
               <button onClick={() => setShowInfographic(false)} className="absolute top-2 right-2 text-gray-500 hover:text-pink-600 text-2xl">&times;</button>
               <div className="text-gray-800">
                 <InfographicSteps />
-            </div>
+              </div>
             </div>
           </div>
         )}
