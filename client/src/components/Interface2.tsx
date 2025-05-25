@@ -6,6 +6,7 @@ import { referenceService, ReferenceItem } from '@/services/ReferenceService';
 import InfographicSteps from './InfographicSteps';
 import { t } from '@/i18n';
 import { Button } from './ui/button';
+import { Sun, CalendarDays, CalendarCheck, Star, Bus, Mountain, Umbrella, Landmark, Ship, Waves, Map, ArrowRightLeft, Bike, CarFront, Car, DollarSign, Euro, Coins, Shirt, Sparkles, Plus, Home, Building2, KeyRound, UserRound, Info, Users, Clock, Calendar, MapPin, Languages, Briefcase, CreditCard, Phone, Mail, User, Lock, CheckCircle, XCircle, AlertTriangle, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Search, Filter, Settings, ClipboardList, FileText, Globe, Tag, ShoppingCart, Truck, Gift, Heart, MessageCircle, Star as StarIcon, BookOpen, BedDouble, Coffee, Wifi, ShieldCheck, PawPrint, CarTaxiFront, ArrowRightLeft as ExchangeIcon, BadgeDollarSign, FileBadge2, UserCog, UserCheck, UserX } from 'lucide-react';
 
 interface Interface2Props {
   isActive: boolean;
@@ -27,6 +28,141 @@ interface ConversationTurn {
     timestamp: Date;
   }>;
 }
+
+// --- KEYWORDS ICONS MAPPING ---
+const serviceIcons = [
+  { key: 'Tours', icon: <Sun size={32} color="#FFC94A" />, tooltip: 'Tours' },
+  { key: 'Bus Tickets', icon: <Bus size={32} color="#FFC94A" />, tooltip: 'Bus Tickets' },
+  { key: 'Vehicle Rental', icon: <CarFront size={32} color="#FFC94A" />, tooltip: 'Vehicle Rental' },
+  { key: 'Currency Exchange', icon: <DollarSign size={32} color="#FFC94A" />, tooltip: 'Currency Exchange' },
+  { key: 'Laundry Service', icon: <Shirt size={32} color="#FFC94A" />, tooltip: 'Laundry Service' },
+  { key: 'HomeStay', icon: <Home size={32} color="#FFC94A" />, tooltip: 'HomeStay' },
+];
+const keywordIconMap: Record<string, JSX.Element> = {
+  Destination: <MapPin size={28} color="#8B1A47" />,
+  'Tour Name': <Tag size={28} color="#8B1A47" />,
+  Duration: <Clock size={28} color="#8B1A47" />,
+  'Start Date': <Calendar size={28} color="#8B1A47" />,
+  'Pickup Location': <MapPin size={28} color="#8B1A47" />,
+  'Drop-off Location': <MapPin size={28} color="#8B1A47" />,
+  Activities: <StarIcon size={28} color="#8B1A47" />,
+  'Number of Participants': <Users size={28} color="#8B1A47" />,
+  'Guide Language': <Languages size={28} color="#8B1A47" />,
+  Price: <BadgeDollarSign size={28} color="#8B1A47" />,
+  'Special Request': <ClipboardList size={28} color="#8B1A47" />,
+  'Departure City': <MapPin size={28} color="#8B1A47" />,
+  'Arrival City': <MapPin size={28} color="#8B1A47" />,
+  'Travel Date': <Calendar size={28} color="#8B1A47" />,
+  'Departure Time': <Clock size={28} color="#8B1A47" />,
+  'Number of Tickets': <Tag size={28} color="#8B1A47" />,
+  'Bus Type': <Bus size={28} color="#8B1A47" />,
+  'Pickup Point': <MapPin size={28} color="#8B1A47" />,
+  'Drop-off Point': <MapPin size={28} color="#8B1A47" />,
+  'Luggage Info': <Briefcase size={28} color="#8B1A47" />,
+  'Contact Number': <Phone size={28} color="#8B1A47" />,
+  'Vehicle Type': <Car size={28} color="#8B1A47" />,
+  'Pickup Date': <Calendar size={28} color="#8B1A47" />,
+  'Return Date': <CalendarCheck size={28} color="#8B1A47" />,
+  'Driver Included': <UserCheck size={28} color="#8B1A47" />,
+  'Fuel Policy': <CarFront size={28} color="#8B1A47" />,
+  'Deposi Method': <CreditCard size={28} color="#8B1A47" />,
+  'Currency Type': <DollarSign size={28} color="#8B1A47" />,
+  Amount: <BadgeDollarSign size={28} color="#8B1A47" />,
+  'Exchange From': <ExchangeIcon size={28} color="#8B1A47" />,
+  'Exchange To': <ExchangeIcon size={28} color="#8B1A47" />,
+  'ID Required': <User size={28} color="#8B1A47" />,
+  'Laundry Type': <Shirt size={28} color="#8B1A47" />,
+  'Pickup Time': <Clock size={28} color="#8B1A47" />,
+  'Return Time': <Clock size={28} color="#8B1A47" />,
+  'Weight Estimate': <Tag size={28} color="#8B1A47" />,
+  'Special Item': <Gift size={28} color="#8B1A47" />,
+  'Fragrance Option': <Sparkles size={28} color="#8B1A47" />,
+  Location: <MapPin size={28} color="#8B1A47" />,
+  'Check-in Date': <Calendar size={28} color="#8B1A47" />,
+  'Check-out Date': <CalendarCheck size={28} color="#8B1A47" />,
+  'Number of Guests': <Users size={28} color="#8B1A47" />,
+  'Room Type': <BedDouble size={28} color="#8B1A47" />,
+  'Facilities Needed': <Coffee size={28} color="#8B1A47" />,
+  'Host Language': <Languages size={28} color="#8B1A47" />,
+  'Pet Friendly': <PawPrint size={28} color="#8B1A47" />,
+  'Smoking Allowed': <UserX size={28} color="#8B1A47" />,
+  'Room Number': <Home size={28} color="#8B1A47" />,
+  'Guest Name': <User size={28} color="#8B1A47" />,
+  'Service Time': <Clock size={28} color="#8B1A47" />,
+  'Food Order': <ShoppingCart size={28} color="#8B1A47" />,
+  'Dietary Preference': <Heart size={28} color="#8B1A47" />,
+  'Allergen Info': <AlertTriangle size={28} color="#8B1A47" />,
+  Quantity: <Tag size={28} color="#8B1A47" />,
+  'Cleaning Time': <Clock size={28} color="#8B1A47" />,
+  'Linen/Towel Request': <BedDouble size={28} color="#8B1A47" />,
+  'Extra Amenities': <Gift size={28} color="#8B1A47" />,
+  'Maintenance Issue': <AlertTriangle size={28} color="#8B1A47" />,
+  'Interest Type': <StarIcon size={28} color="#8B1A47" />,
+  'Travel Time': <Clock size={28} color="#8B1A47" />,
+  'Weather Concern': <Globe size={28} color="#8B1A47" />,
+  'Transport Needed': <CarTaxiFront size={28} color="#8B1A47" />,
+  'Language Preference': <Languages size={28} color="#8B1A47" />,
+  'Activity Level': <StarIcon size={28} color="#8B1A47" />,
+  'Restaurant Booking': <Coffee size={28} color="#8B1A47" />,
+  'Spa/Wellness Time': <Heart size={28} color="#8B1A47" />,
+  'Taxi / Transfer': <CarTaxiFront size={28} color="#8B1A47" />,
+  'Wake-up Call': <Clock size={28} color="#8B1A47" />,
+  'Lost & Found': <Search size={28} color="#8B1A47" />,
+  'Issue Type': <AlertTriangle size={28} color="#8B1A47" />,
+  'Time of Incident': <Clock size={28} color="#8B1A47" />,
+  'Desired Resolution': <CheckCircle size={28} color="#8B1A47" />
+};
+// --- END KEYWORDS ICONS MAPPING ---
+
+// --- COMPONENT: IconWithTooltip ---
+const IconWithTooltip = ({ icon, tooltip }: { icon: JSX.Element, tooltip: string }) => {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="relative flex flex-col items-center justify-center cursor-pointer group" onClick={() => setShow(!show)} onMouseLeave={() => setShow(false)}>
+      {icon}
+      {show && (
+        <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-white text-gray-900 text-xs rounded shadow-lg whitespace-nowrap font-semibold border border-gray-200">
+          {tooltip}
+        </div>
+      )}
+    </div>
+  );
+};
+// --- END COMPONENT ---
+
+// --- COMPONENT: KeywordsBlock ---
+const allKeywords = [
+  'Destination', 'Tour Name', 'Duration', 'Start Date', 'Pickup Location', 'Drop-off Location', 'Activities', 'Number of Participants', 'Guide Language', 'Price', 'Special Request',
+  'Departure City', 'Arrival City', 'Travel Date', 'Departure Time', 'Number of Tickets', 'Bus Type', 'Pickup Point', 'Drop-off Point', 'Luggage Info', 'Contact Number',
+  'Vehicle Type', 'Pickup Date', 'Return Date', 'Driver Included', 'Fuel Policy', 'Deposi Method',
+  'Currency Type', 'Amount', 'Exchange From', 'Exchange To', 'ID Required',
+  'Laundry Type', 'Pickup Time', 'Return Time', 'Weight Estimate', 'Special Item', 'Fragrance Option',
+  'Location', 'Check-in Date', 'Check-out Date', 'Number of Guests', 'Room Type', 'Facilities Needed', 'Host Language', 'Pet Friendly', 'Smoking Allowed',
+  'Room Number', 'Guest Name', 'Service Time', 'Food Order', 'Dietary Preference', 'Allergen Info', 'Quantity',
+  'Cleaning Time', 'Linen/Towel Request', 'Extra Amenities', 'Maintenance Issue',
+  'Interest Type', 'Travel Time', 'Weather Concern', 'Transport Needed', 'Language Preference', 'Activity Level',
+  'Restaurant Booking', 'Spa/Wellness Time', 'Taxi / Transfer', 'Wake-up Call', 'Lost & Found',
+  'Issue Type', 'Time of Incident', 'Desired Resolution'
+];
+const uniqueKeywords = Array.from(new Set(allKeywords.filter(k => k !== 'Price'))); // Price sẽ được thêm riêng để đảm bảo chỉ 1 icon
+uniqueKeywords.push('Price');
+const chunkArray = <T,>(arr: T[], size: number): T[][] => arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr];
+const keywordRows = chunkArray<string>(uniqueKeywords, 10);
+const KeywordsBlock = () => (
+  <div className="flex flex-col gap-3 items-center">
+    {/* Service icons row */}
+    <div className="flex flex-row justify-center gap-6 mb-2">
+      {serviceIcons.map(s => <IconWithTooltip key={s.key} icon={s.icon} tooltip={s.tooltip} />)}
+    </div>
+    {/* Keyword icons rows */}
+    {keywordRows.map((row: string[], idx: number) => (
+      <div key={idx} className="flex flex-row justify-center gap-4">
+        {row.map((k: string) => keywordIconMap[k] && <IconWithTooltip key={k} icon={keywordIconMap[k]} tooltip={k} />)}
+      </div>
+    ))}
+  </div>
+);
+// --- END COMPONENT ---
 
 const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
   const { 
@@ -244,7 +380,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
     >
       <div className="container mx-auto flex flex-col md:flex-row p-2 h-full gap-2">
         {/* Left: Call indicator & Realtime conversation side by side, Reference below */}
-        <div className="w-full md:w-3/4 lg:w-2/3 flex flex-col items-center space-y-1 sm:space-y-4 mt-1 min-h-0 overflow-y-auto">
+        <div className="w-full md:w-2/3 flex flex-col items-center space-y-1 sm:space-y-4 mt-1 min-h-0 overflow-y-auto">
           {/* Replace old orb with new SiriCallButton */}
           <div className="relative flex flex-col items-center justify-center mb-1 sm:mb-6 w-full max-w-xs mx-auto">
             {/* SiriCallButton ở trên */}
@@ -415,36 +551,22 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               </div>
             </div>
           )}
+          {/* Thêm khối References phía dưới */}
+          <div className="w-full mt-4">
+            <div className="bg-blue-50 rounded-2xl shadow p-4 border border-blue-100">
+              <h3 className="font-bold text-blue-900 text-lg mb-2">References</h3>
+              <div className="text-gray-600">(Nội dung tham khảo sẽ hiển thị ở đây)</div>
+            </div>
+          </div>
         </div>
-        {/* Right: Control buttons */}
-        <div className="w-1/4 lg:w-1/3 flex-col items-center lg:items-end p-2 space-y-4 overflow-auto hidden sm:flex" style={{ maxHeight: '100%' }}>
-          <div className="flex flex-col gap-4 w-full md:w-auto">
-            {/* Nút xác nhận (desktop/tablet) */}
-            <Button
-              id="endCallButton"
-              onClick={handleNext}
-              variant="yellow"
-              className="w-full md:w-auto flex items-center justify-center space-x-2 text-base sm:text-lg"
-              style={{ minHeight: 56, minWidth: 220, zIndex: 10 }}
-            >
-              <span className="material-icons">send</span>
-              <span className="whitespace-nowrap">{t('confirm_request', language)}</span>
-            </Button>
-            <button
-              id="cancelButtonDesktop"
-              onClick={handleCancel}
-              className="w-full md:w-auto bg-white hover:bg-blue-100 text-blue-900 font-semibold py-3 px-8 rounded-full shadow flex items-center justify-center space-x-2 transition-all duration-200 border-2 border-blue-200 text-base sm:text-lg active:scale-95 active:bg-blue-100"
-              style={{
-                fontFamily: 'inherit',
-                letterSpacing: 0.2,
-                minHeight: 56,
-                minWidth: 120,
-                touchAction: 'manipulation',
-                zIndex: 10
-              }}
-            >
-              <span className="material-icons text-lg mr-2">cancel</span>{t('cancel', language)}
-            </button>
+        {/* Right: Keywords và Summary */}
+        <div className="w-full md:w-1/3 flex flex-col gap-4 p-2">
+          {/* Khối Keywords */}
+          <KeywordsBlock />
+          {/* Khối Summary */}
+          <div className="bg-yellow-50 rounded-2xl shadow p-4 border border-yellow-200">
+            <h3 className="font-bold text-yellow-800 text-lg mb-2">Summary</h3>
+            <div className="text-gray-700">(Tóm tắt nội dung sẽ hiển thị ở đây)</div>
           </div>
         </div>
       </div>
