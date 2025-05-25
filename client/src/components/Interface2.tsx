@@ -147,14 +147,14 @@ const serviceLabelOptions = [
 const chunkArray = <T,>(arr: T[], size: number): T[][] => arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr];
 const serviceLabelRows = chunkArray(serviceLabelOptions, 4); // 3 hàng, mỗi hàng 4,4,3
 const ServiceLabels = () => (
-  <div className="flex flex-col gap-2 w-full mb-2">
+  <div className="flex flex-col gap-2 w-full mb-2 items-center">
     {serviceLabelRows.map((row, idx) => (
-      <div key={idx} className="flex flex-row justify-center gap-2 w-full">
+      <div key={idx} className="flex flex-row justify-center gap-2 w-full max-w-4xl mx-auto">
         {row.map(opt => (
           <span
             key={opt.key}
-            className="flex-shrink-0 min-w-[140px] sm:min-w-[110px] px-4 py-2 rounded-full font-bold text-base sm:text-sm bg-amber-400 text-pink-900 shadow text-center"
-            style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.02em', display: 'inline-block' }}
+            className="flex-shrink-0 min-w-[90px] sm:min-w-[80px] px-3 py-1.5 rounded-full font-bold text-sm sm:text-xs bg-amber-400 text-pink-900 shadow text-center"
+            style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.01em', display: 'inline-block' }}
           >
             {opt.label}
           </span>
@@ -227,8 +227,7 @@ const KeywordsBlock = () => {
         <div key={idx} className="flex flex-row justify-center gap-4">
           {row.map((k: string) => keywordIconMap[k] && (
             <span key={k} className={activeKeywords.includes(k) ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg scale-110 transition-all duration-200' : ''}>
-              {React.cloneElement(keywordIconMap[k], { color: '#FFC94A' })}
-              <IconWithTooltip icon={keywordIconMap[k]} tooltip={k} />
+              <IconWithTooltip icon={React.cloneElement(keywordIconMap[k], { color: '#FFC94A' })} tooltip={k} />
             </span>
           ))}
         </div>
