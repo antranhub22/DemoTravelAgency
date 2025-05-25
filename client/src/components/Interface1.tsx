@@ -517,21 +517,20 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     ];
 
     return (
-      <div className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x relative"
+      <div className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x relative items-center h-12 py-0 px-2"
         style={{ 
           WebkitOverflowScrolling: 'touch', 
           scrollBehavior: 'smooth', 
           scrollSnapType: 'x mandatory',
           minWidth: 0,
           maxWidth: '100%',
-          paddingBottom: 32,
           zIndex: 10000,
           position: 'relative',
           overflow: 'visible',
         }}
       >
         {allIcons.map(icon => (
-          <div key={icon} className="flex-shrink-0 scroll-snap-align-start relative" style={{overflow: 'visible', zIndex: 10001}}>
+          <div key={icon} className="flex-shrink-0 scroll-snap-align-start relative flex items-center justify-center" style={{overflow: 'visible', zIndex: 10001, height: '100%'}}>
             {iconComponents[icon] ? (
               <IconWithTooltip 
                 iconName={icon} 
