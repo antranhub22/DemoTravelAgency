@@ -144,19 +144,22 @@ const serviceLabelOptions = [
   { key: 'concierge', label: 'Concierge Support' },
   { key: 'guestfeedback', label: 'Guest Feedback' },
 ];
-const ServiceLabels = ({ active, setActive }: { active: string, setActive: (key: string) => void }) => (
-  <div className="w-full flex flex-row overflow-x-auto flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
-    style={{ WebkitOverflowScrolling: 'touch', scrollBehavior: 'smooth', scrollSnapType: 'x mandatory', minWidth: 0 }}
-  >
-    {serviceLabelOptions.map(opt => (
-      <button
-        key={opt.key}
-        onClick={() => setActive(opt.key)}
-        className={`flex-shrink-0 min-w-[160px] sm:min-w-[120px] px-4 py-2 rounded-full font-bold text-base sm:text-sm scroll-snap-align-start ${active === opt.key ? 'bg-amber-400 text-pink-900 shadow' : 'bg-transparent text-amber-300'}`}
-        style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.02em' }}
-      >
-        {opt.label}
-      </button>
+const chunkArray = <T,>(arr: T[], size: number): T[][] => arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr];
+const serviceLabelRows = chunkArray(serviceLabelOptions, 4); // 3 hàng, mỗi hàng 4,4,3
+const ServiceLabels = () => (
+  <div className="flex flex-col gap-2 w-full mb-2">
+    {serviceLabelRows.map((row, idx) => (
+      <div key={idx} className="flex flex-row justify-center gap-2 w-full">
+        {row.map(opt => (
+          <span
+            key={opt.key}
+            className="flex-shrink-0 min-w-[140px] sm:min-w-[110px] px-4 py-2 rounded-full font-bold text-base sm:text-sm bg-amber-400 text-pink-900 shadow text-center"
+            style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.02em', display: 'inline-block' }}
+          >
+            {opt.label}
+          </span>
+        ))}
+      </div>
     ))}
   </div>
 );
@@ -201,36 +204,30 @@ const serviceKeywordsMap: Record<string, string[]> = {
 // --- END KEYWORDS GROUP MAPPING ---
 
 // --- COMPONENT: KeywordsBlock ---
+const allKeywords = Array.from(new Set(Object.values(serviceKeywordsMap).flat()));
+const keywordRows = chunkArray<string>(allKeywords, 10);
 const KeywordsBlock = () => {
-  const [activeService, setActiveService] = useState('tours');
   const [activeKeywords, setActiveKeywords] = useState<string[]>([]);
   const { transcripts } = useAssistant();
-  const keywords = serviceKeywordsMap[activeService] || [];
-  const chunkArray = <T,>(arr: T[], size: number): T[][] => arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr];
-  const keywordRows = chunkArray<string>(keywords, 10);
-
-  // Highlight logic: update activeKeywords when transcripts or activeService changes
+  // Highlight logic: update activeKeywords when transcripts changes
   useEffect(() => {
-    // Lấy toàn bộ nội dung hội thoại (user + assistant)
     const allText = transcripts.map(m => m.content.toLowerCase()).join(' ');
-    // So khớp từng keyword (không phân biệt hoa thường, loại bỏ dấu câu)
-    const matched: string[] = keywords.filter(kw => {
-      // So khớp keyword dạng từ/cụm từ, ignore case, ignore dấu câu
+    const matched: string[] = allKeywords.filter(kw => {
       const kwNorm = kw.toLowerCase().replace(/[^a-z0-9 ]/gi, '');
       return kwNorm && allText.includes(kwNorm);
     });
     setActiveKeywords(matched);
-  }, [transcripts, activeService]);
-
+  }, [transcripts]);
   return (
     <div className="flex flex-col gap-3 items-center w-full">
-      {/* Service labels row */}
-      <ServiceLabels active={activeService} setActive={setActiveService} />
+      {/* Service labels 3 hàng trên cùng */}
+      <ServiceLabels />
       {/* Keyword icons rows */}
       {keywordRows.map((row: string[], idx: number) => (
         <div key={idx} className="flex flex-row justify-center gap-4">
           {row.map((k: string) => keywordIconMap[k] && (
             <span key={k} className={activeKeywords.includes(k) ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg scale-110 transition-all duration-200' : ''}>
+              {React.cloneElement(keywordIconMap[k], { color: '#FFC94A' })}
               <IconWithTooltip icon={keywordIconMap[k]} tooltip={k} />
             </span>
           ))}
@@ -630,8 +627,13 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
         <div className="w-full md:w-1/3 flex flex-col gap-4 p-2">
           {/* Khối Keywords */}
           <KeywordsBlock />
-          {/* Hai nút Confirm và Cancel dưới khối Keywords */}
-          <div className="flex flex-col gap-4 w-full md:w-auto mt-4">
+          {/* Khối Summary */}
+          <div className="bg-yellow-50 rounded-2xl shadow p-4 border border-yellow-200 mb-4">
+            <h3 className="font-bold text-yellow-800 text-lg mb-2">Summary</h3>
+            <div className="text-gray-700">(Tóm tắt nội dung sẽ hiển thị ở đây)</div>
+          </div>
+          {/* Hai nút Confirm và Cancel dưới khối Summary */}
+          <div className="flex flex-col gap-4 w-full md:w-auto mt-2">
             <Button
               id="endCallButton"
               onClick={handleNext}
@@ -657,11 +659,6 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             >
               <span className="material-icons text-lg mr-2">cancel</span>{t('cancel', language as any)}
             </button>
-          </div>
-          {/* Khối Summary */}
-          <div className="bg-yellow-50 rounded-2xl shadow p-4 border border-yellow-200">
-            <h3 className="font-bold text-yellow-800 text-lg mb-2">Summary</h3>
-            <div className="text-gray-700">(Tóm tắt nội dung sẽ hiển thị ở đây)</div>
           </div>
         </div>
       </div>
