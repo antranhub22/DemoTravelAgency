@@ -17,7 +17,6 @@ import { OrderStatus } from '@shared/schema';
 import { Bus, Mountain, Landmark, Car, CarFront, Bike, Coins, Euro, DollarSign, Shirt, Sparkles, Home, Building2, CalendarDays, KeyRound, UserRound, Plus, Star, Sun, CalendarCheck, Umbrella, Map, Ship, Waves, ArrowRightLeft } from 'lucide-react';
 import InfographicSteps from './InfographicSteps';
 import '../styles/custom-scrollbar.css';
-import { createPortal } from 'react-dom';
 
 interface Interface1Props {
   isActive: boolean;
@@ -53,7 +52,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   const [showReference, setShowReference] = useState(false);
 
   // Thêm state để quản lý menu đang chọn trên mobile
-  type MenuKey = 'tours' | 'bus' | 'vehicle' | 'currency' | 'laundry' | 'homestay' | 'roomservice';
+  type MenuKey = 'tours' | 'bus' | 'vehicle' | 'currency' | 'laundry' | 'homestay';
   const [activeMenu, setActiveMenu] = useState<MenuKey>('tours');
 
   // State để điều khiển popup infographic
@@ -61,6 +60,9 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // State cho dropdown tab trên mobile
   const [showTabDropdown, setShowTabDropdown] = useState(false);
+
+  // Thêm state để kiểm soát hiển thị tooltip đồng loạt
+  const [showGroupTooltip, setShowGroupTooltip] = useState<string | null>(null);
 
   const iconColor = '#FFC94A'; // Màu vàng giống tiêu đề
   const iconComponents: Record<string, JSX.Element> = {
@@ -295,7 +297,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     currency: currencyIcons,
     laundry: laundryIcons,
     homestay: homestayIcons,
-    roomservice: [],
   };
 
   // Thêm useEffect để tự động set activeIcon khi activeMenu thay đổi
@@ -379,61 +380,43 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   };
 
   // Component hiển thị icon với tooltip
-  const IconWithTooltip = ({ iconName, className, iconSize = 32, position = 'center', isActive = false }: { iconName: string, className?: string, iconSize?: number, position?: 'left' | 'center' | 'right', isActive?: boolean }) => {
+  const IconWithTooltip = ({ iconName, className, iconSize = 32, position = 'center', isActive = false, isShowTooltip = false }: { iconName: string, className?: string, iconSize?: number, position?: 'left' | 'center' | 'right', isActive?: boolean, isShowTooltip?: boolean }) => {
     let tooltipText = iconDisplayNamesEn[iconName] || iconName;
     if (lang === 'fr') tooltipText = iconDisplayNamesFr[iconName] || tooltipText;
     else if (lang === 'ru') tooltipText = iconDisplayNamesRu[iconName] || tooltipText;
     else if (lang === 'zh') tooltipText = iconDisplayNamesZh[iconName] || tooltipText;
     else if (lang === 'ko') tooltipText = iconDisplayNamesKo[iconName] || tooltipText;
-
-    // Tính toán vị trí tooltip dựa trên bounding rect của icon
-    const [tooltipPos, setTooltipPos] = React.useState<{left: number, top: number} | null>(null);
-    const iconRef = React.useRef<HTMLSpanElement>(null);
-
-    React.useEffect(() => {
-      if (activeTooltip === iconName && iconRef.current) {
-        const rect = iconRef.current.getBoundingClientRect();
-        setTooltipPos({
-          left: rect.left + rect.width / 2,
-          top: rect.top
-        });
-      }
-    }, [activeTooltip, iconName]);
-
     return (
-      <div className="relative flex flex-col items-center justify-center cursor-pointer" style={{overflow: 'visible'}}>
-        <span 
-          ref={iconRef}
-          className={className || ''}
-          style={{
-            filter: 'drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.2))',
-            background: isActive ? 'linear-gradient(90deg, #FFD700 0%, #FFB300 100%)' : 'transparent',
-            borderRadius: '50%',
-            padding: isActive ? 6 : 0,
-            color: isActive ? '#8B1A47' : undefined,
-            transition: 'all 0.2s',
-          }}
-          onClick={() => handleIconClick(iconName)}
-        >
-          {React.cloneElement(iconComponents[iconName] || <span className="text-red-500">?</span>, { size: iconSize, color: isActive ? '#8B1A47' : iconColor })}
-        </span>
-        {activeTooltip === iconName && tooltipPos && createPortal(
-          <div
-            className="fixed z-[9999] w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg pointer-events-none text-center break-words"
-            style={{
-              left: tooltipPos.left,
-              top: tooltipPos.top - 12, // hiển thị sát phía trên icon hơn nữa
-              transform: 'translate(-50%, -100%)',
-              overflow: 'visible',
-            }}
-          >
-            {tooltipText}
-            <div className="absolute w-2 h-2 bg-white/90 transform rotate-45 left-1/2 -translate-x-1/2 top-full -mt-1"></div>
-          </div>,
-          document.body
-        )}
-      </div>
-    );
+    <div className="relative flex flex-col items-center justify-center cursor-pointer">
+      <span 
+        className={className || ''}
+        style={{
+          filter: 'drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.2))',
+          background: isActive ? 'linear-gradient(90deg, #FFD700 0%, #FFB300 100%)' : 'transparent',
+          borderRadius: '50%',
+          padding: isActive ? 6 : 0,
+          color: isActive ? '#8B1A47' : undefined,
+          transition: 'all 0.2s',
+        }}
+        onClick={() => handleIconClick(iconName)}
+      >
+        {React.cloneElement(iconComponents[iconName] || <span className="text-red-500">?</span>, { size: iconSize, color: isActive ? '#8B1A47' : iconColor })}
+      </span>
+      {(activeTooltip === iconName || isShowTooltip) && (
+          isMobile ? (
+            <div className={`absolute top-full ${position === 'left' ? 'left-0' : position === 'right' ? 'right-0' : 'left-1/2 -translate-x-1/2'} mt-2 w-max max-w-[90vw] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-50 pointer-events-none text-center break-words`}> 
+              {tooltipText}
+              <div className={`absolute w-2 h-2 bg-white/90 transform rotate-45 ${position === 'left' ? 'left-4' : position === 'right' ? 'right-4' : 'left-1/2 -translate-x-1/2'} -top-1`}></div>
+            </div>
+          ) : (
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max max-w-[180px] bg-white/90 text-gray-800 text-xs sm:text-sm font-medium py-1 px-2 rounded shadow-lg z-50 pointer-events-none text-center">
+              {tooltipText}
+          <div className="absolute w-2 h-2 bg-white/90 transform rotate-45 left-1/2 -translate-x-1/2 top-full -mt-1"></div>
+        </div>
+          )
+      )}
+    </div>
+  );
   };
 
   // Hàm để xác định màu sắc và icon dựa trên trạng thái
@@ -496,32 +479,31 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     { key: 'currency', label: t('currency_exchange', lang) },
     { key: 'laundry', label: t('laundry_service', lang) },
     { key: 'homestay', label: t('homestay_service', lang) },
-    { key: 'roomservice', label: 'Room Service' },
   ];
 
   const TabBar = () => (
-    <div
-      className="w-full overflow-x-auto whitespace-nowrap flex flex-row flex-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide"
-      style={{
-        WebkitOverflowScrolling: 'touch',
-        scrollBehavior: 'smooth',
+    <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-2 bg-white/10 rounded-lg p-1 shadow no-scrollbar mb-4 scrollbar-hide scroll-snap-x"
+      style={{ 
+        WebkitOverflowScrolling: 'touch', 
+        scrollBehavior: 'smooth', 
+        scrollSnapType: 'x mandatory',
         minWidth: 0,
-        maxWidth: '100%',
-        touchAction: 'pan-x',
-        overflowX: 'auto',
-        overflowY: 'hidden',
+        maxWidth: '100%'
       }}
     >
       {tabOptions.map(opt => (
         <button
           key={opt.key}
-          onClick={() => setActiveMenu(opt.key as MenuKey)}
-          className={`flex-shrink-0 min-w-[140px] px-4 py-2 rounded-full font-bold text-base transition-all duration-200 ${
-            activeMenu === opt.key
-              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105'
+          onClick={() => {
+            setActiveMenu(opt.key as MenuKey);
+            setShowGroupTooltip(opt.key);
+            setTimeout(() => setShowGroupTooltip(null), 3000);
+          }}
+          className={`flex-shrink-0 min-w-[160px] px-4 py-2 rounded-full font-bold text-base scroll-snap-align-start transition-all duration-200 ${
+            activeMenu === opt.key 
+              ? 'bg-amber-400 text-pink-900 shadow-lg scale-105' 
               : 'bg-transparent text-amber-300 hover:bg-white/10'
           }`}
-          style={{ touchAction: 'manipulation' }}
         >
           {opt.label}
         </button>
@@ -531,6 +513,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // 3. ICON GROUP: Chuyển thành slider ngang chứa tất cả icons
   const IconGroup = () => {
+    // Tạo mảng chứa tất cả icons
     const allIcons = [
       ...travelTourIcons,
       ...busTicketIcons,
@@ -539,32 +522,27 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
       ...laundryIcons,
       ...homestayIcons
     ];
+    // Xác định các icon thuộc nhóm đang active
+    const groupIcons = iconMap[activeMenu];
+
     return (
-      <div
-        className="w-full overflow-x-auto overflow-y-visible flex flex-row flex-nowrap whitespace-nowrap gap-4 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide relative items-center h-12 py-0 px-2 mb-4"
-        style={{
-          WebkitOverflowScrolling: 'touch',
-          scrollBehavior: 'smooth',
+      <div className="w-full overflow-x-auto flex flex-row flex-nowrap whitespace-nowrap gap-4 p-2 bg-white/10 rounded-lg shadow no-scrollbar scrollbar-hide scroll-snap-x"
+        style={{ 
+          WebkitOverflowScrolling: 'touch', 
+          scrollBehavior: 'smooth', 
+          scrollSnapType: 'x mandatory',
           minWidth: 0,
-          maxWidth: '100%',
-          zIndex: 10000,
-          position: 'relative',
-          overflowX: 'auto',
-          overflowY: 'visible',
-          touchAction: 'pan-x',
+          maxWidth: '100%'
         }}
       >
         {allIcons.map(icon => (
-          <div
-            key={icon}
-            className="flex-shrink-0 relative flex items-center justify-center"
-            style={{ overflow: 'visible', zIndex: 10001, height: '100%', minWidth: 40 }}
-          >
+          <div key={icon} className="flex-shrink-0 scroll-snap-align-start">
             {iconComponents[icon] ? (
-              <IconWithTooltip
-                iconName={icon}
-                iconSize={24}
+              <IconWithTooltip 
+                iconName={icon} 
+                iconSize={24} 
                 isActive={icon === activeIcon}
+                isShowTooltip={showGroupTooltip === activeMenu && groupIcons.includes(icon)}
                 className="transition-transform duration-200 hover:scale-110"
               />
             ) : (
@@ -578,7 +556,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // 4. CARD DỊCH VỤ: Style lại card/reference: ảnh lớn, overlay, tag, nút heart/arrow, slider ngang
   const ServiceCard = ({ refItem }: { refItem: ReferenceItem }) => (
-    <div className="relative min-w-[280px] max-w-xs rounded-2xl shadow-lg bg-white/90">
+    <div className="relative min-w-[280px] max-w-xs rounded-2xl shadow-lg overflow-hidden bg-white/90">
       <img src={refItem.image ? refItem.image : hotelImage} alt={refItem.title || 'Service'} className="w-full h-40 object-cover" />
       <div className="absolute top-2 left-2 flex gap-1">
         <span className="bg-amber-400 text-xs font-bold px-2 py-1 rounded-full">AI</span>
@@ -610,7 +588,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // 5. NÚT CHAT AI: Style lại nút gọi AI cho lớn, glow, fixed bottom center
   const CallButton = () => (
-    <button className="fixed bottom-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-8 py-4 rounded-full shadow-lg text-lg font-bold flex items-center gap-2 animate-pulse z-50" onClick={() => handleCall(lang as any)}>
+    <button className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-8 py-4 rounded-full shadow-lg text-lg font-bold flex items-center gap-2 animate-pulse z-50" onClick={() => handleCall(lang as any)}>
       <span className="material-icons text-3xl mr-2">auto_mode</span>
       {t('press_to_order', lang)}
     </button>
@@ -661,23 +639,11 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
         backgroundImage: `linear-gradient(rgba(139,26,71,0.7), rgba(168,34,85,0.6)), url(${hotelImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        perspective: '1000px',
-        overflowX: 'visible',
+        perspective: '1000px'
       }}
     >
-      <div
-        className="flex flex-col items-center justify-start text-white overflow-visible pb-28 sm:pb-28"
-        style={{
-          minWidth: 0,
-          width: '100vw',
-          maxWidth: '100vw',
-          left: 0,
-          position: 'relative',
-          zIndex: 1000,
-          background: 'transparent',
-          padding: 0,
-          margin: 0,
-        }}
+      <div className="container mx-auto flex flex-col items-center justify-start text-white p-3 pt-6 sm:p-5 sm:pt-10 lg:pt-16 overflow-visible pb-32 sm:pb-24" 
+        style={{ transform: 'translateZ(20px)', minHeight: 'fit-content' }}
       >
         <Header />
         <TabBar />
