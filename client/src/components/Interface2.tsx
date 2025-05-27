@@ -199,9 +199,9 @@ const ServiceLabels = () => {
           {row.map(opt => (
             <span
               key={opt.key}
-              className={`flex-shrink-0 min-w-[90px] sm:min-w-[80px] px-3 py-1.5 rounded-full font-bold text-sm sm:text-xs shadow text-center transition-all duration-200 ${
+              className={`flex-shrink-0 min-w-[70px] sm:min-w-[80px] px-2 sm:px-3 py-1 sm:py-1.5 rounded-full font-bold text-xs sm:text-sm shadow text-center transition-all duration-200 ${
                 activeService === opt.key 
-                  ? 'bg-amber-400 text-pink-900 scale-110 ring-2 ring-amber-300' 
+                  ? 'bg-amber-400 text-pink-900 scale-105 ring-2 ring-amber-300' 
                   : 'bg-amber-400/60 text-pink-900/80'
               }`}
               style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.01em', display: 'inline-block' }}
@@ -333,11 +333,11 @@ const KeywordsBlock = () => {
       <ServiceLabels />
       {/* Keyword icons rows */}
       {keywordRows.map((row: string[], idx: number) => (
-        <div key={idx} className="flex flex-row justify-center gap-4">
+        <div key={idx} className="flex flex-row justify-center gap-2 sm:gap-4">
           {row.map((k: string) => keywordIconMap[k] && (
             <span 
               key={k} 
-              className={`transition-all duration-200 ${
+              className={`transition-all duration-200 w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center ${
                 activeKeywords.includes(k) 
                   ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg' 
                   : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
@@ -347,6 +347,7 @@ const KeywordsBlock = () => {
             >
               <IconWithTooltip 
                 icon={React.cloneElement(keywordIconMap[k], { 
+                  size: 22, // nhỏ hơn cho mobile
                   color: activeKeywords.includes(k) 
                     ? '#FFC94A' 
                     : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
