@@ -288,6 +288,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // Bổ sung các dịch vụ chính vào tabOptions
   const tabOptions = [
+    { key: 'localtourism', label: t('local_tourism_information', lang) },
     { key: 'tours', label: t('tours', lang) },
     { key: 'bus', label: t('ticket_bus', lang) },
     { key: 'vehicle', label: t('rental_service', lang) },
@@ -296,7 +297,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     { key: 'homestay', label: t('homestay_service', lang) },
     { key: 'roomservice', label: t('room_services', lang) },
     { key: 'housekeeping', label: t('housekeeping', lang) },
-    { key: 'localtourism', label: t('tourism_and_exploration', lang) },
     { key: 'concierge', label: t('concierge_support', lang) },
     { key: 'guestfeedback', label: t('guest_feedback', lang) }
   ];
