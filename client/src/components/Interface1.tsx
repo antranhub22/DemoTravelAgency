@@ -52,7 +52,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   const [showReference, setShowReference] = useState(false);
 
   // Thêm state để quản lý menu đang chọn trên mobile
-  type MenuKey = 'tours' | 'bus' | 'vehicle' | 'currency' | 'laundry' | 'homestay';
+  type MenuKey = 'tours' | 'bus' | 'vehicle' | 'currency' | 'laundry' | 'homestay' | 'roomservice' | 'housekeeping' | 'localtourism' | 'concierge' | 'guestfeedback';
   const [activeMenu, setActiveMenu] = useState<MenuKey>('tours');
 
   // State để điều khiển popup infographic
@@ -286,7 +286,38 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     "homestay_300k", "homestay_300_600k", "homestay_600k", "homestay_longterm", "homestay_fullhouse", "homestay_additional"
   ];
 
-  // Thêm biến ánh xạ iconMap
+  // Bổ sung các dịch vụ chính vào tabOptions
+  const tabOptions = [
+    { key: 'tours', label: t('tourism_tour', lang) },
+    { key: 'bus', label: t('ticket_bus', lang) },
+    { key: 'vehicle', label: t('rental_service', lang) },
+    { key: 'currency', label: t('currency_exchange', lang) },
+    { key: 'laundry', label: t('laundry_service', lang) },
+    { key: 'homestay', label: t('homestay_service', lang) },
+    { key: 'roomservice', label: t('room_services', lang) },
+    { key: 'housekeeping', label: t('icon_cleaning_services', lang) },
+    { key: 'localtourism', label: t('tourism_and_exploration', lang) },
+    { key: 'concierge', label: t('icon_support_agent', lang) },
+    { key: 'guestfeedback', label: t('icon_rate_review', lang) }
+  ];
+
+  // Bổ sung iconMap cho các dịch vụ mới
+  const roomServiceIcons = [
+    'roomservice_food', 'roomservice_drink', 'roomservice_extra', 'roomservice_request'
+  ];
+  const housekeepingIcons = [
+    'housekeeping_cleaning', 'housekeeping_linen', 'housekeeping_amenities', 'housekeeping_maintenance'
+  ];
+  const localTourismIcons = [
+    'localtourism_attraction', 'localtourism_event', 'localtourism_map', 'localtourism_shopping'
+  ];
+  const conciergeIcons = [
+    'concierge_restaurant', 'concierge_spa', 'concierge_taxi', 'concierge_wakeup', 'concierge_lostfound'
+  ];
+  const guestFeedbackIcons = [
+    'guestfeedback_issue', 'guestfeedback_time', 'guestfeedback_room', 'guestfeedback_resolution'
+  ];
+
   const iconMap = {
     tours: travelTourIcons,
     bus: busTicketIcons,
@@ -294,6 +325,11 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     currency: currencyIcons,
     laundry: laundryIcons,
     homestay: homestayIcons,
+    roomservice: roomServiceIcons,
+    housekeeping: housekeepingIcons,
+    localtourism: localTourismIcons,
+    concierge: conciergeIcons,
+    guestfeedback: guestFeedbackIcons
   };
 
   // Thêm useEffect để tự động set activeIcon khi activeMenu thay đổi
@@ -562,15 +598,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   );
 
   // 2. TABS: Trên mobile là dropdown, desktop là tab bar ngang
-  const tabOptions = [
-    { key: 'tours', label: t('tourism_tour', lang) },
-    { key: 'bus', label: t('ticket_bus', lang) },
-    { key: 'vehicle', label: t('rental_service', lang) },
-    { key: 'currency', label: t('currency_exchange', lang) },
-    { key: 'laundry', label: t('laundry_service', lang) },
-    { key: 'homestay', label: t('homestay_service', lang) },
-  ];
-
   const TabBar = () => (
     <>
       {/* Desktop: Tab bar ngang */}
