@@ -733,8 +733,8 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   const TabBar = () => (
     <>
       {/* Title with rainbow effect */}
-      <div className="w-full text-center mb-4">
-        <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-pink-500 via-amber-400 to-blue-500 text-transparent bg-clip-text animate-gradient-x">
+      <div className="w-full text-center mb-4 sm:mb-[31px]"> {/* 16px + 15px = 31px on desktop */}
+        <h2 className="text-xl sm:text-[36px] font-bold bg-gradient-to-r from-pink-500 via-amber-400 to-blue-500 text-transparent bg-clip-text animate-gradient-x">
           Speaking Multiple Languages with Our AI Voice Assistant
         </h2>
       </div>
@@ -782,7 +782,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
         </div>
       </div>
 
-      {/* Mobile: Dropdown menu */}
+      {/* Mobile: Dropdown menu (only keep this, remove the top dropdown) */}
       <div className="block sm:hidden w-full mb-4">
         <div className="relative w-full">
           <button
