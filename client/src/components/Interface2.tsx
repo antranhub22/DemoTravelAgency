@@ -780,32 +780,36 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             </div>
           </div>
           {/* Hai nút Confirm và Cancel dưới khối Summary */}
-          <div className="flex flex-col gap-4 w-full md:w-auto mt-2 mobile-order-2">
-            <Button
-              id="endCallButton"
-              onClick={handleNext}
-              variant="yellow"
-              className="w-full md:w-auto flex items-center justify-center space-x-2 text-base sm:text-lg"
-              style={{ minHeight: 56, minWidth: 220, zIndex: 10 }}
-            >
-              <span className="material-icons">send</span>
-              <span className="whitespace-nowrap">{t('end_call', language as import('../i18n').Lang)}</span>
-            </Button>
+          <div className="flex flex-row justify-between gap-2 w-full md:w-auto mt-2 mobile-order-2">
             <button
               id="cancelButtonDesktop"
               onClick={handleCancel}
-              className="w-full md:w-auto bg-white hover:bg-blue-100 text-blue-900 font-semibold py-3 px-8 rounded-full shadow flex items-center justify-center space-x-2 transition-all duration-200 border-2 border-blue-200 text-base sm:text-lg active:scale-95 active:bg-blue-100"
+              className="w-1/2 md:w-auto bg-white hover:bg-blue-100 text-blue-900 font-semibold py-2 px-4 rounded-full shadow flex items-center justify-center space-x-1 transition-all duration-200 border-2 border-blue-200 text-sm sm:text-base active:scale-95 active:bg-blue-100"
               style={{
                 fontFamily: 'inherit',
                 letterSpacing: 0.2,
-                minHeight: 56,
-                minWidth: 120,
+                minHeight: 40,
+                minWidth: 90,
                 touchAction: 'manipulation',
                 zIndex: 10
               }}
             >
-              <span className="material-icons text-lg mr-2">cancel</span>{t('cancel', language as import('../i18n').Lang)}
+              <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language as import('../i18n').Lang)}
             </button>
+            <Button
+              id="endCallButton"
+              onClick={handleNext}
+              variant="yellow"
+              className="w-1/2 md:w-auto flex items-center justify-center space-x-1 text-sm sm:text-base"
+              style={{ 
+                minHeight: 40,
+                minWidth: 90,
+                zIndex: 10 
+              }}
+            >
+              <span className="material-icons text-base">send</span>
+              <span className="whitespace-nowrap">{t('end_call', language as import('../i18n').Lang)}</span>
+            </Button>
           </div>
         </div>
       </div>
