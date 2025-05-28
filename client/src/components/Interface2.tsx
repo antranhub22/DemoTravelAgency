@@ -814,7 +814,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             display: 'block',
           } : {
             width: '900px',
-            aspectRatio: '16/9',
+            height: '360px',
             maxWidth: '900px',
             margin: '0 auto 24px auto',
             borderRadius: 16,
