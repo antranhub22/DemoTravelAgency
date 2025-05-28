@@ -853,10 +853,9 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
       <div className="w-full max-w-md mx-auto mb-4 bg-white/90 backdrop-blur-md rounded-xl shadow-lg p-4">
         <h3 className="text-lg font-semibold text-gray-800 mb-3">{t('active_orders', lang)}</h3>
         <div className="space-y-3">
-          {activeOrders.map((order, index) => {
+          {[...activeOrders].reverse().map((order, index) => {
             const timeDiff = now.getTime() - order.requestedAt.getTime();
             const minutesElapsed = Math.floor(timeDiff / (1000 * 60));
-            
             return (
               <div key={index} className="bg-white/80 rounded-lg p-3 shadow-sm border border-gray-100">
                 <div className="flex justify-between items-start mb-2">
@@ -898,7 +897,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
         <Header />
         <TabBar />
         <IconGroup />
-        <OrderStatusPanel />
         {activeIcon && iconMediaMap[activeIcon] && iconMediaMap[activeIcon].length > 0 && (
           <div className={`w-full overflow-x-auto flex flex-row gap-4 pb-4 ${iconMediaMap[activeIcon].length === 1 ? 'justify-center' : ''}`}>
             {iconMediaMap[activeIcon].map((media, idx) => (
@@ -915,6 +913,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
           </div>
         )}
         <CallButton />
+        <OrderStatusPanel />
         {/* --- END LAYOUT MỚI --- */}
         {/* Các block giao diện cũ đã được loại bỏ để layout mới hiển thị rõ ràng */}
         {showInfographic && (
