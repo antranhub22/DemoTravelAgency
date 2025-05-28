@@ -595,11 +595,11 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
         backgroundPosition: 'center'
       }}
     >
-      <div className="container mx-auto flex flex-col md:flex-row p-2 h-full gap-2">
+      <div className="container mx-auto flex flex-col md:flex-row p-2 h-full gap-2 mobile-order">
         {/* Left: Call indicator & Realtime conversation side by side, Reference below */}
-        <div className="w-full md:w-2/3 flex flex-col items-center space-y-1 sm:space-y-4 mt-1 min-h-0 overflow-y-auto">
+        <div className="w-full md:w-2/3 flex flex-col items-center space-y-1 sm:space-y-4 mt-1 min-h-0 overflow-y-auto mobile-order-left">
           {/* SiriCallButton ở trên */}
-          <div className="relative flex flex-col items-center justify-center mb-1 sm:mb-6 w-full max-w-xs mx-auto order-1">
+          <div className="relative flex flex-col items-center justify-center mb-1 sm:mb-6 w-full max-w-xs mx-auto mobile-order-1">
             {/* SiriCallButton ... */}
             <SiriCallButton
               containerId="siri-button"
@@ -674,7 +674,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             <div
               id="realTimeConversation"
               ref={conversationRef}
-              className="w-full flex flex-col-reverse gap-1 pr-2 relative max-w-full sm:max-w-2xl mx-auto min-h-[60px] max-h-[12vh] overflow-y-auto mb-1 order-2"
+              className="w-full flex flex-col-reverse gap-1 pr-2 relative max-w-full sm:max-w-2xl mx-auto min-h-[60px] max-h-[12vh] overflow-y-auto mb-1 mobile-order-3"
               style={{
                 background: 'rgba(255,255,255,0.88)',
                 borderRadius: 12,
@@ -759,7 +759,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             </div>
           )}
           {/* Thêm khối References phía dưới */}
-          <div className="w-full mt-4 order-4">
+          <div className="w-full mt-4 mobile-order-4">
             <div className="bg-blue-50 rounded-2xl shadow p-4 border border-blue-100">
               <h3 className="font-bold text-blue-900 text-lg mb-2">References</h3>
               <div className="text-gray-600">(Nội dung tham khảo sẽ hiển thị ở đây)</div>
@@ -767,20 +767,20 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           </div>
         </div>
         {/* Right: Keywords và Summary */}
-        <div className="w-full md:w-1/3 flex flex-col gap-4 p-2">
+        <div className="w-full md:w-1/3 flex flex-col gap-4 p-2 mobile-order-right">
           {/* Khối Keywords */}
-          <div className="order-3">
+          <div className="mobile-order-4">
             <KeywordsBlock />
           </div>
           {/* Khối Summary */}
-          <div className="p-3 sm:p-5 bg-white/80 rounded-xl shadow border border-white/30 mb-3 sm:mb-4 relative order-5" style={{backdropFilter:'blur(2px)'}}>
+          <div className="p-3 sm:p-5 bg-white/80 rounded-xl shadow border border-white/30 mb-3 sm:mb-4 relative mobile-order-5" style={{backdropFilter:'blur(2px)'}}>
             <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2 text-blue-800">{t('summary', language as import('../i18n').Lang)}</h3>
             <div className="text-sm sm:text-base leading-relaxed text-gray-800 whitespace-pre-line" style={{fontWeight: 400}}>
               {callSummary?.content || t('summary_placeholder', language as import('../i18n').Lang)}
             </div>
           </div>
           {/* Hai nút Confirm và Cancel dưới khối Summary */}
-          <div className="flex flex-col gap-4 w-full md:w-auto mt-2 order-6">
+          <div className="flex flex-col gap-4 w-full md:w-auto mt-2 mobile-order-2">
             <Button
               id="endCallButton"
               onClick={handleNext}
