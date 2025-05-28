@@ -135,12 +135,14 @@ const IconWithTooltip = ({ icon, tooltip, forceShowTooltip = false }: IconWithTo
       {icon}
       {(show || forceShowTooltip) && (
         <div
-          className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-2 text-sm font-medium whitespace-nowrap bg-white/10 backdrop-blur-sm rounded-lg"
+          className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 text-xs font-semibold whitespace-nowrap"
           style={{
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            background: 'none',
+            boxShadow: 'none',
+            border: 'none',
             color: '#fff',
-            textShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            textShadow: '0 2px 8px rgba(0,0,0,0.45)',
+            borderRadius: 0
           }}
         >
           {tooltip}
@@ -173,9 +175,11 @@ const ServiceLabels = () => {
   const [activeService, setActiveService] = useState<string | null>(null);
   const { transcripts } = useAssistant();
 
+  // Xác định service đang được đề cập
   useEffect(() => {
     const normText = transcripts.map(m => m.content.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ')).join(' ');
     
+    // Tìm service được đề cập nhiều nhất
     const serviceMentions = serviceLabelOptions.map(service => {
       const label = service.label.toLowerCase();
       const regex = new RegExp(`\\b${label.replace(/ /g, '\\s+')}\\b`, 'i');
@@ -191,7 +195,7 @@ const ServiceLabels = () => {
   }, [transcripts]);
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+    <div className="flex flex-col gap-2 w-full mb-2 items-center">
       <style>{`
         @media (max-width: 640px) {
           .service-label-row {
@@ -202,25 +206,16 @@ const ServiceLabels = () => {
         }
       `}</style>
       {serviceLabelRows.map((row, idx) => (
-        <div 
-          key={idx} 
-          className="flex flex-row justify-center gap-3 mx-auto service-label-row" 
-          style={window.innerWidth < 640 ? {marginBottom: 2, maxWidth: '90vw', width: '90vw'} : {maxWidth: '100%'}}
-        >
+        <div key={idx} className="flex flex-row justify-center gap-1 mx-auto service-label-row" style={window.innerWidth < 640 ? {marginBottom: 2, maxWidth: '90vw', width: '90vw'} : {maxWidth: '900px'}}>
           {row.map(opt => (
             <span
               key={opt.key}
-              className={`flex-shrink-0 min-w-[44px] sm:min-w-[120px] px-2 sm:px-4 py-1.5 sm:py-2 rounded-full font-semibold text-[10px] sm:text-sm shadow-sm text-center transition-all duration-200 ${
+              className={`flex-shrink-0 min-w-[44px] sm:min-w-[80px] px-0.5 sm:px-3 py-0.5 sm:py-1.5 rounded-full font-bold text-[10px] sm:text-sm shadow text-center transition-all duration-200 ${
                 activeService === opt.key 
                   ? 'bg-amber-400 text-pink-900 scale-105 ring-2 ring-amber-300' 
-                  : 'bg-amber-400/60 text-pink-900/80 hover:bg-amber-400/80'
+                  : 'bg-amber-400/60 text-pink-900/80'
               }`}
-              style={{ 
-                fontFamily: 'Poppins, sans-serif', 
-                letterSpacing: '0.01em', 
-                display: 'inline-block',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-              }}
+              style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.01em', display: 'inline-block' }}
             >
               {opt.label}
             </span>
@@ -287,49 +282,114 @@ const serviceRelatedTerms: Record<string, string[]> = {
 // --- END SERVICE RELATED TERMS MAPPING ---
 
 // --- COMPONENT: KeywordsBlock ---
+const allKeywords = Array.from(new Set(Object.values(serviceKeywordsMap).flat()));
+const keywordRows = chunkArray<string>(allKeywords, 10);
 const KeywordsBlock = () => {
   const [activeKeywords, setActiveKeywords] = useState<string[]>([]);
+  const [activeServices, setActiveServices] = useState<string[]>([]);
+  const [persistedServices, setPersistedServices] = useState<string[]>([]);
   const { transcripts } = useAssistant();
+
+  // Di chuyển hook vào trong component
+  const [keywordRelatedMap, setKeywordRelatedMap] = useState<Record<string, string[]>>({});
+  useEffect(() => {
+    fetch('/keywordRelatedMap.json')
+      .then(res => res.json())
+      .then(data => setKeywordRelatedMap(data));
+  }, []);
 
   useEffect(() => {
     const normText = transcripts.map(m => m.content.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ')).join(' ');
-    
-    const keywordMentions = Object.entries(serviceKeywordsMap).flatMap(([service, keywords]) =>
-      keywords.map(keyword => {
-        const label = keyword.toLowerCase();
-        const regex = new RegExp(`\\b${label.replace(/ /g, '\\s+')}\\b`, 'i');
-        const mentions = (normText.match(regex) || []).length;
-        return { keyword, mentions };
-      })
-    );
+    // Nhận diện service bằng related terms
+    const mentionedServices = Object.entries(serviceRelatedTerms)
+      .filter(([key, terms]) =>
+        terms.some(term => normText.includes(term.toLowerCase()))
+      )
+      .map(([key]) => key);
+    setActiveServices(mentionedServices);
+    // Thêm các service mới vào persistedServices
+    setPersistedServices(prev => {
+      const newServices = mentionedServices.filter(s => !prev.includes(s));
+      return [...prev, ...newServices];
+    });
+    // Lấy tất cả keywords thuộc các service được đề cập
+    const allServices = Array.from(new Set([...persistedServices, ...mentionedServices]));
+    const serviceKeywords = allServices.length > 0
+      ? Array.from(new Set(allServices.flatMap(s => serviceKeywordsMap[s] || [])))
+      : [];
+    // Highlight các keywords được nhắc tới trong hội thoại
+    const matched: string[] = serviceKeywords.filter((kw: string) => {
+      const related = keywordRelatedMap[kw] || [];
+      const allTerms = [kw, ...related].sort((a, b) => b.length - a.length);
+      return allTerms.some(term => {
+        const normTerm = term.toLowerCase().replace(/[^a-z0-9 ]/gi, ' ').replace(/\s+/g, ' ').trim();
+        if (!normTerm) return false;
+        const regex = new RegExp(`\\b${normTerm.replace(/ /g, '\\s+')}\\b`, 'i');
+        return regex.test(normText);
+      });
+    });
+    setActiveKeywords(matched);
+  }, [transcripts, keywordRelatedMap]);
 
-    const mostMentioned = keywordMentions
-      .filter(k => k.mentions > 0)
-      .sort((a, b) => b.mentions - a.mentions)
-      .slice(0, 6)
-      .map(k => k.keyword);
-
-    setActiveKeywords(mostMentioned);
+  // Reset persistedServices khi transcripts rỗng
+  useEffect(() => {
+    if (!transcripts || transcripts.length === 0) {
+      setPersistedServices([]);
+    }
   }, [transcripts]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <h3 className="text-lg font-semibold text-white mb-2">Keywords</h3>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        {Object.entries(keywordIconMap).map(([keyword, icon]) => (
-          <div
-            key={keyword}
-            className={`flex items-center gap-2 p-2 rounded-lg transition-all duration-300 ${
-              activeKeywords.includes(keyword)
-                ? 'bg-white/20 scale-105'
-                : 'bg-white/5 hover:bg-white/10'
-            }`}
-          >
-            <div className="flex-shrink-0">{icon}</div>
-            <span className="text-sm text-white/90 truncate">{keyword}</span>
-          </div>
-        ))}
-      </div>
+    <div className="flex flex-col gap-3 items-center w-full">
+      {/* Service labels 3 hàng trên cùng */}
+      <ServiceLabels />
+      {/* Keyword icons rows */}
+      <style>{`
+        @media (max-width: 640px) {
+          .keyword-icon-row {
+            gap: 4px !important;
+          }
+          .keyword-icon-row .keyword-icon {
+            width: 32px !important;
+            height: 32px !important;
+            min-width: 32px !important;
+            min-height: 32px !important;
+            max-width: 32px !important;
+            max-height: 32px !important;
+          }
+        }
+      `}</style>
+      {(window.innerWidth < 640
+        ? chunkArray(allKeywords, Math.ceil(allKeywords.length/3))
+        : chunkArray(allKeywords, Math.ceil(allKeywords.length/3))
+      ).map((row: string[], idx: number) => (
+        <div key={idx} className="flex flex-row justify-center gap-1 sm:gap-4 keyword-icon-row" style={window.innerWidth < 640 ? {marginBottom: 2, maxWidth: '90vw', width: '90vw'} : {maxWidth: '900px', margin: '0 auto'}}>
+          {row.map((k: string) => keywordIconMap[k] && (
+            <span 
+              key={k} 
+              className={`transition-all duration-200 w-6 h-6 sm:w-9 sm:h-9 flex items-center justify-center keyword-icon ${
+                activeKeywords.includes(k) 
+                  ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg' 
+                  : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
+                    ? 'opacity-100'
+                    : 'opacity-75'
+              }`}
+            >
+              <IconWithTooltip 
+                icon={React.cloneElement(keywordIconMap[k], { 
+                  size: window.innerWidth < 640 ? 13 : 18, // nhỏ hơn cho mobile
+                  color: activeKeywords.includes(k) 
+                    ? '#FFC94A' 
+                    : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
+                      ? '#FFC94A'
+                      : '#FFFFFF'
+                })} 
+                tooltip={k}
+                forceShowTooltip={activeKeywords.includes(k)}
+              />
+            </span>
+          ))}
+        </div>
+      ))}
     </div>
   );
 };
@@ -472,7 +532,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
     return () => cleanupAnimations();
   }, [conversationTurns]);
 
-  // Memoize handlers to prevent unnecessary re-renders
+  // Handler for Cancel button - End call and go back to interface1
   const handleCancel = useCallback(() => {
     // Capture the current duration for the email
     const finalDuration = callDuration > 0 ? callDuration : localDuration;
@@ -483,6 +543,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
     setCurrentInterface('interface1');
   }, [callDuration, localDuration, contextEndCall, setCurrentInterface]);
 
+  // Handler for Next button - End call and proceed to interface3
   const handleNext = useCallback(() => {
     // Nếu chưa có hội thoại thì không cho xác nhận
     if (!transcripts || transcripts.length === 0) {
@@ -503,12 +564,12 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
     }
   }, [callDuration, localDuration, contextEndCall, setCurrentInterface, transcripts, language]);
   
-  // Memoize the formatDuration function
-  const formatDuration = useCallback((seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  }, []);
+  // Format duration for display
+  const formatDuration = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${secs}`;
+  };
   
   // Local timer as a backup to ensure we always have a working timer
   useEffect(() => {
@@ -554,64 +615,342 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
   
   return (
     <div 
-      className={`fixed inset-0 bg-gradient-to-br from-pink-900/95 to-pink-800/95 backdrop-blur-sm transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Travel Agency Interface"
+      className={`absolute w-full min-h-screen h-full transition-opacity duration-500 ${
+        isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      } z-20 overflow-y-auto`} id="interface2"
+      style={{
+        backgroundImage: `linear-gradient(rgba(139,26,71,0.7), rgba(168,34,85,0.6)), url('/assets/courtyard.jpeg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
     >
-      <div className="h-full w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
-        <div className="flex flex-col h-full">
-          {/* Header Section */}
-          <header className="flex-none mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white text-center mb-2 sm:mb-4">
-              {t('hotel_name')}
-            </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-white/80 text-center">
-              {t('hotel_subtitle')}
-            </p>
-          </header>
-
-          {/* Main Content */}
-          <main className="flex-1 flex flex-col lg:flex-row gap-8">
-            {/* Left Column - Service Labels */}
-            <aside className="flex-none w-full lg:w-1/4 flex justify-center items-start" aria-label="Service Categories">
-              <ServiceLabels />
-            </aside>
-
-            {/* Center Column - Conversation + SiriCallButton */}
-            <section className="flex-1 flex flex-col items-center justify-center gap-6" aria-label="Conversation">
-              <div 
-                className="w-full max-w-2xl bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg flex flex-col items-center min-h-[320px]"
-                ref={conversationRef}
-                role="log"
-                aria-label="Conversation history"
+      <div className="container mx-auto flex flex-col p-2 gap-2 mobile-order">
+        {/* Call button */}
+        <div className="w-full flex flex-col items-center space-y-2 mt-1 mobile-order-1">
+          {/* SiriCallButton ở trên */}
+          <div className="relative flex flex-col items-center justify-center mb-2 sm:mb-6 w-full max-w-xs mx-auto">
+            {/* SiriCallButton ... */}
+            <SiriCallButton
+              containerId="siri-button"
+              isListening={!isMuted}
+              volumeLevel={micLevel}
+            />
+            {/* Duration bar với các nút hai bên, căn giữa tuyệt đối */}
+            <div className="flex items-center justify-center mt-2 w-full gap-2 sm:gap-3 mb-2 flex-row">
+              {/* Cancel button (always visible, compact on mobile) */}
+              <button
+                className="flex items-center justify-center transition-colors bg-white hover:bg-blue-100 text-blue-900 font-semibold py-2 px-2 sm:px-4 rounded-full shadow space-x-1 border-2 border-blue-200 text-xs sm:text-sm active:scale-95 active:bg-blue-100"
+                style={{ minWidth: 60, minHeight: 36, fontFamily: 'inherit', letterSpacing: 0.2, zIndex: 10 }}
+                onClick={handleCancel}
               >
-                {/* Hiển thị hội thoại ở đây nếu có, nếu không thì hiển thị hướng dẫn */}
-                {transcripts && transcripts.length > 0 ? (
-                  <div className="w-full space-y-2">
-                    {transcripts.map((msg, idx) => (
-                      <div key={msg.id || idx} className={`text-base rounded px-3 py-2 ${msg.role === 'assistant' ? 'bg-pink-100/80 text-pink-900 self-end' : 'bg-amber-100/80 text-amber-900 self-start'}`}>{msg.content}</div>
-                    ))}
+                <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language as import('../i18n').Lang)}
+              </button>
+              {/* Mute button */}
+              <button
+                className="flex items-center justify-center transition-colors"
+                title={isMuted ? t('unmute', language as import('../i18n').Lang) : t('mute', language as import('../i18n').Lang)}
+                onClick={toggleMute}
+                style={{fontSize: 22, padding: 0, background: 'none', border: 'none', color: '#d4af37', width: 28, height: 28}}
+                onMouseOver={e => (e.currentTarget.style.color = '#ffd700')}
+                onMouseOut={e => (e.currentTarget.style.color = '#d4af37')}
+              >
+                <span className="material-icons">{isMuted ? 'mic_off' : 'mic'}</span>
+              </button>
+              {/* Duration ở giữa */}
+              <div className="flex-1 flex justify-center">
+                <div className="text-white text-xs sm:text-sm bg-blue-900/80 rounded-full px-3 sm:px-4 py-1 shadow-lg border border-white/30 flex items-center justify-center" style={{backdropFilter:'blur(2px)'}}>
+                  {formatDuration(localDuration)}
+                </div>
+              </div>
+              {/* Volume button */}
+              <button
+                className="flex items-center justify-center transition-colors"
+                title="Mic Level"
+                style={{fontSize: 22, padding: 0, background: 'none', border: 'none', color: '#d4af37', width: 28, height: 28}}
+                tabIndex={-1}
+                disabled
+                onMouseOver={e => (e.currentTarget.style.color = '#ffd700')}
+                onMouseOut={e => (e.currentTarget.style.color = '#d4af37')}
+              >
+                <span className="material-icons">graphic_eq</span>
+                <span className="ml-1 flex items-end h-4 w-6">
+                  {[...Array(4)].map((_, i) => (
+                    <span key={i} style={{
+                      display: 'inline-block',
+                      width: 2,
+                      height: `${4 + Math.round((micLevel/100)*12) * ((i%2)+1)}px`,
+                      background: '#d4af37',
+                      marginLeft: 1,
+                      borderRadius: 1
+                    }} />
+                  ))}
+                </span>
+              </button>
+              {/* End Call button (always visible, compact on mobile) */}
+              <Button
+                id="endCallButton"
+                onClick={handleNext}
+                variant="yellow"
+                className="flex items-center justify-center space-x-1 text-xs sm:text-sm font-semibold rounded-full shadow px-2 sm:px-4 py-2 border-2 border-yellow-200 active:scale-95 active:bg-yellow-100"
+                style={{ minWidth: 60, minHeight: 36, zIndex: 10 }}
+              >
+                <span className="material-icons text-base">send</span>
+                <span className="whitespace-nowrap">End Call</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Realtime conversation */}
+        {showRealtimeConversation && (
+          <div
+            id="realTimeConversation"
+            ref={conversationRef}
+            className="w-full flex flex-col-reverse gap-1 pr-2 relative max-w-full sm:max-w-2xl mx-auto mb-2 mobile-order-3 realtime-fixed-height"
+            style={{
+              background: 'rgba(255,255,255,0.88)',
+              borderRadius: 12,
+              border: '1px solid rgba(255,255,255,0.35)',
+              boxShadow: '0px 4px 10px rgba(0,0,0,0.15)',
+              padding: '8px',
+              transition: 'box-shadow 0.3s, background 0.3s',
+              fontFamily: 'SF Pro Text, Roboto, Open Sans, Arial, sans-serif',
+              fontSize: window.innerWidth < 640 ? 14 : 16,
+              lineHeight: 1.5,
+              color: '#222',
+              fontWeight: 400,
+              backdropFilter: 'blur(2px)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              height: window.innerWidth < 640 ? '100px' : undefined,
+              minHeight: window.innerWidth < 640 ? '100px' : undefined,
+              maxHeight: window.innerWidth < 640 ? '100px' : undefined,
+              overflowY: 'auto',
+            }}
+          >
+            {/* Nút đóng transcript (ẩn realtime conversation) */}
+            <button
+              className="absolute top-1.5 right-1.5 w-5 h-5 flex items-center justify-center rounded-full bg-white/40 hover:bg-white/70 text-gray-400 hover:text-gray-700 shadow z-10 opacity-60 hover:opacity-90 transition-all"
+              style={{fontSize: 14, display: 'block'}}
+              title="Ẩn realtime conversation"
+              onClick={() => setShowRealtimeConversation(false)}
+            >
+              <span className="material-icons" style={{fontSize: 16}}>close</span>
+            </button>
+            {/* Display conversation turns */}
+            <div className="w-full flex flex-col gap-1 pr-2" style={{overflowY: 'auto', maxHeight: '28vh'}}>
+              {conversationTurns.length === 0 && (
+                <div className="text-gray-400 text-base text-center select-none" style={{opacity: 0.7}}>
+                  {t('tap_to_speak', language as import('../i18n').Lang)}
+                </div>
+              )}
+              {[...conversationTurns].reverse().map((turn, turnIdx) => (
+                <div key={turn.id} className="mb-1">
+                  <div className="flex items-start">
+                    <div className="flex-grow">
+                      {turn.role === 'user' ? (
+                        <p className="text-base md:text-lg font-medium text-gray-900" style={{marginBottom: 2}}>
+                          {turn.messages[0].content}
+                        </p>
+                      ) : (
+                        <p
+                          className="text-base md:text-lg font-medium"
+                          style={{
+                            marginBottom: 2,
+                            position: 'relative',
+                            background: 'linear-gradient(90deg, #FF512F, #F09819, #FFD700, #56ab2f, #43cea2, #1e90ff, #6a11cb, #FF512F)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            fontWeight: 600,
+                            letterSpacing: 0.2,
+                            transition: 'background 0.5s'
+                          }}
+                        >
+                          <span className="inline-flex flex-wrap">
+                            {turn.messages.map((msg, idx) => {
+                              const content = msg.content.slice(0, visibleChars[msg.id] || 0);
+                              return (
+                                <span key={msg.id} style={{ whiteSpace: 'pre' }}>
+                                  {content}
+                                  {/* Blinking cursor cho từ cuối cùng khi đang xử lý */}
+                                  {idx === turn.messages.length - 1 && turnIdx === 0 && visibleChars[msg.id] < msg.content.length && (
+                                    <span className="animate-blink text-yellow-500" style={{marginLeft: 1}}>|</span>
+                                  )}
+                                </span>
+                              );
+                            })}
+                          </span>
+                          {/* 3 chấm nhấp nháy khi assistant đang nghe */}
+                          {turnIdx === 0 && turn.role === 'assistant' && visibleChars[turn.messages[turn.messages.length-1].id] === turn.messages[turn.messages.length-1].content.length && (
+                            <span className="ml-2 animate-ellipsis text-yellow-500">...</span>
+                          )}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                ) : (
-                  <div className="text-white/80 text-center text-lg font-medium opacity-80 py-8">{t('start_conversation_hint') || 'Tap the button below to start your conversation!'}</div>
-                )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Reference (horizontal scroll for multiple media) */}
+        <div
+          className="reference-media-block"
+          style={window.innerWidth < 640 ? {
+            width: '90vw',
+            aspectRatio: '16/9',
+            maxWidth: '90vw',
+            margin: '0 auto 18px auto',
+            borderRadius: 16,
+            boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
+            background: 'rgba(255,255,255,0.88)',
+            border: '1px solid rgba(255,255,255,0.35)',
+            overflow: 'hidden',
+            position: 'relative',
+            padding: 0,
+            display: 'block',
+          } : {
+            width: '900px',
+            aspectRatio: '16/9',
+            maxWidth: '900px',
+            margin: '0 auto 24px auto',
+            borderRadius: 16,
+            boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
+            background: 'rgba(255,255,255,0.88)',
+            border: '1px solid rgba(255,255,255,0.35)',
+            overflow: 'hidden',
+            position: 'relative',
+            padding: 0,
+            display: 'block',
+          }}
+        >
+          <div
+            className="reference-media-carousel"
+            style={window.innerWidth < 640 ? {
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
+              height: '100%',
+              overflowX: 'auto',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+            } : {
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
+              height: '100%',
+              overflowX: 'auto',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+            }}
+          >
+            {/* Placeholder media slides */}
+            {[1,2,3].map((n) => (
+              <div
+                key={n}
+                style={{
+                  flex: '0 0 100%',
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  scrollSnapAlign: 'center',
+                  background: n % 2 === 0 ? 'rgba(230,242,255,0.92)' : 'rgba(255,255,255,0.92)',
+                  fontSize: 24,
+                  color: '#888',
+                  fontWeight: 500,
+                }}
+              >
+                Media {n}
               </div>
-              <div className="flex-none flex justify-center w-full">
-                <SiriCallButton
-                  containerId="siri-button"
-                  isListening={!isMuted}
-                  volumeLevel={micLevel}
-                />
-              </div>
-            </section>
-            {/* Right Column - Keywords (Ẩn trên mọi thiết bị) */}
-            {/* <aside className="flex-none lg:w-1/4" aria-label="Keywords">
-              <KeywordsBlock />
-            </aside> */}
-          </main>
+            ))}
+          </div>
         </div>
       </div>
+      <style>{`
+        @media (max-width: 640px) {
+          html, body, #interface2 {
+            overflow-x: hidden !important;
+            max-width: 100vw !important;
+          }
+          .mobile-main-block {
+            max-width: 90vw !important;
+            width: 100% !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            border-radius: 18px !important;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.07) !important;
+            margin-bottom: 18px !important;
+            background: white !important;
+            padding: 12px 10px !important;
+            box-sizing: border-box !important;
+          }
+          .service-label-row, .keyword-icon-row {
+            flex-wrap: wrap !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            box-sizing: border-box !important;
+          }
+          .mobile-service-label {
+            font-size: 12px !important;
+            min-width: 36px !important;
+            max-width: 100% !important;
+            padding: 2px 6px !important;
+            border-radius: 16px !important;
+            margin-bottom: 4px !important;
+            box-sizing: border-box !important;
+          }
+          .mobile-keyword-icon {
+            width: 26px !important;
+            height: 26px !important;
+            font-size: 15px !important;
+            margin: 2px !important;
+            box-sizing: border-box !important;
+          }
+          .mobile-summary {
+            background: rgba(255,255,255,0.92) !important;
+            font-size: 14px !important;
+            border-radius: 16px !important;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.06) !important;
+            margin-bottom: 18px !important;
+            padding: 12px 10px !important;
+            box-sizing: border-box !important;
+          }
+          .mobile-reference {
+            background: rgba(230,242,255,0.92) !important;
+            font-size: 14px !important;
+            border-radius: 16px !important;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.06) !important;
+            margin-bottom: 18px !important;
+            padding: 12px 10px !important;
+            box-sizing: border-box !important;
+          }
+          .mobile-btn {
+            min-width: 44px !important;
+            min-height: 44px !important;
+            font-size: 14px !important;
+            border-radius: 22px !important;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08) !important;
+            font-weight: 600 !important;
+            transition: background 0.2s, transform 0.1s;
+          }
+          .mobile-btn:active {
+            background: #ffe082 !important;
+            transform: scale(0.97);
+          }
+          .mobile-order-4, .mobile-order-5, .mobile-main-block.mobile-order-4, .mobile-main-block.mobile-order-5 {
+            display: none !important;
+          }
+        }
+        @media (min-width: 640px) {
+          .mobile-order-5, .mobile-summary, .p-3.sm\:p-5.bg-white\/80.rounded-xl.shadow.border.border-white\/30.mb-2.relative.mobile-order-5 {
+            display: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
