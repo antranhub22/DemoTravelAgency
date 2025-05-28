@@ -194,8 +194,17 @@ const ServiceLabels = () => {
 
   return (
     <div className="flex flex-col gap-2 w-full mb-2 items-center">
+      <style>{`
+        @media (max-width: 640px) {
+          .service-label-row {
+            max-width: 90vw !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+        }
+      `}</style>
       {serviceLabelRows.map((row, idx) => (
-        <div key={idx} className="flex flex-row justify-center gap-2 w-full max-w-4xl mx-auto">
+        <div key={idx} className="flex flex-row justify-center gap-2 w-full max-w-4xl mx-auto service-label-row">
           {row.map(opt => (
             <span
               key={opt.key}
@@ -332,12 +341,27 @@ const KeywordsBlock = () => {
       {/* Service labels 3 hàng trên cùng */}
       <ServiceLabels />
       {/* Keyword icons rows */}
-      {keywordRows.map((row: string[], idx: number) => (
-        <div key={idx} className="flex flex-row justify-center gap-2 sm:gap-4">
+      <style>{`
+        @media (max-width: 640px) {
+          .keyword-icon-row {
+            gap: 4px !important;
+          }
+          .keyword-icon-row .keyword-icon {
+            width: 32px !important;
+            height: 32px !important;
+            min-width: 32px !important;
+            min-height: 32px !important;
+            max-width: 32px !important;
+            max-height: 32px !important;
+          }
+        }
+      `}</style>
+      {chunkArray(allKeywords, 13).map((row: string[], idx: number) => (
+        <div key={idx} className="flex flex-row justify-center gap-1 sm:gap-4 keyword-icon-row">
           {row.map((k: string) => keywordIconMap[k] && (
             <span 
               key={k} 
-              className={`transition-all duration-200 w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center ${
+              className={`transition-all duration-200 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center keyword-icon ${
                 activeKeywords.includes(k) 
                   ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg' 
                   : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
@@ -347,7 +371,7 @@ const KeywordsBlock = () => {
             >
               <IconWithTooltip 
                 icon={React.cloneElement(keywordIconMap[k], { 
-                  size: 22, // nhỏ hơn cho mobile
+                  size: 18, // nhỏ hơn cho mobile
                   color: activeKeywords.includes(k) 
                     ? '#FFC94A' 
                     : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
