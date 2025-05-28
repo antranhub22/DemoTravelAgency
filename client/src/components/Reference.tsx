@@ -241,7 +241,13 @@ const Reference = ({ references, activeIconMedia }: ReferenceProps): JSX.Element
 
   // Main render
   return (
-    <div className="w-full sm:max-w-5xl mx-auto mt-2 mb-2 px-2 py-3 rounded-2xl" style={{ background: 'rgba(139,26,71,0.85)', minHeight: 260 }}>
+    <div className="w-full sm:max-w-5xl mx-auto mt-2 mb-2 px-2 py-3 rounded-2xl" 
+      style={{ 
+        background: 'rgba(139,26,71,0.85)', 
+        minHeight: 260, 
+        maxHeight: '80vh', 
+        overflowY: 'auto' 
+      }}>
       {/* Lightbox modal */}
       {lightboxImg && (
         <div
