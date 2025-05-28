@@ -288,17 +288,17 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // Bổ sung các dịch vụ chính vào tabOptions
   const tabOptions = [
-    { key: 'tours', label: t('tourism_tour', lang) },
+    { key: 'tours', label: t('tours', lang) },
     { key: 'bus', label: t('ticket_bus', lang) },
     { key: 'vehicle', label: t('rental_service', lang) },
     { key: 'currency', label: t('currency_exchange', lang) },
     { key: 'laundry', label: t('laundry_service', lang) },
     { key: 'homestay', label: t('homestay_service', lang) },
     { key: 'roomservice', label: t('room_services', lang) },
-    { key: 'housekeeping', label: t('icon_cleaning_services', lang) },
+    { key: 'housekeeping', label: t('housekeeping', lang) },
     { key: 'localtourism', label: t('tourism_and_exploration', lang) },
-    { key: 'concierge', label: t('icon_support_agent', lang) },
-    { key: 'guestfeedback', label: t('icon_rate_review', lang) }
+    { key: 'concierge', label: t('concierge_support', lang) },
+    { key: 'guestfeedback', label: t('guest_feedback', lang) }
   ];
 
   // Bổ sung iconMap cho các dịch vụ mới
