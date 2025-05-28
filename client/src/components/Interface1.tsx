@@ -732,22 +732,19 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   // 2. TABS: Trên mobile là dropdown, desktop là tab bar ngang
   const TabBar = () => (
     <>
-      {/* Desktop: Tab bar ngang với carousel vô hạn */}
+      {/* Desktop: Tab bar ngang với scroll */}
       <div className="hidden sm:block w-full mb-4">
-        <Carousel opts={{ loop: true }}>
-          <CarouselContent className="flex flex-row gap-2 bg-white/10 rounded-lg p-1 shadow">
-            {tabOptions.map(opt => (
-              <CarouselItem key={opt.key} className="min-w-[160px] sm:min-w-[120px] px-0">
-                <button
-                  onClick={() => setActiveMenu(opt.key as MenuKey)}
-                  className={`w-full px-4 py-2 rounded-full font-bold text-base sm:text-sm ${activeMenu === opt.key ? 'bg-amber-400 text-pink-900 shadow' : 'bg-transparent text-amber-300'}`}
-                >
-                  {opt.label}
-                </button>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+        <div className="flex flex-row gap-2 bg-white/10 rounded-lg p-1 shadow overflow-x-auto no-scrollbar">
+          {tabOptions.map(opt => (
+            <button
+              key={opt.key}
+              onClick={() => setActiveMenu(opt.key as MenuKey)}
+              className={`min-w-[160px] sm:min-w-[120px] px-4 py-2 rounded-full font-bold text-base sm:text-sm whitespace-nowrap ${activeMenu === opt.key ? 'bg-amber-400 text-pink-900 shadow' : 'bg-transparent text-amber-300'}`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
       </div>
     </>
   );
