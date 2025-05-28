@@ -637,10 +637,10 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             />
             {/* Duration bar với các nút hai bên, căn giữa tuyệt đối */}
             <div className="flex items-center justify-center mt-2 w-full gap-2 sm:gap-3 mb-2 flex-row">
-              {/* Cancel button (desktop only) */}
+              {/* Cancel button (always visible, compact on mobile) */}
               <button
-                className="hidden sm:flex items-center justify-center transition-colors bg-white hover:bg-blue-100 text-blue-900 font-semibold py-2 px-4 rounded-full shadow space-x-1 border-2 border-blue-200 text-sm active:scale-95 active:bg-blue-100"
-                style={{ minWidth: 90, minHeight: 40, fontFamily: 'inherit', letterSpacing: 0.2, zIndex: 10 }}
+                className="flex items-center justify-center transition-colors bg-white hover:bg-blue-100 text-blue-900 font-semibold py-2 px-2 sm:px-4 rounded-full shadow space-x-1 border-2 border-blue-200 text-xs sm:text-sm active:scale-95 active:bg-blue-100"
+                style={{ minWidth: 60, minHeight: 36, fontFamily: 'inherit', letterSpacing: 0.2, zIndex: 10 }}
                 onClick={handleCancel}
               >
                 <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language as import('../i18n').Lang)}
@@ -686,13 +686,13 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
                   ))}
                 </span>
               </button>
-              {/* End Call button (desktop only) */}
+              {/* End Call button (always visible, compact on mobile) */}
               <Button
                 id="endCallButton"
                 onClick={handleNext}
                 variant="yellow"
-                className="hidden sm:flex items-center justify-center space-x-1 text-sm font-semibold rounded-full shadow px-4 py-2 border-2 border-yellow-200 active:scale-95 active:bg-yellow-100"
-                style={{ minWidth: 90, minHeight: 40, zIndex: 10 }}
+                className="flex items-center justify-center space-x-1 text-xs sm:text-sm font-semibold rounded-full shadow px-2 sm:px-4 py-2 border-2 border-yellow-200 active:scale-95 active:bg-yellow-100"
+                style={{ minWidth: 60, minHeight: 36, zIndex: 10 }}
               >
                 <span className="material-icons text-base">send</span>
                 <span className="whitespace-nowrap">{t('end_call', language as import('../i18n').Lang)}</span>
