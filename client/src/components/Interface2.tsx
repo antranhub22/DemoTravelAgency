@@ -811,7 +811,20 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             position: 'relative',
             padding: 0,
             display: 'block',
-          } : {}}
+          } : {
+            width: '900px',
+            aspectRatio: '16/9',
+            maxWidth: '900px',
+            margin: '0 auto 24px auto',
+            borderRadius: 16,
+            boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
+            background: 'rgba(255,255,255,0.88)',
+            border: '1px solid rgba(255,255,255,0.35)',
+            overflow: 'hidden',
+            position: 'relative',
+            padding: 0,
+            display: 'block',
+          }}
         >
           <div
             className="reference-media-carousel"
@@ -823,7 +836,15 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               overflowX: 'auto',
               scrollSnapType: 'x mandatory',
               WebkitOverflowScrolling: 'touch',
-            } : {}}
+            } : {
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
+              height: '100%',
+              overflowX: 'auto',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+            }}
           >
             {/* Placeholder media slides */}
             {[1,2,3].map((n) => (
@@ -838,7 +859,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
                   justifyContent: 'center',
                   scrollSnapAlign: 'center',
                   background: n % 2 === 0 ? 'rgba(230,242,255,0.92)' : 'rgba(255,255,255,0.92)',
-                  fontSize: 18,
+                  fontSize: 24,
                   color: '#888',
                   fontWeight: 500,
                 }}
