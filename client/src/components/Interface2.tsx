@@ -795,23 +795,25 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           </div>
         )}
 
-        {/* Keywords */}
-        <div className="mobile-order-4 mb-2">
-          <KeywordsBlock />
-        </div>
-
-        {/* Summary */}
-        <div className="p-3 sm:p-5 bg-white/80 rounded-xl shadow border border-white/30 mb-2 relative mobile-order-5" style={{backdropFilter:'blur(2px)'}}>
-          <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2 text-blue-800">{t('summary', language as import('../i18n').Lang)}</h3>
-          <div className="text-sm sm:text-base leading-relaxed text-gray-800 whitespace-pre-line" style={{fontWeight: 400}}>
-            {callSummary?.content || t('summary_placeholder', language as import('../i18n').Lang)}
-          </div>
-        </div>
-
-        {/* References */}
-        <div className="w-full mt-2 mobile-order-4">
-          <div className="bg-blue-50 rounded-2xl shadow p-4 border border-blue-100">
-            <h3 className="font-bold text-blue-900 text-lg mb-2">References</h3>
+        {/* Reference (moved up, 16:9 aspect ratio on mobile) */}
+        <div
+          className="w-full mt-2 mobile-order-4 reference-media-block"
+          style={window.innerWidth < 640 ? {
+            width: '90vw',
+            height: `${(window.innerWidth * 0.9 * 9) / 16}px`,
+            maxWidth: '90vw',
+            maxHeight: `${(window.innerWidth * 0.9 * 9) / 16}px`,
+            margin: '0 auto',
+            borderRadius: 16,
+            boxShadow: '0 2px 12px 0 rgba(0,0,0,0.07)',
+            background: 'rgba(230,242,255,0.92)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+          } : {}}
+        >
+          <div className="w-full h-full flex items-center justify-center">
             <div className="text-gray-600">(Nội dung tham khảo sẽ hiển thị ở đây)</div>
           </div>
         </div>
@@ -886,6 +888,9 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           .mobile-btn:active {
             background: #ffe082 !important;
             transform: scale(0.97);
+          }
+          .mobile-order-4, .mobile-order-5, .mobile-main-block.mobile-order-4, .mobile-main-block.mobile-order-5 {
+            display: none !important;
           }
         }
       `}</style>
