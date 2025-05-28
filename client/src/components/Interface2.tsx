@@ -789,7 +789,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               style={{ minHeight: 56, minWidth: 220, zIndex: 10 }}
             >
               <span className="material-icons">send</span>
-              <span className="whitespace-nowrap">{t('confirm_request', language as import('../i18n').Lang)}</span>
+              <span className="whitespace-nowrap">{t('end_call', language as import('../i18n').Lang)}</span>
             </Button>
             <button
               id="cancelButtonDesktop"
