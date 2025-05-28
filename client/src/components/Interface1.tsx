@@ -14,7 +14,7 @@ import { iconMediaMap, IconMedia } from '../assets/iconMediaMap';
 import { FaMountain, FaCarSide, FaUmbrellaBeach, FaStar, FaBusAlt, FaRoute, FaMotorcycle, FaTaxi, FaMoneyBillWave, FaEuroSign, FaPoundSign, FaYenSign, FaRubleSign, FaExchangeAlt, FaBitcoin, FaTshirt, FaSoap, FaBolt, FaPlus, FaHome, FaBuilding, FaCalendarAlt, FaPlusSquare, FaDollarSign, FaWonSign, FaCity } from 'react-icons/fa';
 import { ReferenceMedia, ReferenceSlider } from './Reference';
 import { OrderStatus } from '@shared/schema';
-import { Bus, Mountain, Landmark, Car, CarFront, Bike, Coins, Euro, DollarSign, Shirt, Sparkles, Home, Building2, CalendarDays, KeyRound, UserRound, Plus, Star, Sun, CalendarCheck, Umbrella, Map, Ship, Waves, ArrowRightLeft } from 'lucide-react';
+import { Bus, Mountain, Landmark, Car, CarFront, Bike, Coins, Euro, DollarSign, Shirt, Sparkles, Home, Building2, CalendarDays, KeyRound, UserRound, Plus, Star, Sun, CalendarCheck, Umbrella, Map, Ship, Waves, ArrowRightLeft, ClipboardList, ShoppingBag, Utensils, AlarmClock, AlertTriangle, Clock, CheckCircle, Gift, Wrench, Search } from 'lucide-react';
 import InfographicSteps from './InfographicSteps';
 import '../styles/custom-scrollbar.css';
 
@@ -84,7 +84,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     // CURRENCY EXCHANGE
     usd: <DollarSign color={iconColor} size={28} strokeWidth={2} />, // USD
     eur: <Euro color={iconColor} size={28} strokeWidth={2} />, // EUR
-    krw: <Coins color={iconColor} size={28} strokeWidth={2} />, // KRW (Coins)
+    krw: <Coins color={iconColor} size={28} strokeWidth={2} />,
     rub: <Coins color={iconColor} size={28} strokeWidth={2} />, // RUB (Coins)
     currency_other: <Coins color={iconColor} size={28} strokeWidth={2} />, // Other
     // LAUNDRY SERVICE
@@ -99,6 +99,32 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     homestay_longterm: <CalendarDays color={iconColor} size={28} strokeWidth={2} />, // Long-term
     homestay_fullhouse: <KeyRound color={iconColor} size={28} strokeWidth={2} />, // Full house
     homestay_additional: <UserRound color={iconColor} size={28} strokeWidth={2} />, // Additional
+    // ROOM SERVICE
+    roomservice_food: <Star color={iconColor} size={28} strokeWidth={2} />, // Dùng Star cho món ăn đặc biệt
+    roomservice_drink: <Sparkles color={iconColor} size={28} strokeWidth={2} />, // Sparkles cho đồ uống
+    roomservice_extra: <Plus color={iconColor} size={28} strokeWidth={2} />, // Plus cho extra
+    roomservice_request: <ClipboardList color={iconColor} size={28} strokeWidth={2} />, // ClipboardList cho yêu cầu
+    // HOUSEKEEPING
+    housekeeping_cleaning: <Sparkles color={iconColor} size={28} strokeWidth={2} />, // Sparkles cho dọn phòng
+    housekeeping_linen: <Shirt color={iconColor} size={28} strokeWidth={2} />, // Shirt cho khăn ga
+    housekeeping_amenities: <Gift color={iconColor} size={28} strokeWidth={2} />, // Gift cho amenities
+    housekeeping_maintenance: <Wrench color={iconColor} size={28} strokeWidth={2} />, // Wrench cho bảo trì
+    // LOCAL TOURISM
+    localtourism_attraction: <Landmark color={iconColor} size={28} strokeWidth={2} />, // Landmark cho điểm đến
+    localtourism_event: <CalendarDays color={iconColor} size={28} strokeWidth={2} />, // CalendarDays cho sự kiện
+    localtourism_map: <Map color={iconColor} size={28} strokeWidth={2} />, // Map cho bản đồ
+    localtourism_shopping: <ShoppingBag color={iconColor} size={28} strokeWidth={2} />, // ShoppingBag cho mua sắm
+    // CONCIERGE
+    concierge_restaurant: <Utensils color={iconColor} size={28} strokeWidth={2} />, // Utensils cho nhà hàng
+    concierge_spa: <Sparkles color={iconColor} size={28} strokeWidth={2} />, // Sparkles cho spa
+    concierge_taxi: <CarFront color={iconColor} size={28} strokeWidth={2} />, // CarFront cho taxi
+    concierge_wakeup: <AlarmClock color={iconColor} size={28} strokeWidth={2} />, // AlarmClock cho wakeup
+    concierge_lostfound: <Search color={iconColor} size={28} strokeWidth={2} />, // Search cho lost & found
+    // GUEST FEEDBACK
+    guestfeedback_issue: <AlertTriangle color={iconColor} size={28} strokeWidth={2} />, // AlertTriangle cho issue
+    guestfeedback_time: <Clock color={iconColor} size={28} strokeWidth={2} />, // Clock cho thời gian
+    guestfeedback_room: <Home color={iconColor} size={28} strokeWidth={2} />, // Home cho phòng
+    guestfeedback_resolution: <CheckCircle color={iconColor} size={28} strokeWidth={2} /> // CheckCircle cho resolution
   };
 
   // Object ánh xạ tên icon cho từng ngôn ngữ
@@ -133,6 +159,27 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     homestay_longterm: 'Long-term',
     homestay_fullhouse: 'Full House',
     homestay_additional: 'Additional Services',
+    roomservice_food: 'Special Meal',
+    roomservice_drink: 'Special Drink',
+    roomservice_extra: 'Extra',
+    roomservice_request: 'Request',
+    housekeeping_cleaning: 'Cleaning',
+    housekeeping_linen: 'Linen',
+    housekeeping_amenities: 'Amenities',
+    housekeeping_maintenance: 'Maintenance',
+    localtourism_attraction: 'Attraction',
+    localtourism_event: 'Event',
+    localtourism_map: 'Map',
+    localtourism_shopping: 'Shopping',
+    concierge_restaurant: 'Restaurant',
+    concierge_spa: 'Spa',
+    concierge_taxi: 'Taxi',
+    concierge_wakeup: 'Wakeup',
+    concierge_lostfound: 'Lost & Found',
+    guestfeedback_issue: 'Issue',
+    guestfeedback_time: 'Time',
+    guestfeedback_room: 'Room',
+    guestfeedback_resolution: 'Resolution'
   };
   const iconDisplayNamesFr: Record<string, string> = {
     tour_halfday: 'Demi-journée',
@@ -165,6 +212,27 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     homestay_longterm: 'Longue durée',
     homestay_fullhouse: 'Maison entière',
     homestay_additional: 'Services supplémentaires',
+    roomservice_food: 'Repas spécial',
+    roomservice_drink: 'Boisson spéciale',
+    roomservice_extra: 'Extra',
+    roomservice_request: 'Demande',
+    housekeeping_cleaning: 'Nettoyage',
+    housekeeping_linen: 'Tissu',
+    housekeeping_amenities: 'Équipements',
+    housekeeping_maintenance: 'Entretien',
+    localtourism_attraction: 'Attraction',
+    localtourism_event: 'Événement',
+    localtourism_map: 'Carte',
+    localtourism_shopping: 'Shopping',
+    concierge_restaurant: 'Restaurant',
+    concierge_spa: 'Spa',
+    concierge_taxi: 'Taxi',
+    concierge_wakeup: 'Réveil',
+    concierge_lostfound: 'Perdu & Trouvé',
+    guestfeedback_issue: 'Problème',
+    guestfeedback_time: 'Temps',
+    guestfeedback_room: 'Chambre',
+    guestfeedback_resolution: 'Résolution'
   };
   const iconDisplayNamesRu: Record<string, string> = {
     tour_halfday: 'Полдня',
@@ -197,6 +265,27 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     homestay_longterm: 'Долгосрочно',
     homestay_fullhouse: 'Весь дом',
     homestay_additional: 'Доп. услуги',
+    roomservice_food: 'Специальное блюдо',
+    roomservice_drink: 'Специальный напиток',
+    roomservice_extra: 'Дополнительно',
+    roomservice_request: 'Запрос',
+    housekeeping_cleaning: 'Уборка',
+    housekeeping_linen: 'Постельное белье',
+    housekeeping_amenities: 'Удобства',
+    housekeeping_maintenance: 'Обслуживание',
+    localtourism_attraction: 'Достопримечательность',
+    localtourism_event: 'Событие',
+    localtourism_map: 'Карта',
+    localtourism_shopping: 'Покупки',
+    concierge_restaurant: 'Ресторан',
+    concierge_spa: 'Спа',
+    concierge_taxi: 'Такси',
+    concierge_wakeup: 'Пробуждение',
+    concierge_lostfound: 'Потеряно и Найдено',
+    guestfeedback_issue: 'Проблема',
+    guestfeedback_time: 'Время',
+    guestfeedback_room: 'Номер',
+    guestfeedback_resolution: 'Решение'
   };
   const iconDisplayNamesZh: Record<string, string> = {
     tour_halfday: '半天',
@@ -229,6 +318,27 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     homestay_longterm: '长期',
     homestay_fullhouse: '整栋',
     homestay_additional: '附加服务',
+    roomservice_food: '特色餐点',
+    roomservice_drink: '特色饮品',
+    roomservice_extra: '额外',
+    roomservice_request: '请求',
+    housekeeping_cleaning: '清洁',
+    housekeeping_linen: '床单',
+    housekeeping_amenities: '设施',
+    housekeeping_maintenance: '维护',
+    localtourism_attraction: '景点',
+    localtourism_event: '活动',
+    localtourism_map: '地图',
+    localtourism_shopping: '购物',
+    concierge_restaurant: '餐厅',
+    concierge_spa: '水疗',
+    concierge_taxi: '出租车',
+    concierge_wakeup: '唤醒',
+    concierge_lostfound: '丢失和找到',
+    guestfeedback_issue: '问题',
+    guestfeedback_time: '时间',
+    guestfeedback_room: '房间',
+    guestfeedback_resolution: '解决'
   };
   const iconDisplayNamesKo: Record<string, string> = {
     tour_halfday: '반나절',
@@ -261,6 +371,27 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     homestay_longterm: '장기',
     homestay_fullhouse: '전체 집',
     homestay_additional: '추가 서비스',
+    roomservice_food: '특별한 음식',
+    roomservice_drink: '특별한 음료',
+    roomservice_extra: '추가',
+    roomservice_request: '요청',
+    housekeeping_cleaning: '청소',
+    housekeeping_linen: '이불',
+    housekeeping_amenities: '시설',
+    housekeeping_maintenance: '유지보수',
+    localtourism_attraction: '명소',
+    localtourism_event: '행사',
+    localtourism_map: '지도',
+    localtourism_shopping: '쇼핑',
+    concierge_restaurant: '레스토랑',
+    concierge_spa: '스파',
+    concierge_taxi: '택시',
+    concierge_wakeup: '일어나기',
+    concierge_lostfound: '잃어버린 것 찾기',
+    guestfeedback_issue: '문제',
+    guestfeedback_time: '시간',
+    guestfeedback_room: '방',
+    guestfeedback_resolution: '해결'
   };
 
   // Định nghĩa mảng iconName cho từng nhóm dịch vụ (theo danh sách mới)
