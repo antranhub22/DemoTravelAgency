@@ -733,7 +733,7 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   const TabBar = () => (
     <>
       {/* Title with rainbow effect */}
-      <div className="w-full text-center mb-4 sm:mb-[31px]"> {/* 16px + 15px = 31px on desktop */}
+      <div className="w-full text-center mb-4 sm:mb-[31px] pb-2 sm:pb-4"> {/* Add padding below to prevent text cut-off */}
         <h2 className="text-xl sm:text-[36px] font-bold bg-gradient-to-r from-pink-500 via-amber-400 to-blue-500 text-transparent bg-clip-text animate-gradient-x">
           Speaking Multiple Languages with Our AI Voice Assistant
         </h2>
