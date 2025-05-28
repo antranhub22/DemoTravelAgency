@@ -695,7 +695,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
                 style={{ minWidth: 60, minHeight: 36, zIndex: 10 }}
               >
                 <span className="material-icons text-base">send</span>
-                <span className="whitespace-nowrap">{t('end_call', language as import('../i18n').Lang)}</span>
+                <span className="whitespace-nowrap">End Call</span>
               </Button>
             </div>
           </div>
