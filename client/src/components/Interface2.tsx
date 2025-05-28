@@ -816,6 +816,67 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           </div>
         </div>
       </div>
+      <style>{`
+        @media (max-width: 640px) {
+          #interface2 {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+            font-family: 'Poppins', 'Inter', 'Roboto', sans-serif !important;
+          }
+          .mobile-main-block {
+            max-width: 90vw !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            border-radius: 18px !important;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.07) !important;
+            margin-bottom: 18px !important;
+            background: white !important;
+            padding: 12px 10px !important;
+          }
+          .mobile-service-label {
+            font-size: 12px !important;
+            min-width: 44px !important;
+            padding: 2px 8px !important;
+            border-radius: 16px !important;
+            margin-bottom: 4px !important;
+          }
+          .mobile-keyword-icon {
+            width: 28px !important;
+            height: 28px !important;
+            font-size: 16px !important;
+            margin: 2px !important;
+          }
+          .mobile-summary {
+            background: rgba(255,255,255,0.92) !important;
+            font-size: 14px !important;
+            border-radius: 16px !important;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.06) !important;
+            margin-bottom: 18px !important;
+            padding: 12px 10px !important;
+          }
+          .mobile-reference {
+            background: rgba(230,242,255,0.92) !important;
+            font-size: 14px !important;
+            border-radius: 16px !important;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.06) !important;
+            margin-bottom: 18px !important;
+            padding: 12px 10px !important;
+          }
+          .mobile-btn {
+            min-width: 44px !important;
+            min-height: 44px !important;
+            font-size: 14px !important;
+            border-radius: 22px !important;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.08) !important;
+            font-weight: 600 !important;
+            transition: background 0.2s, transform 0.1s;
+          }
+          .mobile-btn:active {
+            background: #ffe082 !important;
+            transform: scale(0.97);
+          }
+        }
+      `}</style>
     </div>
   );
 };
