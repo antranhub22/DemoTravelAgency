@@ -168,7 +168,7 @@ const serviceLabelOptions = [
   { key: 'guestfeedback', label: 'Guest Feedback' },
 ];
 const chunkArray = <T,>(arr: T[], size: number): T[][] => arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr];
-const serviceLabelRows = chunkArray(serviceLabelOptions, 4); // 3 hàng, mỗi hàng 4,4,3
+const serviceLabelRows = window.innerWidth < 640 ? chunkArray(serviceLabelOptions, 6) : chunkArray(serviceLabelOptions, 4); // 2 hàng 6 trên mobile, 3 hàng trên desktop
 const ServiceLabels = () => {
   const [activeService, setActiveService] = useState<string | null>(null);
   const { transcripts } = useAssistant();
@@ -204,11 +204,11 @@ const ServiceLabels = () => {
         }
       `}</style>
       {serviceLabelRows.map((row, idx) => (
-        <div key={idx} className="flex flex-row justify-center gap-2 w-full max-w-4xl mx-auto service-label-row">
+        <div key={idx} className="flex flex-row justify-center gap-1 w-full max-w-4xl mx-auto service-label-row" style={window.innerWidth < 640 ? {marginBottom: 2} : {}}>
           {row.map(opt => (
             <span
               key={opt.key}
-              className={`flex-shrink-0 min-w-[70px] sm:min-w-[80px] px-2 sm:px-3 py-1 sm:py-1.5 rounded-full font-bold text-xs sm:text-sm shadow text-center transition-all duration-200 ${
+              className={`flex-shrink-0 min-w-[54px] sm:min-w-[80px] px-1 sm:px-3 py-0.5 sm:py-1.5 rounded-full font-bold text-[11px] sm:text-sm shadow text-center transition-all duration-200 ${
                 activeService === opt.key 
                   ? 'bg-amber-400 text-pink-900 scale-105 ring-2 ring-amber-300' 
                   : 'bg-amber-400/60 text-pink-900/80'
@@ -356,12 +356,12 @@ const KeywordsBlock = () => {
           }
         }
       `}</style>
-      {chunkArray(allKeywords, 13).map((row: string[], idx: number) => (
-        <div key={idx} className="flex flex-row justify-center gap-1 sm:gap-4 keyword-icon-row">
+      {(window.innerWidth < 640 ? chunkArray(allKeywords, Math.ceil(allKeywords.length/3)) : chunkArray(allKeywords, 13)).map((row: string[], idx: number) => (
+        <div key={idx} className="flex flex-row justify-center gap-1 sm:gap-4 keyword-icon-row" style={window.innerWidth < 640 ? {marginBottom: 2} : {}}>
           {row.map((k: string) => keywordIconMap[k] && (
             <span 
               key={k} 
-              className={`transition-all duration-200 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center keyword-icon ${
+              className={`transition-all duration-200 w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center keyword-icon ${
                 activeKeywords.includes(k) 
                   ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg' 
                   : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
@@ -371,7 +371,7 @@ const KeywordsBlock = () => {
             >
               <IconWithTooltip 
                 icon={React.cloneElement(keywordIconMap[k], { 
-                  size: 18, // nhỏ hơn cho mobile
+                  size: window.innerWidth < 640 ? 15 : 18, // nhỏ hơn cho mobile
                   color: activeKeywords.includes(k) 
                     ? '#FFC94A' 
                     : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
@@ -732,7 +732,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           <div
             id="realTimeConversation"
             ref={conversationRef}
-            className="w-full flex flex-col-reverse gap-1 pr-2 relative max-w-full sm:max-w-2xl mx-auto min-h-[60px] mb-2 mobile-order-3"
+            className="w-full flex flex-col-reverse gap-1 pr-2 relative max-w-full sm:max-w-2xl mx-auto mb-2 mobile-order-3 realtime-fixed-height"
             style={{
               background: 'rgba(255,255,255,0.88)',
               borderRadius: 12,
@@ -749,6 +749,10 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-end',
+              height: window.innerWidth < 640 ? '100px' : undefined,
+              minHeight: window.innerWidth < 640 ? '100px' : undefined,
+              maxHeight: window.innerWidth < 640 ? '100px' : undefined,
+              overflowY: 'auto',
             }}
           >
             {/* Nút đóng transcript (ẩn realtime conversation) */}
