@@ -795,7 +795,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           </div>
         )}
 
-        {/* Reference (always below realtime, styled to match) */}
+        {/* Reference (horizontal scroll for multiple media) */}
         <div
           className="reference-media-block"
           style={window.innerWidth < 640 ? {
@@ -807,19 +807,45 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
             background: 'rgba(255,255,255,0.88)',
             border: '1px solid rgba(255,255,255,0.35)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 12,
-            fontFamily: 'Poppins, Inter, Roboto, sans-serif',
-            fontSize: 15,
-            color: '#222',
-            fontWeight: 500,
             overflow: 'hidden',
+            position: 'relative',
+            padding: 0,
+            display: 'block',
           } : {}}
         >
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="text-gray-600">(Nội dung tham khảo sẽ hiển thị ở đây)</div>
+          <div
+            className="reference-media-carousel"
+            style={window.innerWidth < 640 ? {
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
+              height: '100%',
+              overflowX: 'auto',
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+            } : {}}
+          >
+            {/* Placeholder media slides */}
+            {[1,2,3].map((n) => (
+              <div
+                key={n}
+                style={{
+                  flex: '0 0 100%',
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  scrollSnapAlign: 'center',
+                  background: n % 2 === 0 ? 'rgba(230,242,255,0.92)' : 'rgba(255,255,255,0.92)',
+                  fontSize: 18,
+                  color: '#888',
+                  fontWeight: 500,
+                }}
+              >
+                Media {n}
+              </div>
+            ))}
           </div>
         </div>
       </div>
