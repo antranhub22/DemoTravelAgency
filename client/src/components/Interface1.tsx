@@ -733,17 +733,90 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   const TabBar = () => (
     <>
       {/* Desktop: Tab bar ngang với scroll */}
-      <div className="hidden sm:block w-full mb-4">
-        <div className="flex flex-row gap-2 bg-white/10 rounded-lg p-1 shadow overflow-x-auto no-scrollbar">
-          {tabOptions.map(opt => (
-            <button
-              key={opt.key}
-              onClick={() => setActiveMenu(opt.key as MenuKey)}
-              className={`min-w-[160px] sm:min-w-[120px] px-4 py-2 rounded-full font-bold text-base sm:text-sm whitespace-nowrap ${activeMenu === opt.key ? 'bg-amber-400 text-pink-900 shadow' : 'bg-transparent text-amber-300'}`}
-            >
-              {opt.label}
-            </button>
-          ))}
+      <div className="hidden sm:block w-full mb-6">
+        <div className="relative">
+          {/* Gradient overlay for scroll indication */}
+          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-pink-900/20 to-transparent pointer-events-none z-10"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-pink-900/20 to-transparent pointer-events-none z-10"></div>
+          
+          {/* Tab container */}
+          <div className="flex flex-row gap-1 bg-white/10 backdrop-blur-sm rounded-xl p-1.5 shadow-lg overflow-x-auto no-scrollbar scroll-smooth">
+            {tabOptions.map(opt => (
+              <button
+                key={opt.key}
+                onClick={() => setActiveMenu(opt.key as MenuKey)}
+                className={`
+                  relative min-w-[140px] px-4 py-2.5 rounded-lg font-medium text-sm
+                  transition-all duration-200 ease-in-out
+                  focus:outline-none focus:ring-2 focus:ring-amber-400/50
+                  ${activeMenu === opt.key 
+                    ? 'bg-amber-400 text-pink-900 shadow-md scale-[1.02]' 
+                    : 'bg-transparent text-amber-200 hover:bg-white/10 hover:text-amber-100'
+                  }
+                  whitespace-nowrap
+                  flex items-center justify-center
+                  group
+                `}
+                aria-selected={activeMenu === opt.key}
+                role="tab"
+              >
+                {/* Active indicator */}
+                {activeMenu === opt.key && (
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-pink-900 rounded-full"></div>
+                )}
+                
+                {/* Hover effect */}
+                <span className="relative z-10 transition-transform duration-200 group-hover:scale-105">
+                  {opt.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile: Dropdown menu */}
+      <div className="block sm:hidden w-full mb-4">
+        <div className="relative w-full">
+          <button
+            className="w-full px-4 py-3 rounded-xl bg-white/20 backdrop-blur-md text-amber-100 font-medium text-base flex items-center justify-between shadow-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-amber-400/50 transition-all duration-200"
+            onClick={() => setShowTabDropdown(v => !v)}
+            aria-expanded={showTabDropdown}
+            aria-haspopup="true"
+          >
+            <span className="truncate text-base font-medium text-amber-100">
+              {tabOptions.find(opt => opt.key === activeMenu)?.label}
+            </span>
+            <span className="material-icons ml-2 text-amber-200 transition-transform duration-200" 
+                  style={{transform: showTabDropdown ? 'rotate(180deg)' : 'rotate(0deg)'}}>
+              expand_more
+            </span>
+          </button>
+          
+          {showTabDropdown && (
+            <>
+              <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm" onClick={() => setShowTabDropdown(false)} />
+              <div className="absolute left-0 right-0 mt-2 bg-white/90 backdrop-blur-md rounded-xl shadow-xl z-50 border border-white/30 overflow-hidden">
+                {tabOptions.map(opt => (
+                  <button
+                    key={opt.key}
+                    className={`
+                      w-full text-left px-4 py-3 text-base font-medium
+                      transition-colors duration-200
+                      ${activeMenu === opt.key 
+                        ? 'bg-amber-100/80 text-pink-900' 
+                        : 'text-amber-900 hover:bg-amber-50/80 hover:text-pink-900'
+                      }
+                      focus:outline-none focus:ring-2 focus:ring-amber-400/50
+                    `}
+                    onClick={() => { setActiveMenu(opt.key as MenuKey); setShowTabDropdown(false); }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>
