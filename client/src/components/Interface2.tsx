@@ -725,8 +725,8 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               flexDirection: 'column',
               justifyContent: 'flex-end',
               height: window.innerWidth < 640 ? '100px' : undefined,
-              minHeight: window.innerWidth < 640 ? '100px' : 220,
-              maxHeight: window.innerWidth < 640 ? '100px' : 320,
+              minHeight: window.innerWidth < 640 ? '100px' : 110,
+              maxHeight: window.innerWidth < 640 ? '100px' : 160,
               overflowY: 'auto',
             }}
           >
@@ -814,7 +814,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             display: 'block',
           } : {
             width: '900px',
-            height: '360px',
+            height: '280px',
             maxWidth: '900px',
             margin: '0 auto 24px auto',
             borderRadius: 16,
