@@ -572,23 +572,32 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           </header>
 
           {/* Main Content */}
-          <main className="flex-1 flex flex-col lg:flex-row gap-6 sm:gap-8">
+          <main className="flex-1 flex flex-col lg:flex-row gap-8">
             {/* Left Column - Service Labels */}
-            <aside className="flex-none lg:w-1/4" aria-label="Service Categories">
+            <aside className="flex-none w-full lg:w-1/4 flex justify-center items-start" aria-label="Service Categories">
               <ServiceLabels />
             </aside>
 
-            {/* Center Column - Conversation */}
-            <section className="flex-1 flex flex-col gap-4 sm:gap-6" aria-label="Conversation">
+            {/* Center Column - Conversation + SiriCallButton */}
+            <section className="flex-1 flex flex-col items-center justify-center gap-6" aria-label="Conversation">
               <div 
-                className="flex-1 bg-white/5 backdrop-blur-sm rounded-xl p-4 sm:p-6 overflow-y-auto"
+                className="w-full max-w-2xl bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg flex flex-col items-center min-h-[320px]"
                 ref={conversationRef}
                 role="log"
                 aria-label="Conversation history"
               >
-                {/* Conversation content */}
+                {/* Hiển thị hội thoại ở đây nếu có, nếu không thì hiển thị hướng dẫn */}
+                {transcripts && transcripts.length > 0 ? (
+                  <div className="w-full space-y-2">
+                    {transcripts.map((msg, idx) => (
+                      <div key={msg.id || idx} className={`text-base rounded px-3 py-2 ${msg.role === 'assistant' ? 'bg-pink-100/80 text-pink-900 self-end' : 'bg-amber-100/80 text-amber-900 self-start'}`}>{msg.content}</div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-white/80 text-center text-lg font-medium opacity-80 py-8">{t('start_conversation_hint') || 'Tap the button below to start your conversation!'}</div>
+                )}
               </div>
-              <div className="flex-none">
+              <div className="flex-none flex justify-center w-full">
                 <SiriCallButton
                   containerId="siri-button"
                   isListening={!isMuted}
@@ -596,11 +605,10 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
                 />
               </div>
             </section>
-
-            {/* Right Column - Keywords */}
-            <aside className="flex-none lg:w-1/4" aria-label="Keywords">
+            {/* Right Column - Keywords (Ẩn trên mọi thiết bị) */}
+            {/* <aside className="flex-none lg:w-1/4" aria-label="Keywords">
               <KeywordsBlock />
-            </aside>
+            </aside> */}
           </main>
         </div>
       </div>
