@@ -168,7 +168,9 @@ const serviceLabelOptions = [
   { key: 'guestfeedback', label: 'Guest Feedback' },
 ];
 const chunkArray = <T,>(arr: T[], size: number): T[][] => arr.length > size ? [arr.slice(0, size), ...chunkArray(arr.slice(size), size)] : [arr];
-const serviceLabelRows = window.innerWidth < 640 ? chunkArray(serviceLabelOptions, 6) : chunkArray(serviceLabelOptions, 4); // 2 hàng 6 trên mobile, 3 hàng trên desktop
+const serviceLabelRows = window.innerWidth < 640
+  ? chunkArray(serviceLabelOptions, 6)
+  : chunkArray(serviceLabelOptions, 6); // 2 rows, 6 per row on desktop
 const ServiceLabels = () => {
   const [activeService, setActiveService] = useState<string | null>(null);
   const { transcripts } = useAssistant();
@@ -204,7 +206,7 @@ const ServiceLabels = () => {
         }
       `}</style>
       {serviceLabelRows.map((row, idx) => (
-        <div key={idx} className="flex flex-row justify-center gap-1 w-full max-w-4xl mx-auto service-label-row" style={window.innerWidth < 640 ? {marginBottom: 2} : {}}>
+        <div key={idx} className="flex flex-row justify-center gap-1 w-full mx-auto service-label-row" style={window.innerWidth < 640 ? {marginBottom: 2} : {maxWidth: '900px'}}>
           {row.map(opt => (
             <span
               key={opt.key}
@@ -356,8 +358,11 @@ const KeywordsBlock = () => {
           }
         }
       `}</style>
-      {(window.innerWidth < 640 ? chunkArray(allKeywords, Math.ceil(allKeywords.length/3)) : chunkArray(allKeywords, 13)).map((row: string[], idx: number) => (
-        <div key={idx} className="flex flex-row justify-center gap-1 sm:gap-4 keyword-icon-row" style={window.innerWidth < 640 ? {marginBottom: 2} : {}}>
+      {(window.innerWidth < 640
+        ? chunkArray(allKeywords, Math.ceil(allKeywords.length/3))
+        : chunkArray(allKeywords, Math.ceil(allKeywords.length/3))
+      ).map((row: string[], idx: number) => (
+        <div key={idx} className="flex flex-row justify-center gap-1 sm:gap-4 keyword-icon-row" style={window.innerWidth < 640 ? {marginBottom: 2} : {maxWidth: '900px', margin: '0 auto'}}>
           {row.map((k: string) => keywordIconMap[k] && (
             <span 
               key={k} 
