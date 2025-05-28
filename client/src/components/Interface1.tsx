@@ -691,40 +691,9 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     <div className="flex items-center justify-between w-full mb-4">
       <style>{shimmerAnimation}</style>
       {/* Đã xóa nút ngôn ngữ và nút info ở đây */}
-      {/* Các thành phần khác giữ nguyên, ví dụ: tiêu đề, dropdown, ... */}
+      {/* Các thành phần khác giữ nguyên, ví dụ: tiêu đề, ... */}
       <div className="flex-1 flex justify-center items-center">
-        {/* Dropdown tab nằm giữa trên mobile */}
-        <div className="block sm:hidden w-full max-w-xs mx-auto">
-          <div className="relative w-full">
-            <button
-              className="w-full px-4 py-3 rounded-2xl bg-white/30 backdrop-blur-md text-amber-100 font-bold text-base flex items-center justify-between shadow-lg border border-white/30 focus:outline-none focus:ring-2 focus:ring-amber-300 transition-all duration-200"
-              style={{ boxShadow: '0 4px 24px 0 rgba(139,26,71,0.10)', fontFamily: 'Poppins, sans-serif', letterSpacing: '0.02em' }}
-              onClick={() => setShowTabDropdown(v => !v)}
-            >
-              <span className="truncate text-lg font-semibold text-amber-100 drop-shadow-sm" style={{textShadow:'0 1px 6px rgba(139,26,71,0.18)'}}>
-                {tabOptions.find(opt => opt.key === activeMenu)?.label}
-              </span>
-              <span className="material-icons ml-2 text-amber-200 transition-transform duration-200" style={{transform: showTabDropdown ? 'rotate(180deg)' : 'rotate(0deg)'}}>expand_more</span>
-            </button>
-            {showTabDropdown && (
-              <>
-                <div className="fixed inset-0 z-40 bg-black/10" onClick={() => setShowTabDropdown(false)} />
-                <div className="absolute left-0 right-0 mt-2 bg-white/80 bg-gradient-to-br from-[#fff7] to-[#ffe9b3cc] rounded-2xl shadow-2xl z-50 border border-amber-100 overflow-hidden backdrop-blur-md">
-                  {tabOptions.map(opt => (
-                    <button
-                      key={opt.key}
-                      className={`w-full text-left px-5 py-3 text-base font-semibold ${activeMenu === opt.key ? 'bg-amber-100/80 text-pink-900' : 'text-amber-900 hover:bg-amber-50/80 hover:text-pink-900'}`}
-                      style={{fontFamily:'Poppins, sans-serif', letterSpacing:'0.01em'}}
-                      onClick={() => { setActiveMenu(opt.key as MenuKey); setShowTabDropdown(false); }}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+        {/* Đã xóa dropdown tab nằm giữa trên mobile ở đây */}
       </div>
     </div>
   );
