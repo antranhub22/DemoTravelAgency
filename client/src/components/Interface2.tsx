@@ -795,21 +795,26 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           </div>
         )}
 
-        {/* Reference (moved up, 16:9 aspect ratio on mobile) */}
+        {/* Reference (always below realtime, styled to match) */}
         <div
-          className="w-full mt-2 mobile-order-4 reference-media-block"
+          className="reference-media-block"
           style={window.innerWidth < 640 ? {
             width: '90vw',
-            height: `${(window.innerWidth * 0.9 * 9) / 16}px`,
+            aspectRatio: '16/9',
             maxWidth: '90vw',
-            maxHeight: `${(window.innerWidth * 0.9 * 9) / 16}px`,
-            margin: '0 auto',
+            margin: '0 auto 18px auto',
             borderRadius: 16,
-            boxShadow: '0 2px 12px 0 rgba(0,0,0,0.07)',
-            background: 'rgba(230,242,255,0.92)',
+            boxShadow: '0 4px 16px 0 rgba(0,0,0,0.10)',
+            background: 'rgba(255,255,255,0.88)',
+            border: '1px solid rgba(255,255,255,0.35)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            padding: 12,
+            fontFamily: 'Poppins, Inter, Roboto, sans-serif',
+            fontSize: 15,
+            color: '#222',
+            fontWeight: 500,
             overflow: 'hidden',
           } : {}}
         >
