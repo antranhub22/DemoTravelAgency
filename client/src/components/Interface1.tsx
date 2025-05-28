@@ -420,17 +420,17 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
 
   // Bổ sung các dịch vụ chính vào tabOptions
   const tabOptions = [
-    { key: 'localtourism', label: t('local_tourism_information', lang) },
-    { key: 'tours', label: t('tours', lang) },
-    { key: 'bus', label: t('ticket_bus', lang) },
-    { key: 'vehicle', label: t('rental_service', lang) },
-    { key: 'currency', label: t('currency_exchange', lang) },
-    { key: 'laundry', label: t('laundry_service', lang) },
-    { key: 'homestay', label: t('homestay_service', lang) },
-    { key: 'roomservice', label: t('room_services', lang) },
-    { key: 'housekeeping', label: t('housekeeping', lang) },
-    { key: 'concierge', label: t('concierge_support', lang) },
-    { key: 'guestfeedback', label: t('guest_feedback', lang) }
+    { key: 'localtourism', label: 'Local-Infor' },
+    { key: 'tours', label: 'Tours' },
+    { key: 'bus', label: 'Bus-Tickets' },
+    { key: 'vehicle', label: 'Vehicle-Rental' },
+    { key: 'currency', label: 'Currency-Ex' },
+    { key: 'laundry', label: 'Laundry-Service' },
+    { key: 'homestay', label: 'Homestay' },
+    { key: 'roomservice', label: 'Room-Service' },
+    { key: 'housekeeping', label: 'Housekeeping' },
+    { key: 'concierge', label: 'Concierge-Support' },
+    { key: 'guestfeedback', label: 'Guest-Feedback' }
   ];
 
   // Bổ sung iconMap cho các dịch vụ mới
