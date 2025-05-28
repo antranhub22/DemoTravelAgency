@@ -619,11 +619,11 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
         backgroundPosition: 'center'
       }}
     >
-      <div className="container mx-auto flex flex-col md:flex-row p-2 h-full gap-2 mobile-order">
-        {/* Left: Call indicator & Realtime conversation side by side, Reference below */}
-        <div className="w-full md:w-2/3 flex flex-col items-center space-y-2 sm:space-y-4 mt-1 min-h-0 overflow-y-auto mobile-order-left">
+      <div className="container mx-auto flex flex-col p-2 gap-2 mobile-order">
+        {/* Call button */}
+        <div className="w-full flex flex-col items-center space-y-2 mt-1 mobile-order-1">
           {/* SiriCallButton ở trên */}
-          <div className="relative flex flex-col items-center justify-center mb-2 sm:mb-6 w-full max-w-xs mx-auto mobile-order-1">
+          <div className="relative flex flex-col items-center justify-center mb-2 sm:mb-6 w-full max-w-xs mx-auto">
             {/* SiriCallButton ... */}
             <SiriCallButton
               containerId="siri-button"
@@ -692,148 +692,149 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               </button>
             </div>
           </div>
-          
-          {/* Realtime conversation container spans full width */}
-          {showRealtimeConversation && (
-            <div
-              id="realTimeConversation"
-              ref={conversationRef}
-              className="w-full flex flex-col-reverse gap-1 pr-2 relative max-w-full sm:max-w-2xl mx-auto min-h-[60px] max-h-[15vh] overflow-y-auto mb-2 mobile-order-3"
-              style={{
-                background: 'rgba(255,255,255,0.88)',
-                borderRadius: 12,
-                border: '1px solid rgba(255,255,255,0.35)',
-                boxShadow: '0px 4px 10px rgba(0,0,0,0.15)',
-                padding: '8px',
-                transition: 'box-shadow 0.3s, background 0.3s',
-                fontFamily: 'SF Pro Text, Roboto, Open Sans, Arial, sans-serif',
-                fontSize: window.innerWidth < 640 ? 14 : 16,
-                lineHeight: 1.5,
-                color: '#222',
-                fontWeight: 400,
-                backdropFilter: 'blur(2px)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-              }}
+        </div>
+
+        {/* Confirm/Cancel buttons */}
+        <div className="flex flex-row justify-between gap-2 w-full mt-2 mb-2 mobile-order-2">
+          <button
+            id="cancelButtonDesktop"
+            onClick={handleCancel}
+            className="w-1/2 md:w-auto bg-white hover:bg-blue-100 text-blue-900 font-semibold py-2 px-4 rounded-full shadow flex items-center justify-center space-x-1 transition-all duration-200 border-2 border-blue-200 text-sm sm:text-base active:scale-95 active:bg-blue-100"
+            style={{
+              fontFamily: 'inherit',
+              letterSpacing: 0.2,
+              minHeight: 40,
+              minWidth: 90,
+              touchAction: 'manipulation',
+              zIndex: 10
+            }}
+          >
+            <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language as import('../i18n').Lang)}
+          </button>
+          <Button
+            id="endCallButton"
+            onClick={handleNext}
+            variant="yellow"
+            className="w-1/2 md:w-auto flex items-center justify-center space-x-1 text-sm sm:text-base"
+            style={{ 
+              minHeight: 40,
+              minWidth: 90,
+              zIndex: 10 
+            }}
+          >
+            <span className="material-icons text-base">send</span>
+            <span className="whitespace-nowrap">{t('end_call', language as import('../i18n').Lang)}</span>
+          </Button>
+        </div>
+
+        {/* Realtime conversation */}
+        {showRealtimeConversation && (
+          <div
+            id="realTimeConversation"
+            ref={conversationRef}
+            className="w-full flex flex-col-reverse gap-1 pr-2 relative max-w-full sm:max-w-2xl mx-auto min-h-[60px] mb-2 mobile-order-3"
+            style={{
+              background: 'rgba(255,255,255,0.88)',
+              borderRadius: 12,
+              border: '1px solid rgba(255,255,255,0.35)',
+              boxShadow: '0px 4px 10px rgba(0,0,0,0.15)',
+              padding: '8px',
+              transition: 'box-shadow 0.3s, background 0.3s',
+              fontFamily: 'SF Pro Text, Roboto, Open Sans, Arial, sans-serif',
+              fontSize: window.innerWidth < 640 ? 14 : 16,
+              lineHeight: 1.5,
+              color: '#222',
+              fontWeight: 400,
+              backdropFilter: 'blur(2px)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+            }}
+          >
+            {/* Nút đóng transcript (ẩn realtime conversation) */}
+            <button
+              className="absolute top-1.5 right-1.5 w-5 h-5 flex items-center justify-center rounded-full bg-white/40 hover:bg-white/70 text-gray-400 hover:text-gray-700 shadow z-10 opacity-60 hover:opacity-90 transition-all"
+              style={{fontSize: 14, display: 'block'}}
+              title="Ẩn realtime conversation"
+              onClick={() => setShowRealtimeConversation(false)}
             >
-              {/* Nút đóng transcript (ẩn realtime conversation) */}
-              <button
-                className="absolute top-1.5 right-1.5 w-5 h-5 flex items-center justify-center rounded-full bg-white/40 hover:bg-white/70 text-gray-400 hover:text-gray-700 shadow z-10 opacity-60 hover:opacity-90 transition-all"
-                style={{fontSize: 14, display: 'block'}}
-                title="Ẩn realtime conversation"
-                onClick={() => setShowRealtimeConversation(false)}
-              >
-                <span className="material-icons" style={{fontSize: 16}}>close</span>
-              </button>
-              {/* Display conversation turns */}
-              <div className="w-full flex flex-col gap-1 pr-2" style={{overflowY: 'auto', maxHeight: '28vh'}}>
-                {conversationTurns.length === 0 && (
-                  <div className="text-gray-400 text-base text-center select-none" style={{opacity: 0.7}}>
-                    {t('tap_to_speak', language as import('../i18n').Lang)}
-                  </div>
-                )}
-                {[...conversationTurns].reverse().map((turn, turnIdx) => (
-                  <div key={turn.id} className="mb-1">
-                    <div className="flex items-start">
-                      <div className="flex-grow">
-                        {turn.role === 'user' ? (
-                          <p className="text-base md:text-lg font-medium text-gray-900" style={{marginBottom: 2}}>
-                            {turn.messages[0].content}
-                          </p>
-                        ) : (
-                          <p
-                            className="text-base md:text-lg font-medium"
-                            style={{
-                              marginBottom: 2,
-                              position: 'relative',
-                              background: 'linear-gradient(90deg, #FF512F, #F09819, #FFD700, #56ab2f, #43cea2, #1e90ff, #6a11cb, #FF512F)',
-                              WebkitBackgroundClip: 'text',
-                              WebkitTextFillColor: 'transparent',
-                              fontWeight: 600,
-                              letterSpacing: 0.2,
-                              transition: 'background 0.5s'
-                            }}
-                          >
-                            <span className="inline-flex flex-wrap">
-                              {turn.messages.map((msg, idx) => {
-                                const content = msg.content.slice(0, visibleChars[msg.id] || 0);
-                                return (
-                                  <span key={msg.id} style={{ whiteSpace: 'pre' }}>
-                                    {content}
-                                    {/* Blinking cursor cho từ cuối cùng khi đang xử lý */}
-                                    {idx === turn.messages.length - 1 && turnIdx === 0 && visibleChars[msg.id] < msg.content.length && (
-                                      <span className="animate-blink text-yellow-500" style={{marginLeft: 1}}>|</span>
-                                    )}
-                                  </span>
-                                );
-                              })}
-                            </span>
-                            {/* 3 chấm nhấp nháy khi assistant đang nghe */}
-                            {turnIdx === 0 && turn.role === 'assistant' && visibleChars[turn.messages[turn.messages.length-1].id] === turn.messages[turn.messages.length-1].content.length && (
-                              <span className="ml-2 animate-ellipsis text-yellow-500">...</span>
-                            )}
-                          </p>
-                        )}
-                      </div>
+              <span className="material-icons" style={{fontSize: 16}}>close</span>
+            </button>
+            {/* Display conversation turns */}
+            <div className="w-full flex flex-col gap-1 pr-2" style={{overflowY: 'auto', maxHeight: '28vh'}}>
+              {conversationTurns.length === 0 && (
+                <div className="text-gray-400 text-base text-center select-none" style={{opacity: 0.7}}>
+                  {t('tap_to_speak', language as import('../i18n').Lang)}
+                </div>
+              )}
+              {[...conversationTurns].reverse().map((turn, turnIdx) => (
+                <div key={turn.id} className="mb-1">
+                  <div className="flex items-start">
+                    <div className="flex-grow">
+                      {turn.role === 'user' ? (
+                        <p className="text-base md:text-lg font-medium text-gray-900" style={{marginBottom: 2}}>
+                          {turn.messages[0].content}
+                        </p>
+                      ) : (
+                        <p
+                          className="text-base md:text-lg font-medium"
+                          style={{
+                            marginBottom: 2,
+                            position: 'relative',
+                            background: 'linear-gradient(90deg, #FF512F, #F09819, #FFD700, #56ab2f, #43cea2, #1e90ff, #6a11cb, #FF512F)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            fontWeight: 600,
+                            letterSpacing: 0.2,
+                            transition: 'background 0.5s'
+                          }}
+                        >
+                          <span className="inline-flex flex-wrap">
+                            {turn.messages.map((msg, idx) => {
+                              const content = msg.content.slice(0, visibleChars[msg.id] || 0);
+                              return (
+                                <span key={msg.id} style={{ whiteSpace: 'pre' }}>
+                                  {content}
+                                  {/* Blinking cursor cho từ cuối cùng khi đang xử lý */}
+                                  {idx === turn.messages.length - 1 && turnIdx === 0 && visibleChars[msg.id] < msg.content.length && (
+                                    <span className="animate-blink text-yellow-500" style={{marginLeft: 1}}>|</span>
+                                  )}
+                                </span>
+                              );
+                            })}
+                          </span>
+                          {/* 3 chấm nhấp nháy khi assistant đang nghe */}
+                          {turnIdx === 0 && turn.role === 'assistant' && visibleChars[turn.messages[turn.messages.length-1].id] === turn.messages[turn.messages.length-1].content.length && (
+                            <span className="ml-2 animate-ellipsis text-yellow-500">...</span>
+                          )}
+                        </p>
+                      )}
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          )}
-          {/* Thêm khối References phía dưới */}
-          <div className="w-full mt-2 mobile-order-4">
-            <div className="bg-blue-50 rounded-2xl shadow p-4 border border-blue-100">
-              <h3 className="font-bold text-blue-900 text-lg mb-2">References</h3>
-              <div className="text-gray-600">(Nội dung tham khảo sẽ hiển thị ở đây)</div>
-            </div>
+          </div>
+        )}
+
+        {/* Keywords */}
+        <div className="mobile-order-4 mb-2">
+          <KeywordsBlock />
+        </div>
+
+        {/* Summary */}
+        <div className="p-3 sm:p-5 bg-white/80 rounded-xl shadow border border-white/30 mb-2 relative mobile-order-5" style={{backdropFilter:'blur(2px)'}}>
+          <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2 text-blue-800">{t('summary', language as import('../i18n').Lang)}</h3>
+          <div className="text-sm sm:text-base leading-relaxed text-gray-800 whitespace-pre-line" style={{fontWeight: 400}}>
+            {callSummary?.content || t('summary_placeholder', language as import('../i18n').Lang)}
           </div>
         </div>
-        {/* Right: Keywords và Summary */}
-        <div className="w-full md:w-1/3 flex flex-col gap-3 p-2 mobile-order-right">
-          {/* Khối Keywords */}
-          <div className="mobile-order-4 mb-2">
-            <KeywordsBlock />
-          </div>
-          {/* Khối Summary */}
-          <div className="p-3 sm:p-5 bg-white/80 rounded-xl shadow border border-white/30 mb-2 relative mobile-order-5" style={{backdropFilter:'blur(2px)'}}>
-            <h3 className="font-semibold text-base sm:text-lg mb-1 sm:mb-2 text-blue-800">{t('summary', language as import('../i18n').Lang)}</h3>
-            <div className="text-sm sm:text-base leading-relaxed text-gray-800 whitespace-pre-line" style={{fontWeight: 400}}>
-              {callSummary?.content || t('summary_placeholder', language as import('../i18n').Lang)}
-            </div>
-          </div>
-          {/* Hai nút Confirm và Cancel dưới khối Summary */}
-          <div className="flex flex-row justify-between gap-2 w-full md:w-auto mt-2 mb-2 mobile-order-2">
-            <button
-              id="cancelButtonDesktop"
-              onClick={handleCancel}
-              className="w-1/2 md:w-auto bg-white hover:bg-blue-100 text-blue-900 font-semibold py-2 px-4 rounded-full shadow flex items-center justify-center space-x-1 transition-all duration-200 border-2 border-blue-200 text-sm sm:text-base active:scale-95 active:bg-blue-100"
-              style={{
-                fontFamily: 'inherit',
-                letterSpacing: 0.2,
-                minHeight: 40,
-                minWidth: 90,
-                touchAction: 'manipulation',
-                zIndex: 10
-              }}
-            >
-              <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language as import('../i18n').Lang)}
-            </button>
-            <Button
-              id="endCallButton"
-              onClick={handleNext}
-              variant="yellow"
-              className="w-1/2 md:w-auto flex items-center justify-center space-x-1 text-sm sm:text-base"
-              style={{ 
-                minHeight: 40,
-                minWidth: 90,
-                zIndex: 10 
-              }}
-            >
-              <span className="material-icons text-base">send</span>
-              <span className="whitespace-nowrap">{t('end_call', language as import('../i18n').Lang)}</span>
-            </Button>
+
+        {/* References */}
+        <div className="w-full mt-2 mobile-order-4">
+          <div className="bg-blue-50 rounded-2xl shadow p-4 border border-blue-100">
+            <h3 className="font-bold text-blue-900 text-lg mb-2">References</h3>
+            <div className="text-gray-600">(Nội dung tham khảo sẽ hiển thị ở đây)</div>
           </div>
         </div>
       </div>
