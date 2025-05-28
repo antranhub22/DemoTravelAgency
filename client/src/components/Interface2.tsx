@@ -639,11 +639,12 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             <div className="flex items-center justify-center mt-2 w-full gap-2 sm:gap-3 mb-2 flex-row">
               {/* Cancel button (always visible, compact on mobile) */}
               <button
-                className="flex items-center justify-center transition-colors bg-white hover:bg-blue-100 text-blue-900 font-semibold py-2 px-2 sm:px-4 rounded-full shadow space-x-1 border-2 border-blue-200 text-xs sm:text-sm active:scale-95 active:bg-blue-100"
-                style={{ minWidth: 60, minHeight: 36, fontFamily: 'inherit', letterSpacing: 0.2, zIndex: 10 }}
+                className="flex items-center justify-center transition-colors bg-white hover:bg-blue-100 text-blue-900 font-semibold py-2 px-2 sm:px-5 rounded-full shadow space-x-1 border-2 border-blue-200 text-xs sm:text-base active:scale-95 active:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                style={{ minWidth: 90, minHeight: 44, fontFamily: 'inherit', letterSpacing: 0.2, zIndex: 10 }}
                 onClick={handleCancel}
               >
-                <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language as import('../i18n').Lang)}
+                <span className="material-icons text-lg mr-1">cancel</span>
+                <span className="whitespace-nowrap">{t('cancel', language as import('../i18n').Lang)}</span>
               </button>
               {/* Mute button */}
               <button
@@ -658,7 +659,7 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               </button>
               {/* Duration ở giữa */}
               <div className="flex-1 flex justify-center">
-                <div className="text-white text-xs sm:text-sm bg-blue-900/80 rounded-full px-3 sm:px-4 py-1 shadow-lg border border-white/30 flex items-center justify-center" style={{backdropFilter:'blur(2px)'}}>
+                <div className="text-white text-xs sm:text-base bg-blue-900/80 rounded-full px-3 sm:px-5 py-1 shadow-lg border border-white/30 flex items-center justify-center" style={{backdropFilter:'blur(2px)'}}>
                   {formatDuration(localDuration)}
                 </div>
               </div>
@@ -691,10 +692,10 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
                 id="endCallButton"
                 onClick={handleNext}
                 variant="yellow"
-                className="flex items-center justify-center space-x-1 text-xs sm:text-sm font-semibold rounded-full shadow px-2 sm:px-4 py-2 border-2 border-yellow-200 active:scale-95 active:bg-yellow-100"
-                style={{ minWidth: 60, minHeight: 36, zIndex: 10 }}
+                className="flex items-center justify-center space-x-1 text-xs sm:text-base font-semibold rounded-full shadow px-2 sm:px-5 py-2 border-2 border-yellow-200 active:scale-95 active:bg-yellow-100 focus:outline-none focus:ring-2 focus:ring-yellow-300"
+                style={{ minWidth: 110, minHeight: 44, zIndex: 10 }}
               >
-                <span className="material-icons text-base">send</span>
+                <span className="material-icons text-lg">send</span>
                 <span className="whitespace-nowrap">End Call</span>
               </Button>
             </div>
@@ -706,13 +707,13 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
           <div
             id="realTimeConversation"
             ref={conversationRef}
-            className="w-full flex flex-col-reverse gap-1 pr-2 relative max-w-full sm:max-w-2xl mx-auto mb-2 mobile-order-3 realtime-fixed-height"
+            className="w-full flex flex-col-reverse gap-1 pr-2 relative max-w-full sm:max-w-3xl mx-auto mb-2 mobile-order-3 realtime-fixed-height"
             style={{
               background: 'rgba(255,255,255,0.88)',
               borderRadius: 12,
               border: '1px solid rgba(255,255,255,0.35)',
               boxShadow: '0px 4px 10px rgba(0,0,0,0.15)',
-              padding: '8px',
+              padding: '12px',
               transition: 'box-shadow 0.3s, background 0.3s',
               fontFamily: 'SF Pro Text, Roboto, Open Sans, Arial, sans-serif',
               fontSize: window.innerWidth < 640 ? 14 : 16,
@@ -724,8 +725,8 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               flexDirection: 'column',
               justifyContent: 'flex-end',
               height: window.innerWidth < 640 ? '100px' : undefined,
-              minHeight: window.innerWidth < 640 ? '100px' : undefined,
-              maxHeight: window.innerWidth < 640 ? '100px' : undefined,
+              minHeight: window.innerWidth < 640 ? '100px' : 220,
+              maxHeight: window.innerWidth < 640 ? '100px' : 320,
               overflowY: 'auto',
             }}
           >
