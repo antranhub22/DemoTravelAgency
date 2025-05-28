@@ -643,28 +643,43 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               >
                 <span className="material-icons">{isMuted ? 'mic_off' : 'mic'}</span>
               </button>
-              {/* Nút Cancel (chỉ mobile) */}
-              <button
-                id="cancelButton"
-                onClick={handleCancel}
-                className="flex items-center justify-center px-3 py-2 bg-white/80 hover:bg-blue-100 text-blue-900 rounded-full text-xs font-semibold border-2 border-blue-200 shadow transition-colors sm:hidden active:scale-95 active:bg-blue-100"
-                style={{
-                  fontFamily: 'inherit',
-                  letterSpacing: 0.2,
-                  minHeight: 44,
-                  minWidth: 90,
-                  fontSize: 14,
-                  touchAction: 'manipulation',
-                  zIndex: 10
-                }}
-              >
-                <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language as import('../i18n').Lang)}
-              </button>
-              {/* Duration ở giữa, luôn căn giữa */}
-              <div className="flex-1 flex justify-center">
-                <div className="text-white text-xs sm:text-sm bg-blue-900/80 rounded-full px-3 sm:px-4 py-1 shadow-lg border border-white/30 flex items-center justify-center" style={{backdropFilter:'blur(2px)'}}>
-                  {formatDuration(localDuration)}
+              {/* Nút Cancel and End Call buttons on the same row for mobile */}
+              <div className="flex flex-row items-center justify-between gap-2 w-full mt-2 mb-2 mobile-order-2" style={window.innerWidth < 640 ? {marginTop: 0} : {}}>
+                <button
+                  id="cancelButtonDesktop"
+                  onClick={handleCancel}
+                  className="w-1/3 md:w-auto bg-white hover:bg-blue-100 text-blue-900 font-semibold py-2 px-2 rounded-full shadow flex items-center justify-center space-x-1 transition-all duration-200 border-2 border-blue-200 text-sm sm:text-base active:scale-95 active:bg-blue-100"
+                  style={{
+                    fontFamily: 'inherit',
+                    letterSpacing: 0.2,
+                    minHeight: 40,
+                    minWidth: 60,
+                    touchAction: 'manipulation',
+                    zIndex: 10
+                  }}
+                >
+                  <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language as import('../i18n').Lang)}
+                </button>
+                {/* Duration ở giữa */}
+                <div className="flex-1 flex justify-center">
+                  <div className="text-white text-xs sm:text-sm bg-blue-900/80 rounded-full px-3 sm:px-4 py-1 shadow-lg border border-white/30 flex items-center justify-center" style={{backdropFilter:'blur(2px)'}}>
+                    {formatDuration(localDuration)}
+                  </div>
                 </div>
+                <Button
+                  id="endCallButton"
+                  onClick={handleNext}
+                  variant="yellow"
+                  className="w-1/3 md:w-auto flex items-center justify-center space-x-1 text-sm sm:text-base"
+                  style={{ 
+                    minHeight: 40,
+                    minWidth: 60,
+                    zIndex: 10 
+                  }}
+                >
+                  <span className="material-icons text-base">send</span>
+                  <span className="whitespace-nowrap">{t('end_call', language as import('../i18n').Lang)}</span>
+                </Button>
               </div>
               {/* Nút MicLevel bên phải */}
               <button
@@ -692,39 +707,6 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Confirm/Cancel buttons */}
-        <div className="flex flex-row justify-between gap-2 w-full mt-2 mb-2 mobile-order-2">
-          <button
-            id="cancelButtonDesktop"
-            onClick={handleCancel}
-            className="w-1/2 md:w-auto bg-white hover:bg-blue-100 text-blue-900 font-semibold py-2 px-4 rounded-full shadow flex items-center justify-center space-x-1 transition-all duration-200 border-2 border-blue-200 text-sm sm:text-base active:scale-95 active:bg-blue-100"
-            style={{
-              fontFamily: 'inherit',
-              letterSpacing: 0.2,
-              minHeight: 40,
-              minWidth: 90,
-              touchAction: 'manipulation',
-              zIndex: 10
-            }}
-          >
-            <span className="material-icons text-base mr-1">cancel</span>{t('cancel', language as import('../i18n').Lang)}
-          </button>
-          <Button
-            id="endCallButton"
-            onClick={handleNext}
-            variant="yellow"
-            className="w-1/2 md:w-auto flex items-center justify-center space-x-1 text-sm sm:text-base"
-            style={{ 
-              minHeight: 40,
-              minWidth: 90,
-              zIndex: 10 
-            }}
-          >
-            <span className="material-icons text-base">send</span>
-            <span className="whitespace-nowrap">{t('end_call', language as import('../i18n').Lang)}</span>
-          </Button>
         </div>
 
         {/* Realtime conversation */}
