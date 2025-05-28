@@ -732,6 +732,13 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
   // 2. TABS: Trên mobile là dropdown, desktop là tab bar ngang
   const TabBar = () => (
     <>
+      {/* Title with rainbow effect */}
+      <div className="w-full text-center mb-4">
+        <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-pink-500 via-amber-400 to-blue-500 text-transparent bg-clip-text animate-gradient-x">
+          Speaking Multiple Languages with Our AI Voice Assistant
+        </h2>
+      </div>
+
       {/* Desktop: Tab bar ngang với scroll */}
       <div className="hidden sm:block w-full mb-6">
         <div className="relative">
@@ -925,6 +932,17 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
           .reference-media-card img {
             height: 160px !important;
           }
+        }
+      `}</style>
+      <style>{`
+        @keyframes gradient-x {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-gradient-x {
+          background-size: 200% auto;
+          animation: gradient-x 8s ease infinite;
         }
       `}</style>
     </div>
