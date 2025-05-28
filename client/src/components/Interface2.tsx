@@ -893,6 +893,11 @@ const Interface2: React.FC<Interface2Props> = ({ isActive }) => {
             display: none !important;
           }
         }
+        @media (min-width: 640px) {
+          .mobile-order-5, .mobile-summary, .p-3.sm\:p-5.bg-white\/80.rounded-xl.shadow.border.border-white\/30.mb-2.relative.mobile-order-5 {
+            display: none !important;
+          }
+        }
       `}</style>
     </div>
   );
