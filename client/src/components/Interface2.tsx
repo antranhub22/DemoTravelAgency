@@ -206,11 +206,11 @@ const ServiceLabels = () => {
         }
       `}</style>
       {serviceLabelRows.map((row, idx) => (
-        <div key={idx} className="flex flex-row justify-center gap-1 w-full mx-auto service-label-row" style={window.innerWidth < 640 ? {marginBottom: 2} : {maxWidth: '900px'}}>
+        <div key={idx} className="flex flex-row justify-center gap-1 mx-auto service-label-row" style={window.innerWidth < 640 ? {marginBottom: 2, maxWidth: '90vw', width: '90vw'} : {maxWidth: '900px'}}>
           {row.map(opt => (
             <span
               key={opt.key}
-              className={`flex-shrink-0 min-w-[54px] sm:min-w-[80px] px-1 sm:px-3 py-0.5 sm:py-1.5 rounded-full font-bold text-[11px] sm:text-sm shadow text-center transition-all duration-200 ${
+              className={`flex-shrink-0 min-w-[44px] sm:min-w-[80px] px-0.5 sm:px-3 py-0.5 sm:py-1.5 rounded-full font-bold text-[10px] sm:text-sm shadow text-center transition-all duration-200 ${
                 activeService === opt.key 
                   ? 'bg-amber-400 text-pink-900 scale-105 ring-2 ring-amber-300' 
                   : 'bg-amber-400/60 text-pink-900/80'
@@ -362,11 +362,11 @@ const KeywordsBlock = () => {
         ? chunkArray(allKeywords, Math.ceil(allKeywords.length/3))
         : chunkArray(allKeywords, Math.ceil(allKeywords.length/3))
       ).map((row: string[], idx: number) => (
-        <div key={idx} className="flex flex-row justify-center gap-1 sm:gap-4 keyword-icon-row" style={window.innerWidth < 640 ? {marginBottom: 2} : {maxWidth: '900px', margin: '0 auto'}}>
+        <div key={idx} className="flex flex-row justify-center gap-1 sm:gap-4 keyword-icon-row" style={window.innerWidth < 640 ? {marginBottom: 2, maxWidth: '90vw', width: '90vw'} : {maxWidth: '900px', margin: '0 auto'}}>
           {row.map((k: string) => keywordIconMap[k] && (
             <span 
               key={k} 
-              className={`transition-all duration-200 w-7 h-7 sm:w-9 sm:h-9 flex items-center justify-center keyword-icon ${
+              className={`transition-all duration-200 w-6 h-6 sm:w-9 sm:h-9 flex items-center justify-center keyword-icon ${
                 activeKeywords.includes(k) 
                   ? 'ring-4 ring-amber-300 rounded-full bg-yellow-50 shadow-lg' 
                   : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
@@ -376,7 +376,7 @@ const KeywordsBlock = () => {
             >
               <IconWithTooltip 
                 icon={React.cloneElement(keywordIconMap[k], { 
-                  size: window.innerWidth < 640 ? 15 : 18, // nhỏ hơn cho mobile
+                  size: window.innerWidth < 640 ? 13 : 18, // nhỏ hơn cho mobile
                   color: activeKeywords.includes(k) 
                     ? '#FFC94A' 
                     : activeServices.some(s => serviceKeywordsMap[s]?.includes(k))
