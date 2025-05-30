@@ -845,40 +845,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
     </button>
   );
 
-  // Add OrderStatusPanel component
-  const OrderStatusPanel = () => {
-    if (!activeOrders || activeOrders.length === 0) return null;
-
-    return (
-      <div className="w-full max-w-md mx-auto mb-4 bg-white/90 backdrop-blur-md rounded-xl shadow-lg p-4">
-        <h3 className="text-lg font-semibold text-gray-800 mb-3">{t('active_orders', lang)}</h3>
-        <div className="space-y-3">
-          {[...activeOrders].reverse().map((order, index) => {
-            const timeDiff = now.getTime() - order.requestedAt.getTime();
-            const minutesElapsed = Math.floor(timeDiff / (1000 * 60));
-            return (
-              <div key={index} className="bg-white/80 rounded-lg p-3 shadow-sm border border-gray-100">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">{t('order_reference', lang)}: <span className="font-bold">{order.reference}</span></p>
-                    <p className="text-xs text-gray-500">{t('requested_at', lang)}: {order.requestedAt.toLocaleTimeString()}</p>
-                  </div>
-                  <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">
-                    {order.status || t('status_acknowledged', lang)}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <p className="text-xs text-gray-600">{t('estimated_time', lang)}: {order.estimatedTime}</p>
-                  <p className="text-xs text-gray-600">{t('elapsed_time', lang)}: {minutesElapsed}m</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div 
       className={`absolute w-full min-h-screen h-full transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'} z-10 overflow-y-auto`} 
@@ -913,7 +879,6 @@ const Interface1: React.FC<Interface1Props> = ({ isActive }) => {
           </div>
         )}
         <CallButton />
-        <OrderStatusPanel />
         {/* --- END LAYOUT MỚI --- */}
         {/* Các block giao diện cũ đã được loại bỏ để layout mới hiển thị rõ ràng */}
         {showInfographic && (
